@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+// State-management
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from '@redux-state/index';
+import './index.css';
+import { AppRoutes } from './routes/routes';
+
+import reportWebVitals from './reportWebVitals';
+
+const router = createBrowserRouter(AppRoutes);
+
+export default () => {
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={<div>Loading...</div>}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </Provider>
+    </React.StrictMode>
   );
-}
 
-export default App;
+  reportWebVitals();
+}
