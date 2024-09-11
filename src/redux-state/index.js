@@ -6,6 +6,7 @@ import { persistStore, persistReducer, createMigrate } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import onboardingReducer from './onboarding/reducer';
+import commonReducer from './common/reducer';
 import mySaga from './sagas';
 
 // Step 1: Create the saga middleware
@@ -19,7 +20,8 @@ const migrations = {
 
 // Combine your reducers
 const combinedReducer = combineReducers({
-  onboarding: onboardingReducer
+  onboarding: onboardingReducer,
+  common: commonReducer,
 });
 
 const persistConfig = {

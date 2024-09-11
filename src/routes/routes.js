@@ -6,7 +6,7 @@ import ErrorElement from '@pages/error';
 
 export const AppRoutes = [
   {
-    // element: <Layout />,
+    element: <Layout />,
     errorElement: <ErrorElement />,
     children: [
       {
@@ -15,8 +15,8 @@ export const AppRoutes = [
         children: [
           {
             index: true,
-            element: <Products />,
-            key: 'product',
+            element: <Layout />,
+            key: 'layout',
             errorElement: <ErrorElement />
           },
           {
