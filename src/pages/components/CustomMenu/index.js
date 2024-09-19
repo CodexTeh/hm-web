@@ -37,8 +37,6 @@ const CustomMenu = ({
   }, [])
 
   const handleCloseModal = () => {
-    console.log('yoyo', openEditModal);
-    
     setOpenEditModal(false);
   };
   const handleButtonClick = useCallback(

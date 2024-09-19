@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
@@ -6,10 +6,13 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import { CircularProgress, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import { editProduct } from '@redux-state/actions';
+import { GetEditProductLoading } from '@redux-state/common/selectors';
 import { UploadIcon } from '../../assets/icons/UploadIcon';
-import ModalView from '../Modal';
 import { colorPalette } from '../../utils/colorPalette';
-import { editProduct } from '../../../redux-state/actions';
+import ModalView from '../Modal';
 
 const StyledMainBox = styled(Box)({
   backgroundColor: '#fff',
@@ -17,41 +20,25 @@ const StyledMainBox = styled(Box)({
   boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
   display: 'flex',
   flexDirection: 'column',
-  height: 'auto',
-  padding: '20px',
-  paddingLeft: '62.5px',
-  paddingTop: '40px',
-  width: '610px'
+  alignItems: 'center',
+  padding: '30px',
+  width: '610px',
 });
 
 const StyledHeaderTypography = styled(Typography)({
-  color: '#333!important',
-  fontSize: '23px!important',
-  fontWeight: '600!important',
-  paddingBottom: '0px',
+  color: '#333 ',
+  fontSize: '23px ',
+  fontWeight: '600',
   textAlign: 'center',
-  width: '489px'
 });
 
 const StyledUploadBox = styled(Box)({
-  alignItems: 'center',
-  display: 'flex',
-  gap: '4px',
-  marginTop: '6px',
-  paddingBottom: '0px',
-  width: '100 %'
-});
-
-const StyledImageTextTypography = styled(Typography)({
-  color: '#333!important',
-  fontSize: '14px!important',
-  fontWeight: '700!important',
-  width: '55%'
+  alignSelf: 'center',
 });
 
 const StyledUploadTextButton = styled(Button)({
   color: '#632DDD',
-  fontWeight: '600!important',
+  fontWeight: '600',
   textTransform: 'none'
 });
 
@@ -59,30 +46,12 @@ const StyledUploadIcon = styled(UploadIcon)({
   marginRight: '6px'
 });
 
-const StyledBodyBox = styled(Box)({
-  color: '#666',
-  fontSize: '14px',
-  marginBottom: '4px',
-  overflow: 'hidden'
-});
-
-const StyledImage = styled('img')({
-  borderRadius: '8px',
-  maxHeight: '100%',
-  maxWidth: '100%'
-});
-
-const StyledBold = styled('b')({
-  fontSize: '16px!important',
-  fontWeight: '700!important'
-});
-
 const StyledDescriptionTypography = styled(Typography)({
-  color: '#333!important',
-  fontSize: '14px!important',
-  fontWeight: '700!important',
+  color: '#333 ',
+  fontSize: '12px ',
+  fontWeight: '700',
   paddingBottom: '3px',
-  width: '50 %',
+  width: '50%',
   marginTop: 5,
 });
 
@@ -96,65 +65,130 @@ const StyledDescriptionFieldText = styled(TextField)({
 const StyledFooterBox = styled(Box)({
   alignItems: 'center',
   display: 'flex',
-  gap: '4px',
   justifyContent: 'space-between',
-  marginBottom: '10px',
-  marginLeft: '20px',
-  marginTop: '5px',
-  width: '460px'
+  margin: 15,
+  width: '90%'
+});
+
+export const StyledGenerateButtonContainer = styled(Box)({
+  alignSelf: 'center',
+  display: 'grid',
+  margin: 'auto'
+});
+
+export const StyledIconButten = styled(IconButton)({
+  backgroundColor: colorPalette.white,
+  borderRadius: '.375rem',
+  justifyContent: 'center',
+  marginLeft: '.375rem',
+  minHeight: '3.25rem',
+  minWidth: '3.25rem',
+  padding: '.5rem'
+});
+
+export const StyledGenerateImageText = styled(Typography)({
+  color: colorPalette.spanishGray,
+  fontSize: '18px',
+  fontWeight: 600
 });
 
 const StyledCancelButton = styled(Button)({
-  backgroundColor: '#E4CCFF!important',
-  borderRadius: '30px!important',
-  color: '#632DDD!important',
-  fontSize: '14px!important',
-  fontWeight: 'bold',
-  height: '45px',
-  marginRight: '8px',
-  outline: 'none',
-  padding: '8px 0px!important',
-  width: '140px'
 });
 
 const StyledSaveButton = styled(Button)({
-  borderRadius: '30px!important',
-  color: colorPalette.bloodRed,
-  fontSize: '14px !important',
   fontWeight: 'bold',
-  height: '45px',
-  marginRight: '8px',
-  outline: 'none',
-  padding: '8px 0px!important',
-  width: '140px'
 });
 
 const EditModal = ({ data,
   openEditModal,
   onClose,
   pagination }) => {
-  const { getRootProps } = useDropzone({
-    multiple: false,
-    accept: {
-      'image/png': ['.png'],
-      'image/jpeg': ['.jpeg', '.jpg'],
-      'image/gif': ['.gif'],
-      'image/svg+xml': ['.svg']
-    }
-  });
-  
+
+  const loading = GetEditProductLoading();
 
   const [category, setCategory] = useState(data.category);
   const [name, setName] = useState(data.name);
   const [price, setPrice] = useState(data.price);
   const [qtyOnHand, setQtyOnHand] = useState(data.qty_onhand);
   const [tax, setTax] = useState(data.tax);
+  const [images, setImages] = useState([]);
+
+  const MAX_FILE_SIZE_KB = 400; // Maximum file size in KB
 
   const dispatch = useDispatch();
 
   const updateProduct = () => {
-    dispatch(editProduct(data._id, { category, name, price, qtyOnHand, tax  }))
+    dispatch(editProduct(data._id, { category, name, price, qtyOnHand, tax, images }, pagination))
   }
+
+
+  useEffect(() => {
+    if (data?.imageUrls?.length > 0) {
+      const formattedImages = data?.imageUrls?.map((imageUrl) => ({
+        contentType: 'image/jpeg', // Assume default content type or fetch dynamically
+        title: imageUrl.split('/').pop(), // Extract the image name from URL
+        url: imageUrl,
+        file: null // No file object for backend images
+      }));
+      setImages(formattedImages);
+    }
+  }, [data.imageUrls]);
+
+  const removeImage = (key) => {
+    // Remove the object with the matching id
+    const updatedImages = images.filter((image, index) => index !== key);
+
+    // Set the new state by adding new images
+    setImages([...updatedImages]);
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    multiple: true,
+    maxFiles: 4,
+    accept: {
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpeg', '.jpg'],
+      'image/gif': ['.gif'],
+      'image/svg+xml': ['.svg']
+    },
+    onDrop: (files) => {
+      if (images?.length !== 4 && images?.length + files?.length < 5) {
+        const validFiles = files.filter(file => file.size <= MAX_FILE_SIZE_KB * 1024);
+        if (validFiles.length !== files.length) {
+          alert(`Some files were too large and have been ignored. Maximum size is ${MAX_FILE_SIZE_KB} KB.`);
+        }
+
+        if (validFiles.length > 0) {
+          const newImages = validFiles?.map((file) => ({
+            contentType: file.type,
+            title: file.name,
+            file: file,
+            url: URL.createObjectURL(file)
+          }));
+
+          setImages([...images, ...newImages]); // Append new images
+        }
+      } else {
+        alert('You cannot select more than 4 images.');
+      }
+    }
+  });
+
+  const InputTextField = useCallback(
+    ({ label, value, setValue }) => {
+      return (
+        <Box>
+          <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
+          <StyledDescriptionFieldText
+            size='small'
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          ></StyledDescriptionFieldText>
+        </Box>
+      );
+    },
+    []
+  );
 
   const EditModalView = () => {
     return (
@@ -162,48 +196,82 @@ const EditModal = ({ data,
         <StyledHeaderTypography>
           Edit
         </StyledHeaderTypography>
-        <StyledUploadBox>
-          <StyledImageTextTypography>Image</StyledImageTextTypography>
-          <StyledUploadTextButton {...getRootProps()}>
-            <StyledUploadIcon />
-            Upload from your files
-          </StyledUploadTextButton>
-        </StyledUploadBox>
-        {/* <StyledBodyBox>
-          <StyledImage src={productImage} />
-        </StyledBodyBox> */}
-        <StyledDescriptionTypography>Name:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
+
+        <Box
+          {...getRootProps()}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            border: `2px dashed ${colorPalette.purpleBlue}`,
+            padding: '20px',
+            margin: 2,
+            height: 10,
+            cursor: 'pointer',
+            backgroundColor: isDragActive ? colorPalette.lightGrey : colorPalette.whisper
+          }}
+        >
+          <input {...getInputProps()} />
+          <StyledUploadBox>
+            <StyledUploadTextButton {...getRootProps()}>
+              <StyledUploadIcon />
+              Drag & drop some files here, or click to select files
+            </StyledUploadTextButton>
+          </StyledUploadBox>
+        </Box>
+        {images?.length > 0 &&
+          <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+            {images.map((item, index) => (
+              <React.Fragment key={index}>
+                <Box onClick={() => removeImage(index)} sx={{ width: 20, height: 20, position: 'relative', left: 15, top: -2, zIndex: 20, border: '1px solid #555', borderRadius: 20, background: 'white', cursor: 'pointer' }}>
+                  <Close sx={{ width: 18, height: 18 }} />
+                </Box>
+                <img
+                  style={{ border: '1px solid #555', background: 'yellow' }}
+                  src={item.url}
+                  alt={item.title}
+                  loading="lazy"
+                  width={120}
+                  height={120}
+                />
+              </React.Fragment>
+            ))}
+          </Box>
+        }
+        <InputTextField
+          label={'Name:'}
           value={name}
-          onChange={(e) => setName(e.target.value)}
-        ></StyledDescriptionFieldText>
-        <StyledDescriptionTypography>Category:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
+          setValue={setName}
+        />
+        <InputTextField
+          label={'Category:'}
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        ></StyledDescriptionFieldText>
-        <StyledDescriptionTypography>Price:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
+          setValue={setCategory}
+        />
+        <InputTextField
+          label={'Price:'}
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        ></StyledDescriptionFieldText>
-        <StyledDescriptionTypography>Quantity:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
+          setValue={setPrice}
+        />
+        <InputTextField
+          label={'Quantity:'}
           value={qtyOnHand}
-          onChange={(e) => setQtyOnHand(e.target.value)}
-        ></StyledDescriptionFieldText>
-        <StyledDescriptionTypography>Tax:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
+          setValue={setQtyOnHand}
+        />
+        <InputTextField
+          label={'Tax:'}
           value={tax}
-          onChange={(e) => setTax(e.target.value)}
-        ></StyledDescriptionFieldText>
+          setValue={setTax}
+        />
         <StyledFooterBox>
           <StyledCancelButton onClick={() => onClose()}>Cancel</StyledCancelButton>
-          <StyledSaveButton onClick={() => updateProduct()}>
-            Save Changes
+          <StyledSaveButton disabled={loading} variant='contained' onClick={() => updateProduct()}>
+            {loading ?
+              <CircularProgress color="inherit" size={20} />
+
+              : "Save Changes"}
           </StyledSaveButton>
         </StyledFooterBox>
-      </StyledMainBox>
+      </StyledMainBox >
     )
   }
 

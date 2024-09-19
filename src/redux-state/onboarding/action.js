@@ -19,10 +19,10 @@ export const createAccountSuccess = () => (
   }
 );
 
-export const signIn = (email, password, t) => (
+export const signIn = (email, password) => (
   {
     type: SIGN_IN,
-    payload: { email, password, t },
+    payload: { email, password },
   }
 );
 

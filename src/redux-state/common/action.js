@@ -5,10 +5,10 @@ import {
   GET_PRODUCTS_SUCCESS
 } from './types';
 
-export const getProducts = (pagination) => (
+export const getProducts = (pagination, searchText) => (
   {
     type: GET_PRODUCTS,
-    payload: pagination
+    payload: {pagination, searchText}
   }
 );
 
@@ -19,16 +19,15 @@ export const getProductsSuccess = (data) => (
   }
 );
 
-export const editProduct = (id, data) => (
+export const editProduct = (id, data, pagination) => (
   {
     type: EDIT_PRODUCT,
-    payload: { id, data }
+    payload: { id, data, pagination }
   }
 );
 
-export const editProductSuccess = (data) => (
+export const editProductSuccess = () => (
   {
-    type: EDIT_PRODUCT_SUCCESS,
-    payload: data
+    type: EDIT_PRODUCT_SUCCESS
   }
 );

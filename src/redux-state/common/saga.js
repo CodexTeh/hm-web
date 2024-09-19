@@ -1,5 +1,5 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects'
-import { editProductSuccess, getProductsSuccess } from './action';
+import * as Actions from './action';
 import { Api } from './api'
 import {
   EDIT_PRODUCT,
@@ -9,20 +9,21 @@ import {
 function* getProducts(action) {
   try {
     const data = yield call(Api.getProducts, action.payload);
-    yield put(getProductsSuccess(data));
+    yield put(Actions.getProductsSuccess(data));
   } catch (error) {
-    yield put(getProductsSuccess([]));
+    yield put(Actions.getProductsSuccess([]));
     console.log("error", error);
   }
 }
 
 function* editProduct(action) {
   try {
-    const data = yield call(Api.editProducts, action.payload);
-    yield put(editProductSuccess(data));
-    yield put(getProducts(data));
+    const { pagination } = action.payload
+    yield call(Api.editProducts, action.payload);
+    yield put(Actions.editProductSuccess());
+    yield put(Actions.getProducts(pagination));
   } catch (error) {
-    yield put(editProductSuccess());
+    yield put(Actions.editProductSuccess());
     console.log("error", error);
   }
 }

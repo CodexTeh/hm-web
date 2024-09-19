@@ -1,9 +1,8 @@
-const SERVER_URL = "https://d2e4-210-87-64-131.ngrok-free.app";
-
+const SERVER_URL = "http://89.116.20.12:8080/api/";
 
 export const Api = {
   createAccount: async (data) => {
-    const { username, email, password, phone, description, t } = data;
+    const { username, email, password, phone, description } = data;
 
     try {
       let response;
@@ -15,18 +14,18 @@ export const Api = {
         body: JSON.stringify({ username: username, email: email, password: password, phone: phone, description: description, userType: "client" }),
       };
 
-      response = await fetch(`${SERVER_URL}/api/auth/signup`, options);
+      response = await fetch(`${SERVER_URL}auth/signup`, options);
 
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 400:
-          throw new Error(t('All fields are required'));
+          throw new Error('All fields are required');
         case 409:
-          throw new Error(t('User already exists!'));
+          throw new Error('User already exists!');
         default:
-          throw new Error(t('Something went wrong!'));
+          throw new Error('Something went wrong!');
 
       }
     } catch (e) {
@@ -34,7 +33,7 @@ export const Api = {
     }
   },
   signIn: async (data) => {
-    const { email, password, t } = data;
+    const { email, password } = data;
     try {
       let response;
       const options = {
@@ -42,22 +41,22 @@ export const Api = {
         headers: {
           'content-type': 'application/json',
         },
-        body: JSON.stringify({ email: email, password: password, userType: "client"}),
+        body: JSON.stringify({ email: email, password: password }),
       };
 
-      response = await fetch(`${SERVER_URL}/api/auth/signin`, options);
+      response = await fetch(`${SERVER_URL}auth/signin`, options);
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 401:
-          throw new Error(t('Invalid email or password!'));
+          throw new Error('Invalid email or password!');
         case 404:
-          throw new Error(t('User does not exists!'));
+          throw new Error('User does not exists!');
         case 400:
-          throw new Error(t('All fields required!'));
+          throw new Error('All fields required!');
         case 409:
-          throw new Error(t('User already exists!'));
+          throw new Error('User already exists!');
 
         default:
           throw new Error('Something went wrong!');

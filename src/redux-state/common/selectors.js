@@ -9,3 +9,6 @@ export const GetProducts = () =>
 export const GetAllProductsCount = () =>
   useSelector(
     (state) => state.common.totalProducts);
+export const GetEditProductLoading = () =>
+  useSelector(
+    (state) => state.common.editProductLoading);

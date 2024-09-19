@@ -11,6 +11,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import Products from '@pages/products';
+import LoginModal from '../components/Modal/LoginModal';
 
 
 const NAVIGATION = [
@@ -124,6 +125,7 @@ function Layout(props) {
         {pathname !== '/products' && <DemoPageContent pathname={pathname} />}
         {pathname === '/products' && <Products />}
       </DashboardLayout>
+      <LoginModal />
     </AppProvider>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getHeaders } from "../components/TableView/getHeaders";
-import { LinearProgress, Typography } from "@mui/material";
+import { Input, InputAdornment, LinearProgress, Typography } from "@mui/material";
 import { getProducts } from "../../redux-state/actions";
 import TableView from "../components/TableView";
 import { StyledMainBox } from "./styles";
@@ -8,10 +8,13 @@ import { GetActions } from "../components/CustomMenu/actions";
 import { CustomMenu } from "../components/CustomMenu";
 import { useDispatch } from "react-redux";
 import { GetAllProductsCount, GetProducts, GetProductsLoading } from "../../redux-state/common/selectors";
+import { Tune } from "@mui/icons-material";
+import SearchIcon from '@mui/icons-material/Search';
 
 const Products = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchText, setSearchText] = useState('');
 
   const pagination = useMemo(
     () => ({
@@ -28,7 +31,7 @@ const Products = () => {
 
   useEffect(() => {
     dispatch(
-      getProducts(pagination)
+      getProducts(pagination, searchText)
     );
   }, [dispatch, pagination]);
 
@@ -36,6 +39,13 @@ const Products = () => {
     return getHeaders('Product');
   }, []);
 
+  useEffect(() => {
+    if (searchText.length > 2) {
+      dispatch(getProducts(pagination, searchText));
+    } else {
+      dispatch(getProducts(pagination, searchText));
+    }
+  }, [searchText])
 
   const getActions = useMemo(() => {
     return (item) => {
@@ -83,10 +93,26 @@ const Products = () => {
     items: products
   };
 
-
   return (
     <StyledMainBox className="App">
       {productsLoading && <LinearProgress value={10} />}
+      <Input
+        placeholder='Search Product'
+        value={searchText}
+        sx={{ background: 'white', width: '50%', padding: 1, borderRadius: 2 }}
+        id="input-with-icon-adornment"
+        onChange={(e) => setSearchText(e.target.value)}
+        startAdornment={
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        }
+        endAdornment={
+          <InputAdornment position="start">
+            <Tune />
+          </InputAdornment>
+        }
+      />
       <TableView
         headers={headers}
         page={page}

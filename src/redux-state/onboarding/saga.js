@@ -1,10 +1,11 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects'
-import { createAccountSuccess, requestAccessTokenSuccess, signInSuccess, getAccountSuccess, updataProfileSuccess, getAccount } from './action';
+import { createAccountSuccess, signInSuccess } from './action';
 import { Api } from './api'
 import {
   CREATE_ACCOUNT,
   SIGN_IN,
 } from './types'
+import { setToken } from '@helpers/tokenActions';
 
 
 function* createAccount(action) {
@@ -12,7 +13,7 @@ function* createAccount(action) {
   try {
     const data = yield call(Api.createAccount, action.payload);
     yield put(createAccountSuccess());
-  
+
 
   } catch (error) {
     yield put(createAccountSuccess());
@@ -26,6 +27,7 @@ function* signIn(action) {
   try {
     const data = yield call(Api.signIn, action.payload);
     if (data && data?.info?.token) {
+      setToken(data.info.token)
       yield put(signInSuccess(data));
     } else {
       yield put(signInSuccess(null));
