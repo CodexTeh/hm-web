@@ -86,7 +86,7 @@ const Products = () => {
 
       return baseCells;
     };
-  }, []);
+  }, [getActions, pagination]);
 
   const rows = {
     component: (item) => getCells(item),
