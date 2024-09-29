@@ -226,7 +226,7 @@ const EditModal = ({ data,
                   <Close sx={{ width: 18, height: 18 }} />
                 </Box>
                 <img
-                  style={{ border: '1px solid #555', background: 'yellow' }}
+                  style={{ border: '1px solid #555' }}
                   src={item.url}
                   alt={item.title}
                   loading="lazy"

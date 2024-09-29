@@ -1,5 +1,7 @@
 import queryString from 'query-string';
 import { getToken } from '@helpers/tokenActions';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SERVER_URL = "http://89.116.20.12:8080/api/";
 const token = getToken();
@@ -80,6 +82,7 @@ export const Api = {
 
       switch (response.status) {
         case 200:
+          toast("Product Edited Successfully")
           const data = await response.json();
           return data;
         case 400:

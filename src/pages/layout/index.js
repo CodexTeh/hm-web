@@ -11,6 +11,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import Products from '@pages/products';
+import { ToastContainer } from 'react-toastify';
 import LoginModal from '../components/Modal/LoginModal';
 
 
@@ -121,6 +122,7 @@ function Layout(props) {
       theme={demoTheme}
       window={demoWindow}
     >
+      <ToastContainer />
       <DashboardLayout>
         {pathname !== '/products' && <DemoPageContent pathname={pathname} />}
         {pathname === '/products' && <Products />}
