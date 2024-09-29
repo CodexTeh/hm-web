@@ -1,10 +1,8 @@
 import queryString from 'query-string';
-import { getToken } from '@helpers/tokenActions';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SERVER_URL = "http://89.116.20.12:8080/api/";
-const token = getToken();
 
 export const Api = {
   getProducts: async ({ pagination, searchText }) => {
@@ -46,7 +44,7 @@ export const Api = {
       console.log("Error", e);
     }
   },
-  editProducts: async ({ id, data }) => {
+  editProducts: async ({ id, data }, token) => {
     try {
       const { category, name, price, qtyOnHand, tax, images } = data;
       let response;

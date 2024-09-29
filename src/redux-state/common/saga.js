@@ -6,6 +6,8 @@ import {
   GET_PRODUCTS,
 } from './types'
 
+const getToken = state => state.onboarding.token;
+
 function* getProducts(action) {
   try {
     const data = yield call(Api.getProducts, action.payload);
@@ -17,9 +19,10 @@ function* getProducts(action) {
 }
 
 function* editProduct(action) {
+  const token = yield select(getToken);
   try {
     const { pagination } = action.payload
-    yield call(Api.editProducts, action.payload);
+    yield call(Api.editProducts, action.payload, token);
     yield put(Actions.editProductSuccess());
     yield put(Actions.getProducts(pagination));
   } catch (error) {
