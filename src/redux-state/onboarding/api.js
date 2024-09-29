@@ -10,6 +10,7 @@ export const Api = {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
+          'Content-Security-Policy': 'default-src https:; script-src https: http:',
         },
         body: JSON.stringify({ username: username, email: email, password: password, phone: phone, description: description, userType: "client" }),
       };

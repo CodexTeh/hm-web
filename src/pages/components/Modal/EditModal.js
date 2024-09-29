@@ -126,7 +126,7 @@ const EditModal = ({ data,
     if (data?.imageUrls?.length > 0) {
       const formattedImages = data?.imageUrls?.map((imageUrl) => ({
         contentType: 'image/jpeg', // Assume default content type or fetch dynamically
-        title: imageUrl.split('/').pop(), // Extract the image name from URL
+        title: imageUrl?.split('/').pop(), // Extract the image name from URL
         url: imageUrl,
         file: null // No file object for backend images
       }));

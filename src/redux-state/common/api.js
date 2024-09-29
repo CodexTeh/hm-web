@@ -12,6 +12,7 @@ export const Api = {
         method: 'GET',
         headers: {
           'content-type': 'application/json',
+          'Content-Security-Policy': 'default-src https:; script-src https: http:',
         },
       };
 
