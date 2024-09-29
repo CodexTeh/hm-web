@@ -46,6 +46,8 @@ export const Api = {
   },
   editProducts: async ({ id, data }, token) => {
     try {
+      console.log('token: ', token);
+      
       const { category, name, price, qtyOnHand, tax, images } = data;
       let response;
 
