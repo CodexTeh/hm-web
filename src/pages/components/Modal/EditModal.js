@@ -144,7 +144,7 @@ const EditModal = ({ data,
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     multiple: true,
-    maxFiles: 4,
+    maxFiles: 5,
     accept: {
       'image/png': ['.png'],
       'image/jpeg': ['.jpeg', '.jpg'],
@@ -212,7 +212,7 @@ const EditModal = ({ data,
         >
           <input {...getInputProps()} />
           <StyledUploadBox>
-            <StyledUploadTextButton {...getRootProps()}>
+            <StyledUploadTextButton>
               <StyledUploadIcon />
               Drag & drop some files here, or click to select files
             </StyledUploadTextButton>
