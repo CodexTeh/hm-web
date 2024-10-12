@@ -1,4 +1,4 @@
-const SERVER_URL = "http://89.116.20.12:8080/api/";
+const SERVER_URL = "http://213.210.21.52:8080/api/";
 
 export const Api = {
   createAccount: async (data) => {
@@ -41,6 +41,7 @@ export const Api = {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
+          'Content-Security-Policy': 'default-src https:; script-src https: http:',
         },
         body: JSON.stringify({ email: email, password: password }),
       };

@@ -8,21 +8,21 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { CircularProgress, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { UploadIcon } from '@assets/icons/UploadIcon';
 import { editProduct } from '@redux-state/actions';
 import { GetEditProductLoading } from '@redux-state/common/selectors';
-import { UploadIcon } from '../../assets/icons/UploadIcon';
-import { colorPalette } from '../../utils/colorPalette';
-import ModalView from '../Modal';
+import { colorPalette } from '@utils/colorPalette';
+import ModalView from '.';
 
 const StyledMainBox = styled(Box)({
-  backgroundColor: '#fff',
+  backgroundColor: colorPalette.white,
   borderRadius: '8px',
   boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   padding: '30px',
-  width: '610px',
+  overflow: 'auto'
 });
 
 const StyledHeaderTypography = styled(Typography)({
@@ -109,30 +109,34 @@ const EditModal = ({ data,
   const [category, setCategory] = useState(data.category);
   const [name, setName] = useState(data.name);
   const [price, setPrice] = useState(data.price);
+  const [description, setDescription] = useState(data.description);
   const [qtyOnHand, setQtyOnHand] = useState(data.qty_onhand);
   const [tax, setTax] = useState(data.tax);
   const [images, setImages] = useState([]);
+  console.log('yoyo', data);
 
   const MAX_FILE_SIZE_KB = 400; // Maximum file size in KB
 
   const dispatch = useDispatch();
 
   const updateProduct = () => {
-    dispatch(editProduct(data._id, { category, name, price, qtyOnHand, tax, images }, pagination))
+    dispatch(editProduct(data.id, { category, name, description, images }, pagination))
   }
 
-
   useEffect(() => {
-    if (data?.imageUrls?.length > 0) {
-      const formattedImages = data?.imageUrls?.map((imageUrl) => ({
-        contentType: 'image/jpeg', // Assume default content type or fetch dynamically
-        title: imageUrl?.split('/').pop(), // Extract the image name from URL
-        url: imageUrl,
-        file: null // No file object for backend images
-      }));
-      setImages(formattedImages);
+    if (data?.image_urls) {
+      const imageUrls = JSON.parse(data?.image_urls.replace(/'/g, '"'));
+      if (imageUrls.length > 0) {
+        const formattedImages = imageUrls?.map((imageUrl) => ({
+          contentType: 'image/jpeg', // Assume default content type or fetch dynamically
+          title: imageUrl?.split('/').pop(), // Extract the image name from URL
+          url: imageUrl,
+          file: null // No file object for backend images
+        }));
+        setImages(formattedImages);
+      }
     }
-  }, [data.imageUrls]);
+  }, [data.image_urls]);
 
   const removeImage = (key) => {
     // Remove the object with the matching id
@@ -205,7 +209,7 @@ const EditModal = ({ data,
             border: `2px dashed ${colorPalette.purpleBlue}`,
             padding: '20px',
             margin: 2,
-            height: 10,
+            height: 80,
             cursor: 'pointer',
             backgroundColor: isDragActive ? colorPalette.lightGrey : colorPalette.whisper
           }}
@@ -226,42 +230,76 @@ const EditModal = ({ data,
                   <Close sx={{ width: 18, height: 18 }} />
                 </Box>
                 <img
-                  style={{ border: '1px solid #555' }}
+                  style={{ border: '1px solid #555', marginTop: 10 }}
                   src={item.url}
                   alt={item.title}
                   loading="lazy"
-                  width={120}
-                  height={120}
+                  width={180}
+                  height={180}
                 />
               </React.Fragment>
             ))}
           </Box>
         }
-        <InputTextField
-          label={'Name:'}
-          value={name}
-          setValue={setName}
-        />
-        <InputTextField
-          label={'Category:'}
-          value={category}
-          setValue={setCategory}
-        />
-        <InputTextField
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, paddingLeft: 2 }}>
+          <Box sx={{ marginRight: 10 }}>
+            <InputTextField
+              label={'Name:'}
+              value={name}
+              setValue={setName}
+            />
+            <InputTextField
+              label={'Category:'}
+              value={category}
+              setValue={setCategory}
+            />
+            <InputTextField
+              label={'Description:'}
+              value={description}
+              setValue={setDescription}
+            />
+          </Box>
+          <Box>
+            <div dir="rtl">
+              <InputTextField
+                label={':نام'}
+                value={name}
+                setValue={setName}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label={':زمرہ'}
+                value={category}
+                setValue={setCategory}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label={':تفصیل'}
+                value={description}
+                setValue={setDescription}
+              />
+            </div>
+
+          </Box>
+        </Box>
+
+        {/* <InputTextField
           label={'Price:'}
           value={price}
           setValue={setPrice}
-        />
-        <InputTextField
+        /> */}
+        {/* <InputTextField
           label={'Quantity:'}
           value={qtyOnHand}
           setValue={setQtyOnHand}
-        />
-        <InputTextField
+        /> */}
+        {/* <InputTextField
           label={'Tax:'}
           value={tax}
           setValue={setTax}
-        />
+        /> */}
         <StyledFooterBox>
           <StyledCancelButton onClick={() => onClose()}>Cancel</StyledCancelButton>
           <StyledSaveButton disabled={loading} variant='contained' onClick={() => updateProduct()}>

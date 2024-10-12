@@ -4,15 +4,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
-import LayersIcon from '@mui/icons-material/Layers';
+// import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+// import BarChartIcon from '@mui/icons-material/BarChart';
+// import DescriptionIcon from '@mui/icons-material/Description';
+// import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
+import { ToastContainer } from 'react-toastify';
+import LoginModal from '@components/Modal/LoginModal';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import Products from '@pages/products';
-import { ToastContainer } from 'react-toastify';
-import LoginModal from '../components/Modal/LoginModal';
 
 
 const NAVIGATION = [
@@ -23,43 +23,43 @@ const NAVIGATION = [
   {
     kind: 'page',
     segment: 'products',
-    title: 'Dashboard',
+    title: 'Products',
     icon: <DashboardIcon />,
   },
-  {
-    segment: 'orders',
-    title: 'Orders',
-    icon: <ShoppingCartIcon />,
-  },
+  // {
+  //   segment: 'orders',
+  //   title: 'Orders',
+  //   icon: <ShoppingCartIcon />,
+  // },
   {
     kind: 'divider',
   },
-  {
-    kind: 'header',
-    title: 'Analytics',
-  },
-  {
-    segment: 'reports',
-    title: 'Reports',
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: 'sales',
-        title: 'Sales',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'traffic',
-        title: 'Traffic',
-        icon: <DescriptionIcon />,
-      },
-    ],
-  },
-  {
-    segment: 'integrations',
-    title: 'Integrations',
-    icon: <LayersIcon />,
-  },
+  // {
+  //   kind: 'header',
+  //   title: 'Analytics',
+  // },
+  // {
+  //   segment: 'reports',
+  //   title: 'Reports',
+  //   icon: <BarChartIcon />,
+  //   children: [
+  //     {
+  //       segment: 'sales',
+  //       title: 'Sales',
+  //       icon: <DescriptionIcon />,
+  //     },
+  //     {
+  //       segment: 'traffic',
+  //       title: 'Traffic',
+  //       icon: <DescriptionIcon />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   segment: 'integrations',
+  //   title: 'Integrations',
+  //   icon: <LayersIcon />,
+  // },
 ];
 
 const demoTheme = createTheme({
@@ -121,10 +121,14 @@ function Layout(props) {
       router={router}
       theme={demoTheme}
       window={demoWindow}
+      branding={{
+        logo: <img src="https://mui.com/static/logo.png" alt="MUI logo" />,
+        title: 'HM',
+      }}
     >
       <ToastContainer />
       <DashboardLayout>
-        {pathname !== '/products' && <DemoPageContent pathname={pathname} />}
+        {pathname !== '/products' && <Products />}
         {pathname === '/products' && <Products />}
       </DashboardLayout>
       <LoginModal />
