@@ -17,7 +17,7 @@ export const Api = {
 
       const { page = 1, perPage = 10 } = pagination || {};
       const query = {
-        page: JSON.stringify(page+1),
+        page: JSON.stringify(page + 1),
         limit: JSON.stringify(perPage)
       };
 
@@ -66,7 +66,7 @@ export const Api = {
   },
   editProducts: async ({ id, data }, token) => {
     try {
-      const { category, name, description, images } = data;
+      const { category, name, description, arabicName, arabicCategory, arabicDescription, images } = data;
       let response;
 
       const formData = new FormData();
@@ -110,7 +110,10 @@ export const Api = {
                 category_id: category,
                 image_urls: imageUrls,
                 name: name,
-                description: description
+                description: description,
+                arabicName: arabicName,
+                arabicCategory: arabicCategory,
+                arabicDescription: arabicDescription,
               }
             }),
           };

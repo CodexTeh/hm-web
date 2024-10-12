@@ -107,9 +107,12 @@ const EditModal = ({ data,
   const loading = GetEditProductLoading();
 
   const [category, setCategory] = useState(data.category);
+  const [arabicCategory, setArabicCategory] = useState(data.arabicCategory || '');
   const [name, setName] = useState(data.name);
+  const [arabicName, setArabicName] = useState(data.arabicName || '');
   const [price, setPrice] = useState(data.price);
   const [description, setDescription] = useState(data.description);
+  const [arabicDescription, setArabicDescription] = useState(data.arabicDescription || '');
   const [qtyOnHand, setQtyOnHand] = useState(data.qty_onhand);
   const [tax, setTax] = useState(data.tax);
   const [images, setImages] = useState([]);
@@ -120,7 +123,7 @@ const EditModal = ({ data,
   const dispatch = useDispatch();
 
   const updateProduct = () => {
-    dispatch(editProduct(data.id, { category, name, description, images }, pagination))
+    dispatch(editProduct(data.id, { category, name, description, arabicName, arabicCategory, arabicDescription, images }, pagination))
   }
 
   useEffect(() => {
@@ -263,22 +266,22 @@ const EditModal = ({ data,
             <div dir="rtl">
               <InputTextField
                 label={':نام'}
-                value={name}
-                setValue={setName}
+                value={arabicName}
+                setValue={setArabicName}
               />
             </div>
             <div dir="rtl">
               <InputTextField
                 label={':زمرہ'}
-                value={category}
-                setValue={setCategory}
+                value={arabicCategory}
+                setValue={setArabicCategory}
               />
             </div>
             <div dir="rtl">
               <InputTextField
                 label={':تفصیل'}
-                value={description}
-                setValue={setDescription}
+                value={arabicDescription}
+                setValue={setArabicDescription}
               />
             </div>
 
