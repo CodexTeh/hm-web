@@ -46,7 +46,7 @@ export const Api = {
         method: 'GET',
       };
 
-      response = await fetch(`${SERVER_URL}/get_specific_product?id=${searchText}`, options);
+      response = await fetch(`${SERVER_URL}/get_specific_product?barcode=${searchText}`, options);
 
       switch (response.status) {
         case 200:
@@ -66,9 +66,9 @@ export const Api = {
   },
   editProducts: async ({ id, data }, token) => {
     try {
-      const { category, name, description, arabicName, arabicCategory, arabicDescription, images } = data;
+      const { category, arabicCategory, subCategory, arabicSubCategory,
+        name, arabicName, description, arabicDescription, images } = data;
       let response;
-
       const formData = new FormData();
 
       const exisitingImages = [];
@@ -107,16 +107,19 @@ export const Api = {
               jsonrpc: "2.0",
               params: {
                 id: id,
-                category_id: category,
                 image_urls: imageUrls,
                 name: name,
-                description: description,
-                arabicName: arabicName,
-                arabicCategory: arabicCategory,
-                arabicDescription: arabicDescription,
+                arabicName,
+                description,
+                arabicDescription,
+                category_id: category.label,
+                arabicCategory: arabicCategory.label,
+                subCategory: subCategory.label,
+                arabicSubCategory: arabicSubCategory.label,
               }
             }),
           };
+          
           response = await fetch(`${SERVER_URL}/update/product`, options);
           switch (response.status) {
             case 200:

@@ -22,7 +22,11 @@ function* getProducts(action) {
 function* getSearchedProducts(action) {
   try {
     const data = yield call(Api.getSearchedProducts, action.payload);
-    yield put(Actions.getSearchedProductsSuccess([data]));
+    if (data?.status == true) {
+      yield put(Actions.getSearchedProductsSuccess([data]));
+    } else {
+      yield put(Actions.getSearchedProductsSuccess([]));
+    }
   } catch (error) {
     yield put(Actions.getSearchedProductsSuccess([]));
     console.log("error", error);

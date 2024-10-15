@@ -1,5 +1,5 @@
 const headers = {
-  Product: ['ID', 'Name', 'Category', 'Price', 'BarCode', 'Tax', 'Actions'],
+  Product: ['BarCode', 'Name', 'Category', 'Price', 'Quantity', 'Actions'],
 };
 export const getHeaders = (
   key

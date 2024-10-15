@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination, { tablePaginationClasses } from '@mui/material/TablePagination';
 import { styled } from '@mui/material/styles';
 import { colorPalette } from '../../utils/colorPalette';
+import { Box } from '@mui/material';
 
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
@@ -110,7 +111,7 @@ const TableView = ({
 
   return (
     <StyledTableContainer>
-      <Table
+      {rows?.items?.length > 0 ? <Table
         sx={{
           display: 'table',
           flexDirection: isMediumScreen ? 'column' : 'row'
@@ -145,7 +146,7 @@ const TableView = ({
             </TableRow>
           ))}
         </TableBody>
-      </Table>
+      </Table> : <Box sx={{ textAlign: 'center' }}>no products found</Box>}
       {showPaginations && rows?.items?.length > 0 && (
         <StyledTablePaginationContainer
           component="div"

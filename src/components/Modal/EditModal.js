@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { Select, MenuItem, FormControl, ListSubheader, OutlinedInput } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CircularProgress, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -12,6 +13,8 @@ import { UploadIcon } from '@assets/icons/UploadIcon';
 import { editProduct } from '@redux-state/actions';
 import { GetEditProductLoading } from '@redux-state/common/selectors';
 import { colorPalette } from '@utils/colorPalette';
+import { categories, subCategories, arabicCategories, arabicSubCategories } from '@utils/categories';
+
 import ModalView from '.';
 
 const StyledMainBox = styled(Box)({
@@ -22,11 +25,24 @@ const StyledMainBox = styled(Box)({
   flexDirection: 'column',
   alignItems: 'center',
   padding: '30px',
-  overflow: 'auto'
+  maxHeight: '90vh',
+  overflowY: 'auto',
+  '&::-webkit-scrollbar': {
+    width: '8px', // Width of the scrollbar
+  },
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: colorPalette.orange, // Color of the scrollbar thumb
+    borderRadius: '10px', // Rounded corners for the scrollbar thumb
+    border: '2px solid #ffffff', // Adds padding around the scrollbar thumb
+  },
+  '&::-webkit-scrollbar-track': {
+    backgroundColor: '#f1f1f1', // Color of the scrollbar track
+    borderRadius: '10px',
+  }
 });
 
 const StyledHeaderTypography = styled(Typography)({
-  color: '#333 ',
+  color: colorPalette.black,
   fontSize: '23px ',
   fontWeight: '600',
   textAlign: 'center',
@@ -37,17 +53,17 @@ const StyledUploadBox = styled(Box)({
 });
 
 const StyledUploadTextButton = styled(Button)({
-  color: '#632DDD',
+  color: colorPalette.black,
   fontWeight: '600',
   textTransform: 'none'
 });
 
 const StyledUploadIcon = styled(UploadIcon)({
-  marginRight: '6px'
+  marginRight: '6px',
 });
 
 const StyledDescriptionTypography = styled(Typography)({
-  color: '#333 ',
+  color: colorPalette.black,
   fontSize: '12px ',
   fontWeight: '700',
   paddingBottom: '3px',
@@ -106,24 +122,69 @@ const EditModal = ({ data,
 
   const loading = GetEditProductLoading();
 
-  const [category, setCategory] = useState(data.category);
-  const [arabicCategory, setArabicCategory] = useState(data.arabicCategory || '');
+  const filterCategory = (categories, categoryValue) => {
+    return categories.find(cat => cat.label === categoryValue);
+  };
+
+  const filterSubcategoryByLabel = (categories, subcategoryLabel, categoryValue) => {
+    // First, find the category with the matching name
+
+    const category = categories?.find(cat => cat.label === categoryValue?.label);
+
+    if (!category) {
+      return null; // Return null if the category is not found
+    }
+
+    // Then, find the subcategory with the matching value within the filtered category
+    const subcategory = category.subcategories.find(sub => sub.label === subcategoryLabel);
+
+    return subcategory;
+  };
+
+  const filterSubcategory = (categories, subcategoryValue, categoryValue) => {
+    const category = categories.find(cat => cat.label === categoryValue.label);
+    if (!category) {
+      return null; // Return null if the category is not found
+    }
+
+    // Then, find the subcategory with the matching value within the filtered category
+    const subcategory = category.subcategories.find(sub => sub.value === subcategoryValue?.value ? subcategoryValue?.value : subcategoryValue);
+
+    return subcategory;
+  };
+
+
+  const [category, setCategory] = useState(filterCategory(categories, data.category));
+  const [arabicCategory, setArabicCategory] = useState(filterCategory(arabicCategories, data.arabicCategory));
   const [name, setName] = useState(data.name);
   const [arabicName, setArabicName] = useState(data.arabicName || '');
-  const [price, setPrice] = useState(data.price);
   const [description, setDescription] = useState(data.description);
   const [arabicDescription, setArabicDescription] = useState(data.arabicDescription || '');
-  const [qtyOnHand, setQtyOnHand] = useState(data.qty_onhand);
-  const [tax, setTax] = useState(data.tax);
   const [images, setImages] = useState([]);
-  console.log('yoyo', data);
+  const [filteredSubCategories, setFilteredSubCategories] = useState();
+  const [subCategory, setSubCategory] = useState(filterSubcategoryByLabel(subCategories, data.subCategory, category));
+  const [arabicSubCategory, setArabicSubCategory] = useState(filterSubcategoryByLabel(arabicSubCategories, data.arabicSubCategory, arabicCategory));
+  const [filteredArabicSubCategories, setFilteredArabicSubCategories] = useState([]);
+
+  const handleCategoryChange = (value, setCategory, categories) => {
+    setCategory(categories.find(category => category.value === value));
+
+  };
 
   const MAX_FILE_SIZE_KB = 400; // Maximum file size in KB
 
   const dispatch = useDispatch();
 
   const updateProduct = () => {
-    dispatch(editProduct(data.id, { category, name, description, arabicName, arabicCategory, arabicDescription, images }, pagination))
+    if (name && arabicName && category && subCategory && description &&
+      arabicDescription && arabicSubCategory && subCategory) {
+      dispatch(editProduct(data.id, {
+        category, arabicCategory, subCategory: filterSubcategory(subCategories, subCategory, category), arabicSubCategory: filterSubcategory(arabicSubCategories, arabicSubCategory, arabicCategory),
+        name, arabicName, description, arabicDescription, images
+      }, pagination))
+    } else {
+      alert("Fill all fields!")
+    }
   }
 
   useEffect(() => {
@@ -197,30 +258,82 @@ const EditModal = ({ data,
     []
   );
 
+  const InputSubCatSelectField = useCallback(
+    ({ label, value, setValue, category, values }) => {
+      const subcategory = values.find(sub => sub.label === category.label);
+      return (
+        <Box>
+          <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
+          <Select
+            sx={{ height: 40 }}
+            fullWidth
+            value={value?.value ?? value}
+            onChange={(e) => setValue(e.target.value)}
+            label={label}
+            input={<OutlinedInput />}
+          >
+            {subcategory.subcategories.map((subCat, subCatIndex) => (
+              <MenuItem key={subCatIndex} value={subCat.value}>
+                {subCat.label}
+              </MenuItem>))}
+          </Select>
+
+        </Box>
+      );
+    },
+    [category]
+  );
+
+  const InputCatSelectField = useCallback(
+    ({ label, value, setValue, handleCategoryChange, categories }) => {
+      return (
+        <Box>
+          <FormControl fullWidth>
+            <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
+            <Select
+              sx={{ height: 40 }}
+              labelId="category-select-label"
+              value={value?.value}
+              onChange={(e) => handleCategoryChange(e.target.value, setValue, categories)}
+              label={label}
+              input={<OutlinedInput />}
+            >
+              {categories.map((category, index) => (
+                <MenuItem key={index} value={category.value}>
+                  {category.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      );
+    },
+    [category]
+  );
+
   const EditModalView = () => {
     return (
       <StyledMainBox>
         <StyledHeaderTypography>
           Edit
         </StyledHeaderTypography>
-
         <Box
           {...getRootProps()}
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            border: `2px dashed ${colorPalette.purpleBlue}`,
+            border: `2px dashed ${colorPalette.orange}`,
             padding: '20px',
             margin: 2,
             height: 80,
             cursor: 'pointer',
-            backgroundColor: isDragActive ? colorPalette.lightGrey : colorPalette.whisper
+            backgroundColor: isDragActive ? colorPalette.orange : colorPalette.whisper
           }}
         >
           <input {...getInputProps()} />
           <StyledUploadBox>
             <StyledUploadTextButton>
-              <StyledUploadIcon />
+              <StyledUploadIcon color />
               Drag & drop some files here, or click to select files
             </StyledUploadTextButton>
           </StyledUploadBox>
@@ -251,11 +364,20 @@ const EditModal = ({ data,
               value={name}
               setValue={setName}
             />
-            <InputTextField
+            <InputCatSelectField
               label={'Category:'}
               value={category}
+              categories={categories}
               setValue={setCategory}
+              handleCategoryChange={handleCategoryChange}
             />
+            {category?.value && <InputSubCatSelectField
+              label={'Subcategory:'}
+              value={subCategory}
+              category={category}
+              setValue={setSubCategory}
+              values={subCategories}
+            />}
             <InputTextField
               label={'Description:'}
               value={description}
@@ -265,21 +387,34 @@ const EditModal = ({ data,
           <Box>
             <div dir="rtl">
               <InputTextField
-                label={':نام'}
+                label={'نام:'}
                 value={arabicName}
                 setValue={setArabicName}
               />
             </div>
             <div dir="rtl">
-              <InputTextField
-                label={':زمرہ'}
+              <InputCatSelectField
+                label={'زمرہ:'}
+                categories={arabicCategories}
                 value={arabicCategory}
                 setValue={setArabicCategory}
+                handleCategoryChange={handleCategoryChange}
               />
             </div>
+            {arabicCategory?.value &&
+              <div dir="rtl">
+                <InputSubCatSelectField
+                  label={'الفئة الفرعية:'}
+                  category={arabicCategory}
+                  value={arabicSubCategory}
+                  setValue={setArabicSubCategory}
+                  values={arabicSubCategories}
+                />
+              </div>
+            }
             <div dir="rtl">
               <InputTextField
-                label={':تفصیل'}
+                label={'تفصیل:'}
                 value={arabicDescription}
                 setValue={setArabicDescription}
               />
@@ -287,12 +422,6 @@ const EditModal = ({ data,
 
           </Box>
         </Box>
-
-        {/* <InputTextField
-          label={'Price:'}
-          value={price}
-          setValue={setPrice}
-        /> */}
         {/* <InputTextField
           label={'Quantity:'}
           value={qtyOnHand}

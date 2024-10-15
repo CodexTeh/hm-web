@@ -31,6 +31,7 @@ export const colorPalette = {
   forestGreen: '#39B225',
   gold: '#FFD600',
   golden: '#DF8533',
+  orange: '#ffad30',
   gray: '#808080',
   green: '#2d9f72',
   greenHaze: '#07A854',

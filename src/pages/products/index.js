@@ -30,7 +30,7 @@ const Products = () => {
   const productsCount = GetAllProductsCount();
 
   useEffect(() => {
-    if(!searchText){
+    if (!searchText) {
       dispatch(
         getProducts(pagination, searchText)
       );
@@ -53,8 +53,8 @@ const Products = () => {
   const getCells = useMemo(() => {
     return (item) => {
       const baseCells = {
-        id: (
-          <Typography color="black">{item.id}</Typography>
+        barcode: (
+          <Barcode height={20} width={1} fontSize={15} value={item.barcode} />
         ),
         name: (
           <Typography color="black">{item.name}</Typography>
@@ -65,11 +65,8 @@ const Products = () => {
         price: (
           <Typography color="black">{item.price}</Typography>
         ),
-        barcode: (
-          <Barcode height={20} width={1} fontSize={15} value={item.barcode} />
-        ),
-        tax: (
-          <Typography color="black">{item.tax}</Typography>
+        quantity: (
+          <Typography color="black">{item.qty_onhand}</Typography>
         ),
         action: (
           <CustomMenu
@@ -91,9 +88,9 @@ const Products = () => {
     <StyledMainBox className="App">
       {productsLoading && <LinearProgress value={10} />}
       <Input
-        placeholder='Search Product by ID'
+        placeholder='Search Product by barcode'
         value={searchText}
-        sx={{ background: 'white', width: '20%', padding: 1, borderRadius: 2 }}
+        sx={{ background: 'white', width: '30%', padding: 1, borderRadius: 2 }}
         id="input-with-icon-adornment"
         onChange={(e) => setSearchText(e.target.value)}
         onKeyDown={(e) => {
@@ -108,11 +105,11 @@ const Products = () => {
             <SearchIcon />
           </InputAdornment>
         }
-        // endAdornment={
-        //   <InputAdornment position="start">
-        //     <Tune />
-        //   </InputAdornment>
-        // }
+      // endAdornment={
+      //   <InputAdornment position="start">
+      //     <Tune />
+      //   </InputAdornment>
+      // }
       />
       <TableView
         headers={headers}

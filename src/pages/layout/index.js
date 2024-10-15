@@ -8,11 +8,13 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 // import BarChartIcon from '@mui/icons-material/BarChart';
 // import DescriptionIcon from '@mui/icons-material/Description';
 // import LayersIcon from '@mui/icons-material/Layers';
+import logo from "@assets/icons/logo.jpeg";
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { ToastContainer } from 'react-toastify';
 import LoginModal from '@components/Modal/LoginModal';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import Products from '@pages/products';
+import { colorPalette } from '@utils/colorPalette';
 
 
 const NAVIGATION = [
@@ -76,6 +78,15 @@ const demoTheme = createTheme({
       xl: 1536,
     },
   },
+  palette: {
+    primary: {
+      main: colorPalette.orange, // Customize the main color for selected items
+    },
+    text: {
+      primary: colorPalette.black, // Default text color
+      secondary: '#757575', // Non-selected navigation item text color
+    },
+  },
 });
 
 function DemoPageContent({ pathname }) {
@@ -122,7 +133,7 @@ function Layout(props) {
       theme={demoTheme}
       window={demoWindow}
       branding={{
-        logo: <img src="https://mui.com/static/logo.png" alt="MUI logo" />,
+        logo: <img src={logo} alt="MUI logo" />,
         title: 'HM',
       }}
     >
