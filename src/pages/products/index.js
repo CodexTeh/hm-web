@@ -8,8 +8,8 @@ import TableView from "@components/TableView";
 import { StyledMainBox } from "./styles";
 import { GetActions } from "@components/CustomMenu/actions";
 import { CustomMenu } from "@components/CustomMenu";
-import { getProducts, getSearchedProducts } from "@redux-state/actions";
-import { GetAllProductsCount, GetProducts, GetProductsLoading } from "../../redux-state/common/selectors";
+import { getProducts, getSearchedProducts, getCategories } from "@redux-state/actions";
+import { GetAllProductsCount, GetProducts, GetProductsLoading } from "@redux-state/common/selectors";
 
 const Products = () => {
   const [page, setPage] = useState(0);
@@ -35,6 +35,7 @@ const Products = () => {
         getProducts(pagination, searchText)
       );
     }
+    dispatch(getCategories())
   }, [dispatch, pagination, searchText]);
 
   const headers = useMemo(() => {

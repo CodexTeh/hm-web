@@ -5,15 +5,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Select, MenuItem, FormControl, ListSubheader, OutlinedInput } from '@mui/material';
+import { Select, MenuItem, FormControl, OutlinedInput } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CircularProgress, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { UploadIcon } from '@assets/icons/UploadIcon';
 import { editProduct } from '@redux-state/actions';
-import { GetEditProductLoading } from '@redux-state/common/selectors';
+import { GetEditProductLoading, GetCategories } from '@redux-state/common/selectors';
 import { colorPalette } from '@utils/colorPalette';
-import { categories, subCategories, arabicCategories, arabicSubCategories } from '@utils/categories';
 
 import ModalView from '.';
 
@@ -122,14 +121,19 @@ const EditModal = ({ data,
 
   const loading = GetEditProductLoading();
 
+  const allCategories = GetCategories();
+
+  const arabicCategories = allCategories.filter((item) => item.language === 'ar');
+  const categories = allCategories.filter((item) => item.language === 'en');
+
+
   const filterCategory = (categories, categoryValue) => {
-    return categories.find(cat => cat.label === categoryValue);
+    return categories.filter((categoryObj) => categoryObj.category.label === categoryValue)
+      .map((categoryObj) => categoryObj.category)[0];
   };
 
   const filterSubcategoryByLabel = (categories, subcategoryLabel, categoryValue) => {
-    // First, find the category with the matching name
-
-    const category = categories?.find(cat => cat.label === categoryValue?.label);
+    const category = categories?.find(cat => cat.category.label === categoryValue?.label);
 
     if (!category) {
       return null; // Return null if the category is not found
@@ -141,8 +145,21 @@ const EditModal = ({ data,
     return subcategory;
   };
 
+  const filterSubcategoryByValue = (categories, subcategoryValue, categoryValue) => {
+    const category = categories?.find(cat => cat.category.label === categoryValue?.label);
+
+    if (!category) {
+      return null; // Return null if the category is not found
+    }
+
+    // Then, find the subcategory with the matching value within the filtered category
+    const subcategory = category.subcategories.find(sub => sub.value === subcategoryValue);
+
+    return subcategory;
+  };
+
   const filterSubcategory = (categories, subcategoryValue, categoryValue) => {
-    const category = categories.find(cat => cat.label === categoryValue.label);
+    const category = categories.find(cat => cat.category.label === categoryValue.label);
     if (!category) {
       return null; // Return null if the category is not found
     }
@@ -154,21 +171,19 @@ const EditModal = ({ data,
   };
 
 
-  const [category, setCategory] = useState(filterCategory(categories, data.category));
-  const [arabicCategory, setArabicCategory] = useState(filterCategory(arabicCategories, data.arabicCategory));
   const [name, setName] = useState(data.name);
   const [arabicName, setArabicName] = useState(data.arabicName || '');
   const [description, setDescription] = useState(data.description);
   const [arabicDescription, setArabicDescription] = useState(data.arabicDescription || '');
   const [images, setImages] = useState([]);
-  const [filteredSubCategories, setFilteredSubCategories] = useState();
-  const [subCategory, setSubCategory] = useState(filterSubcategoryByLabel(subCategories, data.subCategory, category));
-  const [arabicSubCategory, setArabicSubCategory] = useState(filterSubcategoryByLabel(arabicSubCategories, data.arabicSubCategory, arabicCategory));
-  const [filteredArabicSubCategories, setFilteredArabicSubCategories] = useState([]);
+  const [category, setCategory] = useState(filterCategory(categories, data.category));
+  const [arabicCategory, setArabicCategory] = useState(filterCategory(arabicCategories, data.arabicCategory));
+  const [subCategory, setSubCategory] = useState(filterSubcategoryByLabel(categories, data.subCategory, category));
+  const [arabicSubCategory, setArabicSubCategory] = useState(filterSubcategoryByLabel(arabicCategories, data.arabicSubCategory, arabicCategory));
 
   const handleCategoryChange = (value, setCategory, categories) => {
-    setCategory(categories.find(category => category.value === value));
-
+    setCategory(categories.filter(category => category.category.value === value)
+      .map((categoryObj) => categoryObj.category)[0]);
   };
 
   const MAX_FILE_SIZE_KB = 400; // Maximum file size in KB
@@ -179,7 +194,7 @@ const EditModal = ({ data,
     if (name && arabicName && category && subCategory && description &&
       arabicDescription && arabicSubCategory && subCategory) {
       dispatch(editProduct(data.id, {
-        category, arabicCategory, subCategory: filterSubcategory(subCategories, subCategory, category), arabicSubCategory: filterSubcategory(arabicSubCategories, arabicSubCategory, arabicCategory),
+        category, arabicCategory, subCategory: filterSubcategoryByValue(categories, subCategory, category), arabicSubCategory: filterSubcategoryByValue(arabicCategories, arabicSubCategory, arabicCategory),
         name, arabicName, description, arabicDescription, images
       }, pagination))
     } else {
@@ -260,7 +275,8 @@ const EditModal = ({ data,
 
   const InputSubCatSelectField = useCallback(
     ({ label, value, setValue, category, values }) => {
-      const subcategory = values.find(sub => sub.label === category.label);
+      const subcategory = values.find(sub => sub.category.label === category.label);
+      
       return (
         <Box>
           <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
@@ -299,8 +315,8 @@ const EditModal = ({ data,
               input={<OutlinedInput />}
             >
               {categories.map((category, index) => (
-                <MenuItem key={index} value={category.value}>
-                  {category.label}
+                <MenuItem key={index} value={category.category.value}>
+                  {category.category.label}
                 </MenuItem>
               ))}
             </Select>
@@ -376,7 +392,7 @@ const EditModal = ({ data,
               value={subCategory}
               category={category}
               setValue={setSubCategory}
-              values={subCategories}
+              values={categories}
             />}
             <InputTextField
               label={'Description:'}
@@ -408,7 +424,7 @@ const EditModal = ({ data,
                   category={arabicCategory}
                   value={arabicSubCategory}
                   setValue={setArabicSubCategory}
-                  values={arabicSubCategories}
+                  values={arabicCategories}
                 />
               </div>
             }

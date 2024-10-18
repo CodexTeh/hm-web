@@ -8,7 +8,7 @@ const API_URL = "http://213.210.21.52:8080/api/";
 const SERVER_URL = "https://dessco-stagging-15003402.dev.odoo.com";
 
 export const Api = {
-  getProducts: async ({ pagination, searchText }) => {
+  getProducts: async ({ pagination }) => {
     try {
       let response;
       const options = {
@@ -59,6 +59,63 @@ export const Api = {
         default:
           throw new Error('Something went wrong!');
 
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
+  getCategories: async () => {
+    try {
+      let response;
+      const options = {
+        method: 'GET',
+      };
+
+      response = await fetch(`${API_URL}/categories`, options);
+
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          return data;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
+  createCategory: async (data, token) => {
+    try {
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+
+      const response = await fetch(`${API_URL}categories`, options);
+      
+      switch (response.status) {
+        case 200:
+          toast("Category Added Successfully")
+          const responseData = await response.json();
+          return responseData;
+
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          toast('Category or Subcategory already exists!')
+          throw new Error('Category or Subcategory already exists!');
+        default:
+          throw new Error('Something went wrong!');
       }
     } catch (e) {
       console.log("Error", e);
@@ -119,7 +176,7 @@ export const Api = {
               }
             }),
           };
-          
+
           response = await fetch(`${SERVER_URL}/update/product`, options);
           switch (response.status) {
             case 200:

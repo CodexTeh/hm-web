@@ -1,6 +1,10 @@
 import {
+  CREATE_CATEGORY,
+  CREATE_CATEGORY_SUCCESS,
   EDIT_PRODUCT,
   EDIT_PRODUCT_SUCCESS,
+  GET_CATEGORIES,
+  GET_CATEGORIES_SUCCESS,
   GET_PRODUCTS,
   GET_PRODUCTS_SUCCESS,
   GET_SEARCHED_PRODUCTS,
@@ -17,6 +21,20 @@ export const getProducts = (pagination, searchText) => (
 export const getProductsSuccess = (data) => (
   {
     type: GET_PRODUCTS_SUCCESS,
+    payload: data
+  }
+);
+
+export const getCategories = (pagination, searchText) => (
+  {
+    type: GET_CATEGORIES,
+    payload: { pagination, searchText }
+  }
+);
+
+export const getCategoriesSuccess = (data) => (
+  {
+    type: GET_CATEGORIES_SUCCESS,
     payload: data
   }
 );
@@ -45,5 +63,18 @@ export const editProduct = (id, data, pagination) => (
 export const editProductSuccess = () => (
   {
     type: EDIT_PRODUCT_SUCCESS
+  }
+);
+
+export const createCategory = (data) => (
+  {
+    type: CREATE_CATEGORY,
+    payload: data
+  }
+);
+
+export const createCategorySuccess = () => (
+  {
+    type: CREATE_CATEGORY_SUCCESS
   }
 );

@@ -39,7 +39,7 @@ const persistConfig = {
   blacklist: ['common'],
   migrate: createMigrate(migrations, { debug: false }),
   storage,
-  version: 1
+  version: 0
 };
 const rootReducer = persistReducer(persistConfig, combinedReducer);
 // Step 2: Set up the store with sagaMiddleware and other middlewares

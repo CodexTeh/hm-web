@@ -12,3 +12,12 @@ export const GetAllProductsCount = () =>
 export const GetEditProductLoading = () =>
   useSelector(
     (state) => state.common.editProductLoading);
+export const GetCategoriesLoading = () =>
+  useSelector(
+    (state) => state.common.getCategoriesLoading);
+export const GetCategories = () =>
+  useSelector(
+    (state) => state.common.categories);
+export const GetCreateCategoryLoading = () =>
+  useSelector(
+    (state) => state.common.createCategoryLoading);

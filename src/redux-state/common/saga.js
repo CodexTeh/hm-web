@@ -2,7 +2,9 @@ import { call, put, select, takeLatest } from 'redux-saga/effects'
 import * as Actions from './action';
 import { Api } from './api'
 import {
+  CREATE_CATEGORY,
   EDIT_PRODUCT,
+  GET_CATEGORIES,
   GET_PRODUCTS,
   GET_SEARCHED_PRODUCTS,
 } from './types'
@@ -33,6 +35,20 @@ function* getSearchedProducts(action) {
   }
 }
 
+function* getCategories(action) {
+  try {
+    const data = yield call(Api.getCategories, action.payload);
+    if (data?.data) {
+      yield put(Actions.getCategoriesSuccess(data));
+    } else {
+      yield put(Actions.getCategoriesSuccess([]));
+    }
+  } catch (error) {
+    yield put(Actions.getSearchedProductsSuccess([]));
+    console.log("error", error);
+  }
+}
+
 function* editProduct(action) {
   const token = yield select(getToken);
   try {
@@ -46,10 +62,24 @@ function* editProduct(action) {
   }
 }
 
+function* createCategory(action) {
+  const token = yield select(getToken);
+  try {
+    yield call(Api.createCategory, action.payload, token);
+    yield put(Actions.getCategories());
+    yield put(Actions.createCategorySuccess());
+  } catch (error) {
+    yield put(Actions.createCategorySuccess());
+    console.log("error", error);
+  }
+}
+
 function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
+  yield takeLatest(GET_CATEGORIES, getCategories);
   yield takeLatest(EDIT_PRODUCT, editProduct);
+  yield takeLatest(CREATE_CATEGORY, createCategory);
 }
 
 export default commonSaga;

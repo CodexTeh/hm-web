@@ -1,4 +1,5 @@
 import React from 'react';
+import Categories from '@pages/categories';
 import Layout from '@pages/layout';
 import Products from '@pages/products';
 import ErrorElement from '@pages/error';
@@ -23,6 +24,12 @@ export const AppRoutes = [
             path: 'products',
             key: 'products',
             element: <Products />,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'categories',
+            key: 'categories',
+            element: <Categories />,
             errorElement: <ErrorElement />
           },
         ]

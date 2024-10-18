@@ -13,8 +13,11 @@ import { AppProvider } from '@toolpad/core/AppProvider';
 import { ToastContainer } from 'react-toastify';
 import LoginModal from '@components/Modal/LoginModal';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+import Categories from '@pages/categories';
 import Products from '@pages/products';
+import { getCategories } from "@redux-state/actions";
 import { colorPalette } from '@utils/colorPalette';
+import { useDispatch } from 'react-redux';
 
 
 const NAVIGATION = [
@@ -26,6 +29,15 @@ const NAVIGATION = [
     kind: 'page',
     segment: 'products',
     title: 'Products',
+    icon: <DashboardIcon />,
+  },
+  {
+    kind: 'divider',
+  },
+  {
+    kind: 'page',
+    segment: 'categories',
+    title: 'Categories',
     icon: <DashboardIcon />,
   },
   // {
@@ -114,6 +126,8 @@ function Layout(props) {
 
   const [pathname, setPathname] = React.useState('/products');
 
+  const dispatch = useDispatch();
+
   const router = React.useMemo(() => {
     return {
       pathname,
@@ -121,6 +135,11 @@ function Layout(props) {
       navigate: (path) => setPathname(String(path)),
     };
   }, [pathname]);
+
+  React.useEffect(() => {
+    dispatch(getCategories())
+  }, [dispatch])
+
 
   // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
@@ -139,8 +158,9 @@ function Layout(props) {
     >
       <ToastContainer />
       <DashboardLayout>
-        {pathname !== '/products' && <Products />}
+        {/* {pathname !== '/products' && <Products />} */}
         {pathname === '/products' && <Products />}
+        {pathname === '/categories' && <Categories />}
       </DashboardLayout>
       <LoginModal />
     </AppProvider>

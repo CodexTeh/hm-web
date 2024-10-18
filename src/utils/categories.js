@@ -1,33 +1,20 @@
 export const categories = [
-  { value: 1, label: 'Fruits & Vegetables' },
-  { value: 2, label: 'Meat & Fish' },
-  { value: 3, label: 'Snacks' },
-  { value: 4, label: 'Pet Care' },
-  { value: 5, label: 'Home & Cleaning' },
-  { value: 6, label: 'Dairy' },
-  { value: 7, label: 'Cooking' },
-  { value: 8, label: 'BreakFast' },
-  { value: 9, label: 'Beverges' },
-  { value: 10, label: 'Health & Beauty' },
-];
-
-export const subCategories = [
   {
-    label: 'Fruits & Vegetables',
+    category: { value: 1, label: 'Fruits & Vegetables' },
     subcategories: [
       { value: 1, label: 'Fruits' },
       { value: 2, label: 'Vegetables' },
     ],
   },
   {
-    label: 'Meat & Fish',
+    category: { value: 2, label: 'Meat & Fish' },
     subcategories: [
       { value: 3, label: 'Fresh Fish' },
       { value: 4, label: 'Meat' },
     ],
   },
   {
-    label: 'Snacks',
+    category: { value: 3, label: 'Snacks' },
     subcategories: [
       { value: 5, label: 'Nuts & Biscuits' },
       { value: 6, label: 'Chocolates' },
@@ -38,7 +25,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Pet Care',
+    category: { value: 4, label: 'Pet Care' },
     subcategories: [
       { value: 11, label: 'Cat Food' },
       { value: 12, label: 'Dog Food' },
@@ -46,7 +33,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Home & Cleaning',
+    category: { value: 5, label: 'Home & Cleaning' },
     subcategories: [
       { value: 14, label: 'Air Freshner' },
       { value: 15, label: 'Cleaning Products' },
@@ -55,7 +42,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Dairy',
+    category: { value: 6, label: 'Dairy' },
     subcategories: [
       { value: 18, label: 'Milk' },
       { value: 19, label: 'Butter' },
@@ -64,7 +51,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Cooking',
+    category: { value: 7, label: 'Cooking' },
     subcategories: [
       { value: 22, label: 'Oil' },
       { value: 23, label: 'Rice' },
@@ -73,7 +60,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Breakfast',
+    category: { value: 8, label: 'BreakFast' },
     subcategories: [
       { value: 26, label: 'Bread' },
       { value: 27, label: 'Cereal' },
@@ -81,7 +68,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Beverges',
+    category: { value: 9, label: 'Beverges' },
     subcategories: [
       { value: 29, label: 'Coffe' },
       { value: 30, label: 'Energy Drinks' },
@@ -90,7 +77,7 @@ export const subCategories = [
     ],
   },
   {
-    label: 'Health & Beauty',
+    category: { value: 10, label: 'Health & Beauty' },
     subcategories: [
       { value: 33, label: 'Bath' },
       { value: 34, label: 'Cream' },
@@ -104,35 +91,22 @@ export const subCategories = [
 
 
 export const arabicCategories = [
-  { value: 1, label: 'الفواكه والخضروات' },
-  { value: 2, label: 'اللحوم والأسماك' },
-  { value: 3, label: 'الوجبات الخفيفة' },
-  { value: 4, label: 'رعاية الحيوانات الأليفة' },
-  { value: 5, label: 'المنزل والتنظيف' },
-  { value: 6, label: 'منتجات الألبان' },
-  { value: 7, label: 'الطبخ' },
-  { value: 8, label: 'الإفطار' },
-  { value: 9, label: 'المشروبات' },
-  { value: 10, label: 'الصحة والجمال' },
-];
-
-export const arabicSubCategories = [
   {
-    label: 'الفواكه والخضروات',
+    category: { value: 1, label: 'الفواكه والخضروات' },
     subcategories: [
       { value: 1, label: 'الفواكه' },
       { value: 2, label: 'الخضروات' },
     ],
   },
   {
-    label: 'اللحوم والأسماك',
+    category: { value: 2, label: 'اللحوم والأسماك' },
     subcategories: [
       { value: 3, label: 'الأسماك الطازجة' },
       { value: 4, label: 'اللحوم' },
     ],
   },
   {
-    label: 'الوجبات الخفيفة',
+    category: { value: 3, label: 'الوجبات الخفيفة' },
     subcategories: [
       { value: 5, label: 'المكسرات والبسكويت' },
       { value: 6, label: 'الشوكولاتة' },
@@ -143,66 +117,66 @@ export const arabicSubCategories = [
     ],
   },
   {
-    label: 'رعاية الحيوانات الأليفة',
+    category: { value: 4, label: 'رعاية الحيوانات الأليفة' },
     subcategories: [
       { value: 11, label: 'طعام القطط' },
       { value: 12, label: 'طعام الكلاب' },
-      { value: 13, label: 'إكسسوارات' }
+      { value: 13, label: 'إكسسوارات' },
     ],
   },
   {
-    label: 'المنزل والتنظيف',
+    category: { value: 5, label: 'المنزل والتنظيف' },
     subcategories: [
       { value: 14, label: 'معطر الجو' },
       { value: 15, label: 'منتجات التنظيف' },
       { value: 16, label: 'إكسسوارات المطبخ' },
-      { value: 17, label: 'غسيل الملابس' }
+      { value: 17, label: 'غسيل الملابس' },
     ],
   },
   {
-    label: 'منتجات الألبان',
+    category: { value: 6, label: 'منتجات الألبان' },
     subcategories: [
       { value: 18, label: 'الحليب' },
       { value: 19, label: 'الزبدة' },
       { value: 20, label: 'البيض' },
-      { value: 21, label: 'الزبادي' }
+      { value: 21, label: 'الزبادي' },
     ],
   },
   {
-    label: 'الطبخ',
+    category: { value: 7, label: 'الطبخ' },
     subcategories: [
       { value: 22, label: 'الزيت' },
       { value: 23, label: 'الأرز' },
       { value: 24, label: 'الملح والسكر' },
-      { value: 25, label: 'التوابل' }
+      { value: 25, label: 'التوابل' },
     ],
   },
   {
-    label: 'الإفطار',
+    category: { value: 8, label: 'الإفطار' },
     subcategories: [
       { value: 26, label: 'الخبز' },
       { value: 27, label: 'الحبوب' },
-      { value: 28, label: 'المربى' }
+      { value: 28, label: 'المربى' },
     ],
   },
   {
-    label: 'المشروبات',
+    category: { value: 9, label: 'المشروبات' },
     subcategories: [
       { value: 29, label: 'القهوة' },
       { value: 30, label: 'مشروبات الطاقة' },
       { value: 31, label: 'العصير' },
-      { value: 32, label: 'المشروبات الغازية' }
+      { value: 32, label: 'المشروبات الغازية' },
     ],
   },
   {
-    label: 'الصحة والجمال',
+    category: { value: 10, label: 'الصحة والجمال' },
     subcategories: [
       { value: 33, label: 'الاستحمام' },
       { value: 34, label: 'الكريم' },
       { value: 35, label: 'مزيل العرق' },
       { value: 36, label: 'العناية بالوجه' },
       { value: 37, label: 'العناية بالفم' },
-      { value: 38, label: 'مستلزمات الحلاقة' }
+      { value: 38, label: 'مستلزمات الحلاقة' },
     ],
   },
 ];
