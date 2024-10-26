@@ -9,6 +9,8 @@ import {
   GET_CATEGORIES_SUCCESS,
   CREATE_CATEGORY,
   CREATE_CATEGORY_SUCCESS,
+  EDIT_CATEGORY,
+  EDIT_CATEGORY_SUCCESS,
 } from './types';
 
 const INITIAL_STATE = {
@@ -19,7 +21,7 @@ const INITIAL_STATE = {
   categories: [],
   getCategoriesLoading: false,
   createCategoryLoading: false,
-
+  editCategoryLoading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -55,6 +57,12 @@ export default (state = INITIAL_STATE, action) => {
 
     case CREATE_CATEGORY_SUCCESS:
       return { ...state, createCategoryLoading: false };
+
+    case EDIT_CATEGORY:
+      return { ...state, editCategoryLoading: true };
+
+    case EDIT_CATEGORY_SUCCESS:
+      return { ...state, editCategoryLoading: false };
 
     default:
       return state;

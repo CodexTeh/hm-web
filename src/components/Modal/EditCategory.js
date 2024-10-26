@@ -7,10 +7,10 @@ import { Select, MenuItem, FormControl, OutlinedInput, TextField } from '@mui/ma
 import { styled } from '@mui/material/styles';
 import { CircularProgress, IconButton } from '@mui/material';
 import { GetCategories } from '@redux-state/common/selectors';
-import { createCategory } from '@redux-state/common/action';
-import { GetCreateCategoryLoading } from '@redux-state/common/selectors';
+import { editCategory } from '@redux-state/common/action';
+import { GetEditCategoryLoading } from '@redux-state/common/selectors';
 import { colorPalette } from '@utils/colorPalette';
-import EditCategory from '@components/Modal/EditCategory';
+import ModalView from '.';
 
 
 const StyledMainBox = styled(Box)({
@@ -92,15 +92,16 @@ const StyledSaveButton = styled(Button)({
   fontWeight: 'bold',
 });
 
-const Categories = () => {
+const EditCategory = ({
+  openEditModal,
+  onClose, }) => {
 
   const allCategories = GetCategories();
-  const createCatLoader = GetCreateCategoryLoading();
+  const editCatLoader = GetEditCategoryLoading();
 
 
   const arabicCategories = allCategories?.filter((item) => item.language === 'ar');
   const categories = allCategories?.filter((item) => item.language === 'en');
-  const [openEditModal, setOpenEditModal] = useState(false);
   const [category, setCategory] = useState();
   const [arabicCategory, setArabicCategory] = useState();
   const [subCategory, setSubCategory] = useState();
@@ -109,6 +110,10 @@ const Categories = () => {
   const [arabicCategoryLabel, setArabicCategoryLabel] = useState();
   const [subCategoryLabel, setSubCategoryLabel] = useState();
   const [arabicSubCategoryLabel, setArabicSubCategoryLabel] = useState();
+  const [catId, setCatId] = useState();
+  const [arabicCatId, setArabicCatId] = useState();
+  const [subCatId, setSubCatId] = useState();
+  const [arabicSubCatId, setArabicSubCatId] = useState();
 
   const handleCategoryChange = (value, setValue, categories) => {
     setValue(categories.filter(category => category.category.value === value)
@@ -118,9 +123,11 @@ const Categories = () => {
   const toggleStates = (category) => {
     const foundCategory = categories.find((categoryObj) => categoryObj.category.value === category?.value);
     const foundArabicCategory = arabicCategories.find((categoryObj) => categoryObj.category.value === category?.value);
-
-    setCategoryLabel(foundCategory.category.label)
-    setArabicCategoryLabel(foundArabicCategory.category.label)
+    
+    setCatId(foundCategory?.id)
+    setArabicCatId(foundArabicCategory?.id)
+    setCategoryLabel(foundCategory?.category?.label)
+    setArabicCategoryLabel(foundArabicCategory?.category?.label)
   }
 
   useEffect(() => {
@@ -139,17 +146,41 @@ const Categories = () => {
     }
   }, [arabicCategory])
 
+  const toggleSubCatStates = (category, subCategory) => {
+    const foundCategory = categories.find((categoryObj) => categoryObj.category.value === category?.value);
+    const foundArabicCategory = arabicCategories.find((categoryObj) => categoryObj.category.value === category?.value);
+    const foundSubCategory = foundCategory.subcategories.find((subcat) => subcat.value === subCategory);
+    const foundArabicSubCategory = foundArabicCategory.subcategories.find((subcat) => subcat.value === subCategory);
+
+    setSubCatId(foundSubCategory?._id)
+    setArabicSubCatId(foundArabicSubCategory?._id)
+    setSubCategory(subCategory)
+    setArabicSubCategory(subCategory)
+    setSubCategoryLabel(foundSubCategory?.label)
+    setArabicSubCategoryLabel(foundArabicSubCategory?.label)
+  }
+
+  useEffect(() => {
+    if (subCategory) {
+      toggleSubCatStates(category, subCategory)
+    }
+  }, [subCategory])
+
+  useEffect(() => {
+    if (arabicSubCategory) {
+      toggleSubCatStates(arabicCategory, arabicSubCategory)
+    }
+  }, [arabicSubCategory])
+
+
 
   const dispatch = useDispatch();
 
-  const handleCloseModal = () => {
-    setOpenEditModal(false);
-  };
 
   const InputTextField = useCallback(
     ({ label, value, setValue, disabled = false }) => {
       return (
-        <Box>
+        <Box sx={{ marginTop: 3 }}>
           <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
           <StyledDescriptionFieldText
             disabled={disabled}
@@ -163,100 +194,82 @@ const Categories = () => {
     [category, arabicCategory]
   );
 
-  const addCategory = () => {
+  const updateCategory = () => {
     const catValue = Math.floor(Math.random() * 1000);
     const subCatValue = Math.floor(Math.random() * 1001);
 
 
-    if (categoryLabel && arabicCategoryLabel && !subCategoryLabel && !arabicSubCategoryLabel && !category && !arabicCategory) {
+    if (categoryLabel && arabicCategoryLabel && catId && arabicCatId && !subCategoryLabel && !arabicSubCategoryLabel) {
       const englishCategory = {
-        category: { value: catValue, label: categoryLabel },
-        language: "en",
+        category: { id: catId, value: catValue, label: categoryLabel },
       }
 
       const arabicCategory = {
-        category: { value: catValue, label: arabicCategoryLabel },
-        language: "ar",
+        category: { id: arabicCatId, value: catValue, label: arabicCategoryLabel },
       }
-
-      dispatch(createCategory(englishCategory));
-      dispatch(createCategory(arabicCategory));
-      setCategoryLabel(null)
-      setArabicCategoryLabel(null)
-      setCategory(null)
-      setArabicCategory(null)
-      setArabicSubCategoryLabel(null)
-      setSubCategoryLabel(null)
-      return;
+      dispatch(editCategory(englishCategory));
+      dispatch(editCategory(arabicCategory));
     }
     if (categoryLabel && arabicCategoryLabel && subCategoryLabel && arabicSubCategoryLabel && !category && !arabicCategory) {
       const englishCategory = {
-        category: { value: catValue, label: categoryLabel },
-        language: "en",
+        category: { id: catId, value: catValue, label: categoryLabel },
         subcategory: {
+          id: subCatId,
           value: subCatValue,
           label: subCategoryLabel
         }
       }
 
       const arabicCategory = {
-        category: { value: catValue, label: arabicCategoryLabel },
-        language: "ar",
+        category: { id: arabicCatId, value: catValue, label: arabicCategoryLabel },
         subcategory: {
+          id: arabicSubCatId,
           value: subCatValue,
           label: arabicSubCategoryLabel
         }
       }
-
-      dispatch(createCategory(englishCategory));
-      dispatch(createCategory(arabicCategory));
-      setCategoryLabel(null)
-      setArabicCategoryLabel(null)
-      setCategory(null)
-      setArabicCategory(null)
-      setArabicSubCategoryLabel(null)
-      setSubCategoryLabel(null)
-      return;
+      dispatch(editCategory(englishCategory));
+      dispatch(editCategory(arabicCategory));
     }
 
     if (category && arabicCategory && subCategoryLabel && arabicSubCategoryLabel) {
       const englishCategory = {
-        category: { value: catValue, label: categoryLabel },
-        language: "en",
+        category: { id: catId, value: catValue, label: categoryLabel },
         subcategory: {
+          id: subCatId,
           value: subCatValue,
           label: subCategoryLabel
         }
       }
 
       const arabicCategory = {
-        category: { value: catValue, label: arabicCategoryLabel },
-        language: "ar",
+        category: { id: arabicCatId, value: catValue, label: arabicCategoryLabel },
         subcategory: {
+          id: arabicSubCatId,
           value: subCatValue,
           label: arabicSubCategoryLabel
         }
       }
 
-      dispatch(createCategory(englishCategory));
-      dispatch(createCategory(arabicCategory));
-      setCategoryLabel(null)
-      setArabicCategoryLabel(null)
-      setCategory(null)
-      setArabicCategory(null)
-      setArabicSubCategoryLabel(null)
-      setSubCategoryLabel(null)
-    } else {
-      alert("Fill all fields!")
+      dispatch(editCategory(englishCategory));
+      dispatch(editCategory(arabicCategory));
+
     }
+
+    setSubCatId(null)
+    setArabicSubCatId(null)
+    setSubCategoryLabel(null)
+    setArabicSubCategoryLabel(null)
+    setCategoryLabel(null)
+    setArabicCategoryLabel(null)
   }
 
   const InputSubCatSelectField = useCallback(
     ({ label, value, setValue, category, values }) => {
-      const subcategory = values.find(sub => sub.category.label === category.label);
+      const subcategory = values.find(sub => sub.category.value === category.value);
 
       return (
-        <Box sx={{ width: '489px' }}>
+        <Box sx={{ width: '489px', marginTop: 3 }}>
           <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
           <Select
             sx={{ height: 40 }}
@@ -266,7 +279,7 @@ const Categories = () => {
             label={label}
             input={<OutlinedInput />}
           >
-            {subcategory.subcategories.map((subCat, subCatIndex) => (
+            {subcategory?.subcategories?.map((subCat, subCatIndex) => (
               <MenuItem key={subCatIndex} value={subCat.value}>
                 {subCat.label}
               </MenuItem>))}
@@ -314,107 +327,96 @@ const Categories = () => {
     [category, arabicCategory]
   );
 
-
-  return (
-    <StyledMainBox>
-      <StyledHeaderTypography>
-        Add Parent Categories
-      </StyledHeaderTypography>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, paddingLeft: 0 }}>
-        <Box sx={{ marginRight: 10 }}>
-          <InputTextField
-            label={'Parent Category:'}
-            value={categoryLabel}
-            setValue={setCategoryLabel}
-            disabled={category && arabicCategory}
-          />
-        </Box>
-        <Box>
-          <div dir="rtl">
-            <InputTextField
-              label={'فئة الوالدين:'}
-              value={arabicCategoryLabel}
-              setValue={setArabicCategoryLabel}
-              disabled={category && arabicCategory}
-            />
-          </div>
-        </Box>
-      </Box>
-      <StyledHeaderTypography sx={{ marginTop: 10 }}>
-        Add and View Sub-Categories
-      </StyledHeaderTypography>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 6, paddingRight: 6 }}>
-        <Box sx={{ marginRight: 10 }}>
-          <InputCatSelectField
-            label={'Select Parent Category:'}
-            enableText={'Unselect'}
-            value={category}
-            categories={categories}
-            setValue={setCategory}
-            handleCategoryChange={handleCategoryChange}
-          />
-          {category?.value && <InputSubCatSelectField
-            label={'View Subcategories:'}
-            value={subCategory}
-            category={category}
-            setValue={setSubCategory}
-            values={categories}
-          />}
-          <InputTextField
-            label={'Add SubCategory:'}
-            value={subCategoryLabel}
-            setValue={setSubCategoryLabel}
-          />
-        </Box>
-        <Box>
-          <div dir="rtl">
+  const CategoriesView = () => {
+    return (
+      <StyledMainBox>
+        <StyledHeaderTypography>
+          Edit Parent Categories adn Sub-Categories
+        </StyledHeaderTypography>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 6, paddingRight: 6 }}>
+          <Box sx={{ marginRight: 10 }}>
             <InputCatSelectField
-              label={'اختر الفئة:'}
-              enableText={'قم بإلغاء التحديد'}
-              categories={arabicCategories}
-              value={arabicCategory}
-              setValue={setArabicCategory}
+              label={'Select Parent Category:'}
+              enableText={'Unselect'}
+              value={category}
+              categories={categories}
+              setValue={setCategory}
               handleCategoryChange={handleCategoryChange}
             />
-          </div>
-          {arabicCategory?.value &&
+            {categoryLabel && <InputTextField
+              label={'Parent Category:'}
+              value={categoryLabel}
+              setValue={setCategoryLabel}
+            />}
+            {category?.value && <InputSubCatSelectField
+              label={'Select Subcategory:'}
+              value={subCategory}
+              category={category}
+              setValue={setSubCategory}
+              values={categories}
+            />}
+            {subCategoryLabel && <InputTextField
+              label={'SubCategory:'}
+              value={subCategoryLabel}
+              setValue={setSubCategoryLabel}
+            />}
+          </Box>
+          <Box>
             <div dir="rtl">
-              <InputSubCatSelectField
-                label={'الفئة الفرعية:'}
-                category={arabicCategory}
-                value={arabicSubCategory}
-                setValue={setArabicSubCategory}
-                values={arabicCategories}
+              <InputCatSelectField
+                label={'اختر الفئة:'}
+                enableText={'قم بإلغاء التحديد'}
+                categories={arabicCategories}
+                value={arabicCategory}
+                setValue={setArabicCategory}
+                handleCategoryChange={handleCategoryChange}
               />
             </div>
-          }
-          <div dir="rtl">
-            <InputTextField
-              label={'الفئة الفرعية:'}
-              value={arabicSubCategoryLabel}
-              setValue={setArabicSubCategoryLabel}
-            />
-          </div>
+            {arabicCategoryLabel && <div dir="rtl">
+              <InputTextField
+                label={'فئة:'}
+                value={arabicCategoryLabel}
+                setValue={setArabicCategoryLabel}
+              />
+            </div>}
+            {arabicCategory?.value &&
+              <div dir="rtl">
+                <InputSubCatSelectField
+                  label={'الفئة الفرعية:'}
+                  category={arabicCategory}
+                  value={arabicSubCategory}
+                  setValue={setArabicSubCategory}
+                  values={arabicCategories}
+                />
+              </div>
+            }
+            {arabicSubCategoryLabel && <div dir="rtl">
+              <InputTextField
+                label={'الفئة الفرعية:'}
+                value={arabicSubCategoryLabel}
+                setValue={setArabicSubCategoryLabel}
+              />
+            </div>}
+          </Box>
         </Box>
-      </Box>
-      <StyledFooterBox>
-        <StyledSaveButton disabled={createCatLoader} variant='contained' onClick={() => addCategory()}>
-          {createCatLoader ?
-            <CircularProgress color="inherit" size={20} />
+        <StyledFooterBox>
+          <StyledSaveButton disabled={editCatLoader} variant='contained' onClick={updateCategory}>
+            {editCatLoader ?
+              <CircularProgress color="inherit" size={20} />
 
-            : "Save Changes"}
-        </StyledSaveButton>
-        <StyledSaveButton sx={{ marginTop: 5 }} disabled={createCatLoader} variant='contained' onClick={() => setOpenEditModal(true)}>
-          Edit Parent Category and Sub-Categories
-        </StyledSaveButton>
-      </StyledFooterBox>
-      {openEditModal && <EditCategory
-        openEditModal={openEditModal}
-        onClose={handleCloseModal}
-      />}
-    </StyledMainBox >
+              : "Save Changes"}
+          </StyledSaveButton>
+        </StyledFooterBox>
+      </StyledMainBox >
 
+    );
+  };
+
+  return (
+    <ModalView
+      content={CategoriesView} open={openEditModal} close={onClose}
+    />
   );
 };
 
-export default Categories;
+export default EditCategory;

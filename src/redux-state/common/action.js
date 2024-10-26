@@ -1,6 +1,8 @@
 import {
   CREATE_CATEGORY,
   CREATE_CATEGORY_SUCCESS,
+  EDIT_CATEGORY,
+  EDIT_CATEGORY_SUCCESS,
   EDIT_PRODUCT,
   EDIT_PRODUCT_SUCCESS,
   GET_CATEGORIES,
@@ -76,5 +78,18 @@ export const createCategory = (data) => (
 export const createCategorySuccess = () => (
   {
     type: CREATE_CATEGORY_SUCCESS
+  }
+);
+
+export const editCategory = (data) => (
+  {
+    type: EDIT_CATEGORY,
+    payload: data
+  }
+);
+
+export const editCategorySuccess = () => (
+  {
+    type: EDIT_CATEGORY_SUCCESS
   }
 );

@@ -102,7 +102,7 @@ export const Api = {
       };
 
       const response = await fetch(`${API_URL}categories`, options);
-      
+
       switch (response.status) {
         case 200:
           toast("Category Added Successfully")
@@ -121,10 +121,42 @@ export const Api = {
       console.log("Error", e);
     }
   },
+  editCategory: async (data, token) => {
+    try {
+
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+
+      const response = await fetch(`${API_URL}update-categories`, options);
+
+      switch (response.status) {
+        case 200:
+          toast("Category Edited Successfully")
+          return true;
+
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          toast('Category or Subcategory already exists!')
+          throw new Error('Category or Subcategory already exists!');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
   editProducts: async ({ id, data }, token) => {
     try {
       const { category, arabicCategory, subCategory, arabicSubCategory,
         name, arabicName, description, arabicDescription, images } = data;
+
       let response;
       const formData = new FormData();
 
@@ -169,10 +201,10 @@ export const Api = {
                 arabicName,
                 description,
                 arabicDescription,
-                category_id: category.label,
-                arabicCategory: arabicCategory.label,
-                subCategory: subCategory.label,
-                arabicSubCategory: arabicSubCategory.label,
+                category_id: category._id,
+                arabicCategory: arabicCategory._id,
+                subCategory: subCategory,
+                arabicSubCategory: arabicSubCategory,
               }
             }),
           };

@@ -21,3 +21,6 @@ export const GetCategories = () =>
 export const GetCreateCategoryLoading = () =>
   useSelector(
     (state) => state.common.createCategoryLoading);
+export const GetEditCategoryLoading = () =>
+  useSelector(
+    (state) => state.common.editCategoryLoading);

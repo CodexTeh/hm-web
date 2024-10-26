@@ -3,6 +3,7 @@ import * as Actions from './action';
 import { Api } from './api'
 import {
   CREATE_CATEGORY,
+  EDIT_CATEGORY,
   EDIT_PRODUCT,
   GET_CATEGORIES,
   GET_PRODUCTS,
@@ -74,12 +75,25 @@ function* createCategory(action) {
   }
 }
 
+function* editCategory(action) {
+  const token = yield select(getToken);
+  try {
+    yield call(Api.editCategory, action.payload, token);
+    yield put(Actions.getCategories());
+    yield put(Actions.editCategorySuccess());
+  } catch (error) {
+    yield put(Actions.editCategorySuccess());
+    console.log("error", error);
+  }
+}
+
 function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
   yield takeLatest(GET_CATEGORIES, getCategories);
   yield takeLatest(EDIT_PRODUCT, editProduct);
   yield takeLatest(CREATE_CATEGORY, createCategory);
+  yield takeLatest(EDIT_CATEGORY, editCategory);
 }
 
 export default commonSaga;

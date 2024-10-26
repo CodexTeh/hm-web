@@ -9,7 +9,7 @@ import { StyledMainBox } from "./styles";
 import { GetActions } from "@components/CustomMenu/actions";
 import { CustomMenu } from "@components/CustomMenu";
 import { getProducts, getSearchedProducts, getCategories } from "@redux-state/actions";
-import { GetAllProductsCount, GetProducts, GetProductsLoading } from "@redux-state/common/selectors";
+import { GetAllProductsCount, GetProducts, GetProductsLoading, GetCategories } from "@redux-state/common/selectors";
 
 const Products = () => {
   const [page, setPage] = useState(0);
@@ -28,7 +28,15 @@ const Products = () => {
   const productsLoading = GetProductsLoading();
   const products = GetProducts();
   const productsCount = GetAllProductsCount();
+  const categories = GetCategories();
 
+  const filterCategoryName = (categoryValue) => {
+    const result = categories.find(
+      (categoryObj) => categoryObj._id.toString() === categoryValue
+    );
+    return result ? result.category.label : undefined;
+  };
+  
   useEffect(() => {
     if (!searchText) {
       dispatch(
@@ -61,7 +69,7 @@ const Products = () => {
           <Typography color="black">{item.name}</Typography>
         ),
         category: (
-          <Typography color="black">{item.category}</Typography>
+          <Typography color="black">{filterCategoryName(item.category)}</Typography>
         ),
         price: (
           <Typography color="black">{item.price}</Typography>
@@ -78,7 +86,7 @@ const Products = () => {
 
       return baseCells;
     };
-  }, [getActions, pagination]);
+  }, [getActions, pagination, categories]);
 
   const rows = {
     component: (item) => getCells(item),

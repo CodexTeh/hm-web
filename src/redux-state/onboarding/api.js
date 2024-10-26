@@ -1,4 +1,5 @@
 const SERVER_URL = "http://213.210.21.52:8080/api/";
+// const SERVER_URL = "http://localhost:8080/api/";
 
 export const Api = {
   createAccount: async (data) => {

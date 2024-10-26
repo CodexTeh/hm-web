@@ -128,48 +128,22 @@ const EditModal = ({ data,
 
 
   const filterCategory = (categories, categoryValue) => {
-    return categories.filter((categoryObj) => categoryObj.category.label === categoryValue)
-      .map((categoryObj) => categoryObj.category)[0];
+    return categories.filter((categoryObj) => categoryObj._id.toString() === categoryValue)
+      .map((categoryObj) => categoryObj)[0];
   };
 
-  const filterSubcategoryByLabel = (categories, subcategoryLabel, categoryValue) => {
-    const category = categories?.find(cat => cat.category.label === categoryValue?.label);
+  const filterSubcategoryByUuid = (categories, subcategoryId, categoryValue) => {
+    const category = categories?.find(cat => cat?._id === categoryValue?._id);
 
     if (!category) {
       return null; // Return null if the category is not found
     }
 
     // Then, find the subcategory with the matching value within the filtered category
-    const subcategory = category.subcategories.find(sub => sub.label === subcategoryLabel);
+    const subcategory = category.subcategories.find(sub => sub._id === subcategoryId);
 
     return subcategory;
   };
-
-  const filterSubcategoryByValue = (categories, subcategoryValue, categoryValue) => {
-    const category = categories?.find(cat => cat.category.label === categoryValue?.label);
-
-    if (!category) {
-      return null; // Return null if the category is not found
-    }
-
-    // Then, find the subcategory with the matching value within the filtered category
-    const subcategory = category.subcategories.find(sub => sub.value === subcategoryValue);
-
-    return subcategory;
-  };
-
-  const filterSubcategory = (categories, subcategoryValue, categoryValue) => {
-    const category = categories.find(cat => cat.category.label === categoryValue.label);
-    if (!category) {
-      return null; // Return null if the category is not found
-    }
-
-    // Then, find the subcategory with the matching value within the filtered category
-    const subcategory = category.subcategories.find(sub => sub.value === subcategoryValue?.value ? subcategoryValue?.value : subcategoryValue);
-
-    return subcategory;
-  };
-
 
   const [name, setName] = useState(data.name);
   const [arabicName, setArabicName] = useState(data.arabicName || '');
@@ -178,12 +152,23 @@ const EditModal = ({ data,
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState(filterCategory(categories, data.category));
   const [arabicCategory, setArabicCategory] = useState(filterCategory(arabicCategories, data.arabicCategory));
-  const [subCategory, setSubCategory] = useState(filterSubcategoryByLabel(categories, data.subCategory, category));
-  const [arabicSubCategory, setArabicSubCategory] = useState(filterSubcategoryByLabel(arabicCategories, data.arabicSubCategory, arabicCategory));
+  const [subCategory, setSubCategory] = useState(filterSubcategoryByUuid(categories, data.subCategory, data.category));
+  const [arabicSubCategory, setArabicSubCategory] = useState(filterSubcategoryByUuid(arabicCategories, data.arabicSubCategory, data.arabicCategory));
+
+  useEffect(() => {
+    if (category) {
+      setSubCategory(filterSubcategoryByUuid(categories, data.subCategory, category))
+    }
+  }, [category])
+
+  useEffect(() => {
+    if (category) {
+      setArabicSubCategory(filterSubcategoryByUuid(arabicCategories, data.arabicSubCategory, arabicCategory))
+    }
+  }, [arabicCategory])
 
   const handleCategoryChange = (value, setCategory, categories) => {
-    setCategory(categories.filter(category => category.category.value === value)
-      .map((categoryObj) => categoryObj.category)[0]);
+    setCategory(filterCategory(categories, value));
   };
 
   const MAX_FILE_SIZE_KB = 400; // Maximum file size in KB
@@ -191,10 +176,11 @@ const EditModal = ({ data,
   const dispatch = useDispatch();
 
   const updateProduct = () => {
-    if (name && arabicName && category && subCategory && description &&
+    if (name && arabicName && category && arabicCategory && description &&
       arabicDescription && arabicSubCategory && subCategory) {
+
       dispatch(editProduct(data.id, {
-        category, arabicCategory, subCategory: filterSubcategoryByValue(categories, subCategory, category), arabicSubCategory: filterSubcategoryByValue(arabicCategories, arabicSubCategory, arabicCategory),
+        category, arabicCategory, subCategory, arabicSubCategory,
         name, arabicName, description, arabicDescription, images
       }, pagination))
     } else {
@@ -275,21 +261,20 @@ const EditModal = ({ data,
 
   const InputSubCatSelectField = useCallback(
     ({ label, value, setValue, category, values }) => {
-      const subcategory = values.find(sub => sub.category.label === category.label);
-      
+      const subcategory = values.find(sub => sub._id === category._id);
       return (
         <Box>
           <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
           <Select
             sx={{ height: 40 }}
             fullWidth
-            value={value?.value ?? value}
+            value={value?._id ?? value}
             onChange={(e) => setValue(e.target.value)}
             label={label}
             input={<OutlinedInput />}
           >
             {subcategory.subcategories.map((subCat, subCatIndex) => (
-              <MenuItem key={subCatIndex} value={subCat.value}>
+              <MenuItem key={subCatIndex} value={subCat._id}>
                 {subCat.label}
               </MenuItem>))}
           </Select>
@@ -302,6 +287,7 @@ const EditModal = ({ data,
 
   const InputCatSelectField = useCallback(
     ({ label, value, setValue, handleCategoryChange, categories }) => {
+
       return (
         <Box>
           <FormControl fullWidth>
@@ -309,13 +295,13 @@ const EditModal = ({ data,
             <Select
               sx={{ height: 40 }}
               labelId="category-select-label"
-              value={value?.value}
+              value={value?._id}
               onChange={(e) => handleCategoryChange(e.target.value, setValue, categories)}
               label={label}
               input={<OutlinedInput />}
             >
               {categories.map((category, index) => (
-                <MenuItem key={index} value={category.category.value}>
+                <MenuItem key={index} value={category._id}>
                   {category.category.label}
                 </MenuItem>
               ))}
@@ -387,7 +373,7 @@ const EditModal = ({ data,
               setValue={setCategory}
               handleCategoryChange={handleCategoryChange}
             />
-            {category?.value && <InputSubCatSelectField
+            {category?.category?.value && <InputSubCatSelectField
               label={'Subcategory:'}
               value={subCategory}
               category={category}
@@ -417,7 +403,7 @@ const EditModal = ({ data,
                 handleCategoryChange={handleCategoryChange}
               />
             </div>
-            {arabicCategory?.value &&
+            {arabicCategory?.category?.value &&
               <div dir="rtl">
                 <InputSubCatSelectField
                   label={'الفئة الفرعية:'}
