@@ -71,7 +71,7 @@ export const Api = {
         method: 'GET',
       };
 
-      response = await fetch(`${API_URL}/categories`, options);
+      response = await fetch(`${API_URL}categories`, options);
 
       switch (response.status) {
         case 200:

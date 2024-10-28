@@ -119,8 +119,8 @@ const Categories = () => {
     const foundCategory = categories.find((categoryObj) => categoryObj.category.value === category?.value);
     const foundArabicCategory = arabicCategories.find((categoryObj) => categoryObj.category.value === category?.value);
 
-    setCategoryLabel(foundCategory.category.label)
-    setArabicCategoryLabel(foundArabicCategory.category.label)
+    setCategoryLabel(foundCategory?.category?.label)
+    setArabicCategoryLabel(foundArabicCategory?.category?.label)
   }
 
   useEffect(() => {

@@ -31,7 +31,7 @@ const Products = () => {
   const categories = GetCategories();
 
   const filterCategoryName = (categoryValue) => {
-    const result = categories.find(
+    const result = categories?.find(
       (categoryObj) => categoryObj._id.toString() === categoryValue
     );
     return result ? result.category.label : undefined;
