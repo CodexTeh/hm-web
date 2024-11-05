@@ -117,8 +117,25 @@ const StyledSaveButton = styled(Button)({
 const EditModal = ({ data,
   openEditModal,
   onClose,
-  pagination }) => {
+  pagination, productCatalogs }) => {
 
+    const {
+      en: {
+        brand: enBrands = [],
+        'available-color': enAvailableColors = [],
+        material: enMaterials = [],
+        unit: enUnits = [],
+        size: enSizes = []
+      } = {},
+      ar: {
+        brand: arBrands = [],
+        'available-color': arAvailableColors = [],
+        material: arMaterials = [],
+        unit: arUnits = [],
+        size: arSizes = []
+      } = {}
+    } = productCatalogs || {};
+    
   const loading = GetEditProductLoading();
 
   const allCategories = GetCategories();
@@ -331,6 +348,39 @@ const EditModal = ({ data,
     [category]
   );
 
+  const InputProdCatSelectField = useCallback(
+    ({ label, value, setValue, productCatalogs, enableText }) => {
+      return (
+        <Box sx={{ width: '489px' }}>
+          <FormControl fullWidth>
+            <StyledDescriptionTypography>{label}</StyledDescriptionTypography>
+            <Select
+              sx={{ height: 40 }}
+              labelId="category-select-label"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              label={label}
+              fullWidth
+              input={<OutlinedInput />}
+            >
+              <MenuItem onClick={() => {
+                setValue(null)
+              }}>
+                {enableText}
+              </MenuItem>
+              {productCatalogs?.map((item, index) => (
+                <MenuItem key={index} value={item.id}>
+                  {item.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      );
+    },
+    []
+  );
+
   const EditModalView = () => {
     return (
       <StyledMainBox>
@@ -403,28 +453,38 @@ const EditModal = ({ data,
               value={description}
               setValue={setDescription}
             />
-            <InputTextField
-              label={'Brand:'}
+            <InputProdCatSelectField
+              label={'Select Brand:'}
+              enableText={'Unselect'}
+              productCatalogs={enBrands}
               value={brand}
               setValue={setBrand}
             />
-            <InputTextField
-              label={'Material:'}
+            <InputProdCatSelectField
+              label={'Select Material:'}
+              enableText={'Unselect'}
+              productCatalogs={enMaterials}
               value={material}
               setValue={setMaterial}
             />
-            <InputTextField
-              label={'Size:'}
+            <InputProdCatSelectField
+              label={'Select Size:'}
+              enableText={'Unselect'}
+              productCatalogs={enSizes}
               value={size}
               setValue={setSize}
             />
-            <InputTextField
-              label={'Unit:'}
+            <InputProdCatSelectField
+              label={'Select Unit:'}
+              enableText={'Unselect'}
+              productCatalogs={enUnits}
               value={unit}
               setValue={setUnit}
             />
-            <InputTextField
-              label={'Available Color:'}
+            <InputProdCatSelectField
+              label={'Select Available Color:'}
+              enableText={'Unselect'}
+              productCatalogs={enAvailableColors}
               value={availableColor}
               setValue={setAvailableColor}
             />
@@ -470,36 +530,46 @@ const EditModal = ({ data,
               />
             </div>
             <div dir="rtl">
-              <InputTextField
-                label='ماركة:'
+              <InputProdCatSelectField
+                label='اختر العلامة التجارية:'
+                enableText={'Unselect'}
+                productCatalogs={arBrands}
                 value={arabicBrand}
                 setValue={setArabicBrand}
               />
             </div>
             <div dir="rtl">
-              <InputTextField
-                label='مادة:'
+              <InputProdCatSelectField
+                label='اختر المادة:'
+                enableText={'Unselect'}
+                productCatalogs={arMaterials}
                 value={arabicMaterial}
                 setValue={setArabicMaterial}
               />
             </div>
             <div dir="rtl">
-              <InputTextField
-                label='مقاس:'
+              <InputProdCatSelectField
+                label='اختر الحجم:'
+                enableText={'Unselect'}
+                productCatalogs={arSizes}
                 value={arabicSize}
                 setValue={setArabicSize}
               />
             </div>
             <div dir="rtl">
-              <InputTextField
-                label='وحدة:'
+              <InputProdCatSelectField
+                label='اختر الوحدة:'
+                enableText={'Unselect'}
+                productCatalogs={arUnits}
                 value={arabicUnit}
                 setValue={setArabicUnit}
               />
             </div>
             <div dir="rtl">
-              <InputTextField
-                label='اللون المتاح:'
+              <InputProdCatSelectField
+                label='حدد الألوان المتاحة:'
+                enableText={'Unselect'}
+                productCatalogs={arAvailableColors}
                 value={arabicAvailableColor}
                 setValue={setArabicAvailableColor}
               />

@@ -2,14 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import Barcode from 'react-barcode';
 import SearchIcon from '@mui/icons-material/Search';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { getHeaders } from "@components/TableView/getHeaders";
 import { Input, InputAdornment, LinearProgress, Typography } from "@mui/material";
 import TableView from "@components/TableView";
 import { StyledMainBox } from "./styles";
 import { GetActions } from "@components/CustomMenu/actions";
 import { CustomMenu } from "@components/CustomMenu";
-import { getProducts, getSearchedProducts, getCategories } from "@redux-state/actions";
-import { GetAllProductsCount, GetProducts, GetProductsLoading, GetCategories } from "@redux-state/common/selectors";
+import { getProducts, getSearchedProducts, getCategories, getProductCatalog } from "@redux-state/actions";
+import { GetAllProductsCount, GetProducts, GetProductsLoading, GetCategories, GetProductCatalogs } from "@redux-state/common/selectors";
 
 const Products = () => {
   const [page, setPage] = useState(0);
@@ -29,6 +31,26 @@ const Products = () => {
   const products = GetProducts();
   const productsCount = GetAllProductsCount();
   const categories = GetCategories();
+  const allProductCatalogs = GetProductCatalogs();
+
+  const splitByTypeAndLanguage = (array) => {
+    return array.reduce((acc, item) => {
+      const { type, language } = item;
+
+      if (!acc[language]) {
+        acc[language] = {};
+      }
+
+      if (!acc[language][type]) {
+        acc[language][type] = [];
+      }
+
+      acc[language][type].push(item);
+      return acc;
+    }, {});
+  };
+
+  const splitData = splitByTypeAndLanguage(allProductCatalogs);
 
   const filterCategoryName = (categoryValue) => {
     const result = categories?.find(
@@ -36,7 +58,11 @@ const Products = () => {
     );
     return result ? result.category.label : undefined;
   };
-  
+
+  useEffect(() => {
+    dispatch(getProductCatalog());
+  }, [])
+
   useEffect(() => {
     if (!searchText) {
       dispatch(
@@ -61,6 +87,18 @@ const Products = () => {
 
   const getCells = useMemo(() => {
     return (item) => {
+      let formattedImages;
+      if (item?.image_urls) {
+        const imageUrls = JSON.parse(item?.image_urls.replace(/'/g, '"'));
+        if (imageUrls.length > 0) {
+          formattedImages = imageUrls?.map((imageUrl) => ({
+            contentType: 'image/jpeg', // Assume default content type or fetch dynamically
+            title: imageUrl?.split('/').pop(), // Extract the image name from URL
+            url: imageUrl,
+            file: null // No file object for backend images
+          }));
+        }
+      }
       const baseCells = {
         barcode: (
           <Barcode height={20} width={1} fontSize={15} value={item.barcode} />
@@ -79,8 +117,13 @@ const Products = () => {
         ),
         action: (
           <CustomMenu
-            actions={getActions(item)} item={item} pagination={pagination}
+            actions={getActions(item)} item={item} pagination={pagination} productCatalogs={splitData}
           />
+        ),
+        completed: (
+          (formattedImages ?
+            <CheckCircleIcon color="success" />
+            : <CancelIcon color="warning" />)
         )
       };
 

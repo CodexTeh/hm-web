@@ -24,3 +24,12 @@ export const GetCreateCategoryLoading = () =>
 export const GetEditCategoryLoading = () =>
   useSelector(
     (state) => state.common.editCategoryLoading);
+export const GetProductCatalogs = () =>
+  useSelector(
+    (state) => state.common.productCatalogs);
+export const AddProductCatalogLoading = () =>
+  useSelector(
+    (state) => state.common.addProductCatalogLodaing);
+export const EditProductCatalogLoading = () =>
+  useSelector(
+    (state) => state.common.editProductCatalogLoading);

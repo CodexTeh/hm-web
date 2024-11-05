@@ -121,6 +121,93 @@ export const Api = {
       console.log("Error", e);
     }
   },
+  addProductCatalog: async (data, token) => {
+    try {
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+
+      const response = await fetch(`${API_URL}product-catalogs`, options);
+
+      switch (response.status) {
+        case 200:
+          toast("Product Catalog Added Successfully")
+          const responseData = await response.json();
+          return responseData;
+
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          toast('Product Catalog already exists!')
+          throw new Error('Product Catalog already exists!');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
+  editProductCatalog: async (data, token) => {
+    try {
+
+      const options = {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+
+      const response = await fetch(`${API_URL}update-product-catalogs`, options);
+
+      switch (response.status) {
+        case 200:
+          toast("Product Catalog Updated Successfully")
+          const responseData = await response.json();
+          return responseData;
+
+        case 400:
+          throw new Error('All fields are required');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
+  getProductCatalog: async () => {
+    try {
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const response = await fetch(`${API_URL}product-catalogs`, options);
+
+      switch (response.status) {
+        case 200:
+          const responseData = await response.json();
+          return responseData;
+
+        case 400:
+          throw new Error('All fields are required');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
   editCategory: async (data, token) => {
     try {
 

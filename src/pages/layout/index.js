@@ -14,6 +14,7 @@ import { ToastContainer } from 'react-toastify';
 import LoginModal from '@components/Modal/LoginModal';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import Categories from '@pages/categories';
+import ProductCatalog from '@pages/product-catalog';
 import Products from '@pages/products';
 import { getCategories } from "@redux-state/actions";
 import { colorPalette } from '@utils/colorPalette';
@@ -38,6 +39,15 @@ const NAVIGATION = [
     kind: 'page',
     segment: 'categories',
     title: 'Categories',
+    icon: <DashboardIcon />,
+  },
+  {
+    kind: 'divider',
+  },
+  {
+    kind: 'page',
+    segment: 'product-catalog',
+    title: 'ProductCatalog',
     icon: <DashboardIcon />,
   },
   // {
@@ -161,6 +171,7 @@ function Layout(props) {
         {/* {pathname !== '/products' && <Products />} */}
         {pathname === '/products' && <Products />}
         {pathname === '/categories' && <Categories />}
+        {pathname === '/product-catalog' && <ProductCatalog />}
       </DashboardLayout>
       <LoginModal />
     </AppProvider>

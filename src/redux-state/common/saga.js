@@ -2,10 +2,13 @@ import { call, put, select, takeLatest } from 'redux-saga/effects'
 import * as Actions from './action';
 import { Api } from './api'
 import {
+  ADD_PRODUCT_CATALOG,
   CREATE_CATEGORY,
   EDIT_CATEGORY,
   EDIT_PRODUCT,
+  EDIT_PRODUCT_CATALOG,
   GET_CATEGORIES,
+  GET_PRODUCT_CATALOG,
   GET_PRODUCTS,
   GET_SEARCHED_PRODUCTS,
 } from './types'
@@ -50,6 +53,20 @@ function* getCategories(action) {
   }
 }
 
+function* getProductCatalog(action) {
+  try {
+    const data = yield call(Api.getProductCatalog, action.payload);
+    if (data?.data) {
+      yield put(Actions.getProductCatalogSuccess(data.data));
+    } else {
+      yield put(Actions.getProductCatalogSuccess([]));
+    }
+  } catch (error) {
+    yield put(Actions.getProductCatalogSuccess([]));
+    console.log("error", error);
+  }
+}
+
 function* editProduct(action) {
   const token = yield select(getToken);
   try {
@@ -75,6 +92,30 @@ function* createCategory(action) {
   }
 }
 
+function* addProductCatalog(action) {
+  const token = yield select(getToken);
+  try {
+    yield call(Api.addProductCatalog, action.payload, token);
+    yield put(Actions.getProductCatalog());
+    yield put(Actions.addProductCatalogSuccess());
+  } catch (error) {
+    yield put(Actions.addProductCatalogSuccess());
+    console.log("error", error);
+  }
+}
+
+function* editProductCatalog(action) {
+  const token = yield select(getToken);
+  try {
+    yield call(Api.editProductCatalog, action.payload, token);
+    yield put(Actions.getProductCatalog());
+    yield put(Actions.editProductCatalogSuccess());
+  } catch (error) {
+    yield put(Actions.editProductCatalogSuccess());
+    console.log("error", error);
+  }
+}
+
 function* editCategory(action) {
   const token = yield select(getToken);
   try {
@@ -91,8 +132,11 @@ function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
   yield takeLatest(GET_CATEGORIES, getCategories);
+  yield takeLatest(GET_PRODUCT_CATALOG, getProductCatalog);
   yield takeLatest(EDIT_PRODUCT, editProduct);
   yield takeLatest(CREATE_CATEGORY, createCategory);
+  yield takeLatest(ADD_PRODUCT_CATALOG, addProductCatalog);
+  yield takeLatest(EDIT_PRODUCT_CATALOG, editProductCatalog);
   yield takeLatest(EDIT_CATEGORY, editCategory);
 }
 

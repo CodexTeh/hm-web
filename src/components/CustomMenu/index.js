@@ -22,6 +22,7 @@ const CustomMenu = ({
   actions,
   item,
   pagination,
+  productCatalogs
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -96,6 +97,7 @@ const CustomMenu = ({
       </StyledBox>
       {openEditModal && <EditModal
         data={item}
+        productCatalogs={productCatalogs}
         openEditModal={openEditModal}
         onClose={handleCloseModal}
         pagination={pagination}

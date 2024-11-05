@@ -1,12 +1,18 @@
 import {
+  ADD_PRODUCT_CATALOG,
+  ADD_PRODUCT_CATALOG_SUCCESS,
   CREATE_CATEGORY,
   CREATE_CATEGORY_SUCCESS,
   EDIT_CATEGORY,
   EDIT_CATEGORY_SUCCESS,
   EDIT_PRODUCT,
+  EDIT_PRODUCT_CATALOG,
+  EDIT_PRODUCT_CATALOG_SUCCESS,
   EDIT_PRODUCT_SUCCESS,
   GET_CATEGORIES,
   GET_CATEGORIES_SUCCESS,
+  GET_PRODUCT_CATALOG,
+  GET_PRODUCT_CATALOG_SUCCESS,
   GET_PRODUCTS,
   GET_PRODUCTS_SUCCESS,
   GET_SEARCHED_PRODUCTS,
@@ -91,5 +97,44 @@ export const editCategory = (data) => (
 export const editCategorySuccess = () => (
   {
     type: EDIT_CATEGORY_SUCCESS
+  }
+);
+
+export const addProductCatalog = (data) => (
+  {
+    type: ADD_PRODUCT_CATALOG,
+    payload: data
+  }
+);
+
+export const addProductCatalogSuccess = () => (
+  {
+    type: ADD_PRODUCT_CATALOG_SUCCESS
+  }
+);
+
+export const getProductCatalog = () => (
+  {
+    type: GET_PRODUCT_CATALOG,
+  }
+);
+
+export const getProductCatalogSuccess = data => (
+  {
+    type: GET_PRODUCT_CATALOG_SUCCESS,
+    payload: data
+  }
+);
+
+export const editProductCatalog = (data) => (
+  {
+    type: EDIT_PRODUCT_CATALOG,
+    payload: data
+  }
+);
+
+export const editProductCatalogSuccess = () => (
+  {
+    type: EDIT_PRODUCT_CATALOG_SUCCESS,
   }
 );
