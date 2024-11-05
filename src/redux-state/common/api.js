@@ -155,7 +155,10 @@ export const Api = {
   editProducts: async ({ id, data }, token) => {
     try {
       const { category, arabicCategory, subCategory, arabicSubCategory,
-        name, arabicName, description, arabicDescription, images } = data;
+        name, arabicName, description, arabicDescription, brand,
+        arabicBrand, material, arabicMaterial, size
+        , arabicSize, unit, arabicUnit, availableColor
+        , arabicAvailableColor, flashSale, arabicFlashSale, images } = data;
 
       let response;
       const formData = new FormData();
@@ -205,6 +208,18 @@ export const Api = {
                 arabicCategory: arabicCategory._id,
                 subCategory: subCategory,
                 arabicSubCategory: arabicSubCategory,
+                brand: brand,
+                ar_brand: arabicBrand,
+                material: material,
+                ar_material: arabicMaterial,
+                size: size,
+                ar_size: arabicSize,
+                unit: unit,
+                ar_unit: arabicUnit,
+                avalable_color: availableColor,
+                ar_color: arabicAvailableColor,
+                flash_sale: flashSale,
+                ar_flash_sale: arabicFlashSale
               }
             }),
           };

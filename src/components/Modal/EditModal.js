@@ -154,6 +154,18 @@ const EditModal = ({ data,
   const [arabicCategory, setArabicCategory] = useState(filterCategory(arabicCategories, data.arabicCategory));
   const [subCategory, setSubCategory] = useState(filterSubcategoryByUuid(categories, data.subCategory, data.category));
   const [arabicSubCategory, setArabicSubCategory] = useState(filterSubcategoryByUuid(arabicCategories, data.arabicSubCategory, data.arabicCategory));
+  const [brand, setBrand] = useState(data.brand || '');
+  const [arabicBrand, setArabicBrand] = useState(data.ar_brand || '');
+  const [material, setMaterial] = useState(data.material || '');
+  const [arabicMaterial, setArabicMaterial] = useState(data.ar_material || '');
+  const [size, setSize] = useState(data.size || '');
+  const [arabicSize, setArabicSize] = useState(data.ar_size || '');
+  const [unit, setUnit] = useState(data.unit || '');
+  const [arabicUnit, setArabicUnit] = useState(data.ar_unit || '');
+  const [availableColor, setAvailableColor] = useState(data.avalable_color || '');
+  const [arabicAvailableColor, setArabicAvailableColor] = useState(data.ar_color || '');
+  const [flashSale, setFlashSale] = useState(data.flash_sale || '');
+  const [arabicFlashSale, setArabicFlashSale] = useState(data.ar_flash_sale || '');
 
   useEffect(() => {
     if (category) {
@@ -177,11 +189,17 @@ const EditModal = ({ data,
 
   const updateProduct = () => {
     if (name && arabicName && category && arabicCategory && description &&
-      arabicDescription && arabicSubCategory && subCategory) {
+      arabicDescription && arabicSubCategory && subCategory &&
+      brand && arabicBrand && material && arabicMaterial && size
+      && arabicSize && unit && arabicUnit && availableColor
+      && arabicAvailableColor && flashSale && arabicFlashSale) {
 
       dispatch(editProduct(data.id, {
         category, arabicCategory, subCategory, arabicSubCategory,
-        name, arabicName, description, arabicDescription, images
+        name, arabicName, description, arabicDescription, brand,
+        arabicBrand, material, arabicMaterial, size
+        , arabicSize, unit, arabicUnit, availableColor
+        , arabicAvailableColor, flashSale, arabicFlashSale, images
       }, pagination))
     } else {
       alert("Fill all fields!")
@@ -385,6 +403,36 @@ const EditModal = ({ data,
               value={description}
               setValue={setDescription}
             />
+            <InputTextField
+              label={'Brand:'}
+              value={brand}
+              setValue={setBrand}
+            />
+            <InputTextField
+              label={'Material:'}
+              value={material}
+              setValue={setMaterial}
+            />
+            <InputTextField
+              label={'Size:'}
+              value={size}
+              setValue={setSize}
+            />
+            <InputTextField
+              label={'Unit:'}
+              value={unit}
+              setValue={setUnit}
+            />
+            <InputTextField
+              label={'Available Color:'}
+              value={availableColor}
+              setValue={setAvailableColor}
+            />
+            <InputTextField
+              label={'Flash Sale:'}
+              value={flashSale}
+              setValue={setFlashSale}
+            />
           </Box>
           <Box>
             <div dir="rtl">
@@ -419,6 +467,48 @@ const EditModal = ({ data,
                 label={'تفصیل:'}
                 value={arabicDescription}
                 setValue={setArabicDescription}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label='ماركة:'
+                value={arabicBrand}
+                setValue={setArabicBrand}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label='مادة:'
+                value={arabicMaterial}
+                setValue={setArabicMaterial}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label='مقاس:'
+                value={arabicSize}
+                setValue={setArabicSize}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label='وحدة:'
+                value={arabicUnit}
+                setValue={setArabicUnit}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label='اللون المتاح:'
+                value={arabicAvailableColor}
+                setValue={setArabicAvailableColor}
+              />
+            </div>
+            <div dir="rtl">
+              <InputTextField
+                label='بيع فلاش:'
+                value={arabicFlashSale}
+                setValue={setArabicFlashSale}
               />
             </div>
 
