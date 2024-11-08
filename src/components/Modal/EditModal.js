@@ -119,23 +119,23 @@ const EditModal = ({ data,
   onClose,
   pagination, productCatalogs }) => {
 
-    const {
-      en: {
-        brand: enBrands = [],
-        'available-color': enAvailableColors = [],
-        material: enMaterials = [],
-        unit: enUnits = [],
-        size: enSizes = []
-      } = {},
-      ar: {
-        brand: arBrands = [],
-        'available-color': arAvailableColors = [],
-        material: arMaterials = [],
-        unit: arUnits = [],
-        size: arSizes = []
-      } = {}
-    } = productCatalogs || {};
-    
+  const {
+    en: {
+      brand: enBrands = [],
+      'available-color': enAvailableColors = [],
+      material: enMaterials = [],
+      unit: enUnits = [],
+      size: enSizes = []
+    } = {},
+    ar: {
+      brand: arBrands = [],
+      'available-color': arAvailableColors = [],
+      material: arMaterials = [],
+      unit: arUnits = [],
+      size: arSizes = []
+    } = {}
+  } = productCatalogs || {};
+
   const loading = GetEditProductLoading();
 
   const allCategories = GetCategories();
@@ -186,12 +186,50 @@ const EditModal = ({ data,
 
   useEffect(() => {
     if (category) {
+      setArabicCategory(arabicCategories.filter(cat => cat.category?.value === category?.category?.value)
+        .map((categoryObj) => categoryObj)[0])
+    }
+  }, [category])
+
+  useEffect(() => {
+    if (arabicCategory) {
+      setCategory(categories.filter(cat => cat.category?.value === arabicCategory?.category?.value)
+        .map((categoryObj) => categoryObj)[0])
+    }
+  }, [arabicCategory])
+
+  useEffect(() => {
+    if (arabicSubCategory && arabicCategory) {
+      const filteredSubCategory = arabicCategory.subcategories.filter(subCat => subCat._id === subCategory)
+        .map((subCatObj) => subCatObj)[0]
+      const selectSubCat = category.subcategories.filter(subCat => subCat.value === filteredSubCategory?.value)
+        .map((subCatObj) => subCatObj)[0]
+      if (selectSubCat) {
+        setSubCategory(selectSubCat?._id)
+      }
+    }
+  }, [arabicSubCategory])
+
+  useEffect(() => {
+    if (subCategory && category) {
+      const filteredSubCategory = category.subcategories.filter(subCat => subCat._id === subCategory)
+        .map((subCatObj) => subCatObj)[0]
+      const selectSubCat = arabicCategory.subcategories.filter(subCat => subCat.value === filteredSubCategory?.value)
+        .map((subCatObj) => subCatObj)[0]
+      if (selectSubCat) {
+        setArabicSubCategory(selectSubCat._id)
+      }
+    }
+  }, [subCategory])
+
+  useEffect(() => {
+    if (category) {
       setSubCategory(filterSubcategoryByUuid(categories, data.subCategory, category))
     }
   }, [category])
 
   useEffect(() => {
-    if (category) {
+    if (arabicCategory) {
       setArabicSubCategory(filterSubcategoryByUuid(arabicCategories, data.arabicSubCategory, arabicCategory))
     }
   }, [arabicCategory])
@@ -317,7 +355,7 @@ const EditModal = ({ data,
         </Box>
       );
     },
-    [category]
+    [category, arabicCategory, subCategory, arabicSubCategory]
   );
 
   const InputCatSelectField = useCallback(
@@ -345,7 +383,7 @@ const EditModal = ({ data,
         </Box>
       );
     },
-    [category]
+    [category, arabicCategory]
   );
 
   const InputProdCatSelectField = useCallback(
