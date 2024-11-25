@@ -152,17 +152,20 @@ const ProductCatalog = () => {
   );
 
   const addCategory = () => {
+    const value = Math.floor(Math.random() * 1000);
     if (title && arabicTitle && type) {
       const englishProductCatalog = {
         title: title,
         language: "en",
-        type: getLabelByValue(type)
+        type: getLabelByValue(type),
+        value: value
       }
 
       const arabicProductCatalog = {
         title: arabicTitle,
         language: "ar",
-        type: getLabelByValue(type)
+        type: getLabelByValue(type),
+        value
       }
       dispatch(addProductCatalog(englishProductCatalog))
       dispatch(addProductCatalog(arabicProductCatalog))

@@ -234,6 +234,27 @@ const EditModal = ({ data,
     }
   }, [arabicCategory])
 
+  useEffect(() => {
+    if (arabicBrand && arBrands?.length > 0) {
+      const arBrand = arBrands.filter(arbrand => arbrand.id === arabicBrand)
+        .map((brand) => brand)[0]
+
+      setBrand(enBrands.filter(brand => brand?.value === arBrand?.value)
+        .map((brand) => brand)[0]?.id)
+    }
+  }, [arabicBrand])
+
+  useEffect(() => {
+    if (brand && enBrands?.length > 0) {
+      const enBrand = enBrands.filter(enbrand => enbrand.id === brand)
+        .map((brand) => brand)[0]
+
+      setArabicBrand(arBrands.filter(brand => brand?.value === enBrand?.value)
+        .map((brand) => brand)[0]?.id)
+    }
+  }, [brand])
+
+
   const handleCategoryChange = (value, setCategory, categories) => {
     setCategory(filterCategory(categories, value));
   };
@@ -387,7 +408,7 @@ const EditModal = ({ data,
   );
 
   const InputProdCatSelectField = useCallback(
-    ({ label, value, setValue, productCatalogs, enableText }) => {
+    ({ label, value, setValue, setArabicValue, productCatalogs, enableText }) => {
       return (
         <Box sx={{ width: '489px' }}>
           <FormControl fullWidth>
@@ -497,6 +518,7 @@ const EditModal = ({ data,
               productCatalogs={enBrands}
               value={brand}
               setValue={setBrand}
+              setArabicValue={setArabicBrand}
             />
             <InputProdCatSelectField
               label={'Select Material:'}

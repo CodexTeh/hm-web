@@ -52,6 +52,7 @@ export const colorPalette = {
   magicMint: '#B1F4D4',
   magnolia: '#f9f1ff',
   malachite: '#01d057',
+  greenButton: '#009f7f',
   maroon: '#800000',
   marzipan: '#F9D991',
   mediumGray: '#aaa',

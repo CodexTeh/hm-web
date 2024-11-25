@@ -6,20 +6,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { debounce } from 'lodash';
 import { useDispatch } from 'react-redux';
 import LoginModal from '@components/Modal/LoginModal';
-import { StyledCardBox, StyledCardContainer, StyledDivider, StyledEditBox, StyledMainBox } from './styles';
-import SearchIcon from '@mui/icons-material/Search';
-import { CardContent, IconButton, Input, InputAdornment, LinearProgress } from '@mui/material';
-import { ArrowLeft, Tune } from '@mui/icons-material';
-import Drawer from '@mui/material/Drawer';
 import { GetToken } from '@redux-state/onboarding/selectors';
 import { colorPalette } from '@utils/colorPalette';
 import CardDrawer from './CartDrawer';
 import TopBar from './TopBar';
-import CartFloatButton from './CartFloatButton';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import { StyledCartBoxContainer, StyledCartContainer } from './styles';
 
-const drawerWidth = 370;
-
-export default function Layout() {
+export default function CartFloatButton() {
 
   const fixedCenterLeftPosition = {
     position: 'fixed',
@@ -31,6 +25,8 @@ export default function Layout() {
     background: colorPalette.greenButton,
     right: 5,
     cursor: 'pointer',
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4
   };
   const [open, setOpen] = useState(true);
 
@@ -51,11 +47,20 @@ export default function Layout() {
   };
 
   return (
-    <>
-      <TopBar />
-      <CardDrawer />
-      <CartFloatButton />
-      <LoginModal />
-    </>
+    <div onClick={handleDrawerOpen}>
+      <Box sx={fixedCenterLeftPosition}
+        color="primary" aria-label="add">
+        <StyledCartContainer>
+          <StyledCartBoxContainer>
+            <LocalMallIcon style={{ width: 18, height: 18, color: colorPalette.white }} />
+            <Typography sx={{ color: colorPalette.white, marginLeft: 1 }} variant='body2'>0 Item</Typography>
+          </StyledCartBoxContainer>
+          <Box sx={{ background: colorPalette.white, padding: 1, marginTop: 2, borderRadius: 1 }}>
+            <Typography sx={{ color: colorPalette.greenButton }} variant='body2'>$ 0.00</Typography>
+          </Box>
+        </StyledCartContainer>
+        <LoginModal />
+      </Box>
+    </div>
   );
 }
