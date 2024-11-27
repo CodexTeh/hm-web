@@ -1,46 +1,22 @@
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { useCallback, useEffect, useState } from 'react';
-import { debounce } from 'lodash';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginModal from '@components/Modal/LoginModal';
-import { StyledCardBox, StyledCardContainer, StyledDivider, StyledEditBox, StyledMainBox } from './styles';
-import SearchIcon from '@mui/icons-material/Search';
-import { CardContent, IconButton, Input, InputAdornment, LinearProgress } from '@mui/material';
-import { ArrowLeft, Tune } from '@mui/icons-material';
-import Drawer from '@mui/material/Drawer';
-import { GetToken } from '@redux-state/onboarding/selectors';
-import { colorPalette } from '@utils/colorPalette';
+import { getCategories } from '@redux-state/common/action';
 import CardDrawer from './CartDrawer';
 import TopBar from './TopBar';
 import CartFloatButton from './CartFloatButton';
-
-const drawerWidth = 370;
+import Banner from './Banner';
+import ProductCardView from './Products';
 
 export default function Layout() {
 
-  const fixedCenterLeftPosition = {
-    position: 'fixed',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    justifySelf: 'flex-end',
-    display: 'flex',
-    bottom: '50%',
-    background: colorPalette.greenButton,
-    right: 5,
-    cursor: 'pointer',
-  };
-  const [open, setOpen] = useState(true);
-
-  const token = GetToken();
-  const loading = false;
+  const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
 
-  const [searchText, setSearchText] = useState('');
-  const [fileUrl, setFileUrl] = useState();
+  useEffect(() => {
+    dispatch(getCategories())
+  }, [dispatch])
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -53,8 +29,10 @@ export default function Layout() {
   return (
     <>
       <TopBar />
-      <CardDrawer />
-      <CartFloatButton />
+      <Banner />
+      <ProductCardView />
+      <CardDrawer open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
+      <CartFloatButton open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <LoginModal />
     </>
   );

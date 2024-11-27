@@ -33,3 +33,6 @@ export const AddProductCatalogLoading = () =>
 export const EditProductCatalogLoading = () =>
   useSelector(
     (state) => state.common.editProductCatalogLoading);
+export const GetLanguage = () =>
+  useSelector(
+    (state) => state.common.language);

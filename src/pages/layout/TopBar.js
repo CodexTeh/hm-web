@@ -5,26 +5,50 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { colorPalette } from '@utils/colorPalette';
-import logo from '@assets/icons/logo.jpeg';
+import { Input, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-const pages = ['Offers', 'Contact'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { alpha, styled, Switch } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import logo from '@assets/icons/logo.jpeg';
+import { changeLanguage } from '@redux-state/common/action';
+import { colorPalette } from '@utils/colorPalette';
+import { GetLanguage } from '@redux-state/common/selectors';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const pages = {
+  en: ['Offers', 'Contact'],
+  ar: ['عروض', 'اتصل']
+};
+const settings = {
+  en: ['Profile', 'Account', 'Dashboard', 'Logout'],
+  ar: ['الملف الشخصي', 'الحساب', 'لوحة القيادة', 'تسجيل الخروج']
+};
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: colorPalette.greenButton,
+    '&:hover': {
+      backgroundColor: alpha(colorPalette.greenButton, theme.palette.action.hoverOpacity),
+    },
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: colorPalette.greenButton,
+  },
+}));
 
 const TopBar = () => {
+  const dispatch = useDispatch();
+  const language = GetLanguage();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -37,79 +61,125 @@ const TopBar = () => {
     setAnchorElUser(null);
   };
 
-  return (
-    <AppBar sx={{ background: colorPalette.white }} position="static">
-      <Container maxWidth="xl">
-        <Toolbar sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} disableGutters>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img src={logo} style={{ width: 50, height: 50, marginRight: 5 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: colorPalette.black,
-                textDecoration: 'none',
-              }}
-            >
-              HM
-            </Typography>
-          </Box>
+  const CachedGreenSwitch = React.useCallback(() => {
+    return (
+      <GreenSwitch
+        checked={language === 'ar'}
+        onChange={() => {
+          const lang = language === 'ar' ? 'en' : 'ar';
+          dispatch(changeLanguage(lang));
+        }}
+      />
+    );
+  }, [language, dispatch]);
 
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: colorPalette.black, display: 'block', mx: 1 }}
+  // Set theme for RTL
+  const theme = createTheme({
+    direction: language === 'ar' ? 'rtl' : 'ltr',
+  });
+
+  React.useEffect(() => {
+    document.body.dir = language === 'ar' ? 'rtl' : 'ltr'; // Set the body direction
+  }, [language]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <AppBar sx={{ background: colorPalette.white }} position="static">
+        <Container maxWidth="xl">
+          <Toolbar
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexDirection: language === 'ar' ? 'row-reverse' : 'row',
+            }}
+            disableGutters
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <img src={logo} alt="logo" style={{ width: 50, height: 50, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
+              {/* <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                href="#app-bar-with-responsive-menu"
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+                  color: colorPalette.black,
+                  textDecoration: 'none',
+                }}
               >
-                {page}
-              </Button>
-            ))}
-            <Button
-              onClick={handleCloseNavMenu}
-              variant='contained'
-              sx={{ my: 2, background: colorPalette.greenButton, mx: 1 }}
-            >
-              Join
-            </Button>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
+                {language === 'ar' ? 'هم' : 'HM'}
+              </Typography> */}
+            </Box>
+
+            <Input
+              sx={{ background: 'white', width: '30%', padding: 1, borderRadius: 2 }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              }
+            />
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              {pages[language].map((page, index) => (
+                <Button
+                  key={index}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: colorPalette.black, display: 'block', mx: 1 }}
+                >
+                  {page}
+                </Button>
               ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              <Button
+                onClick={handleCloseNavMenu}
+                variant="contained"
+                sx={{ my: 2, background: colorPalette.greenButton, mx: 1 }}
+              >
+                {language === 'ar' ? 'انضم' : 'Join'}
+              </Button>
+              <Tooltip title={language === 'ar' ? 'افتح الإعدادات' : 'Open settings'}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <CachedGreenSwitch />
+                <Typography sx={{ textAlign: 'center', color: colorPalette.black, mx: 1 }}>
+                  {language === 'ar' ? 'العربية' : 'Arabic'}
+                </Typography>
+              </Box>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: language === 'ar' ? 'left' : 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: language === 'ar' ? 'left' : 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings[language].map((setting, index) => (
+                  <MenuItem key={index} onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </ThemeProvider>
   );
-}
+};
+
 export default TopBar;

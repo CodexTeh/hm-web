@@ -36,7 +36,7 @@ const combinedReducer = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  blacklist: ['common'],
+  blacklist: [],
   migrate: createMigrate(migrations, { debug: false }),
   storage,
   version: 0

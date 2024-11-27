@@ -1,6 +1,7 @@
 import {
   ADD_PRODUCT_CATALOG,
   ADD_PRODUCT_CATALOG_SUCCESS,
+  CHANGE_LANGUAGE,
   CREATE_CATEGORY,
   CREATE_CATEGORY_SUCCESS,
   EDIT_CATEGORY,
@@ -19,10 +20,10 @@ import {
   GET_SEARCHED_PRODUCTS_SUCCESS
 } from './types';
 
-export const getProducts = (pagination, searchText) => (
+export const getProducts = (pagination) => (
   {
     type: GET_PRODUCTS,
-    payload: { pagination, searchText }
+    payload: { pagination }
   }
 );
 
@@ -136,5 +137,12 @@ export const editProductCatalog = (data) => (
 export const editProductCatalogSuccess = () => (
   {
     type: EDIT_PRODUCT_CATALOG_SUCCESS,
+  }
+);
+
+export const changeLanguage = (lang) => (
+  {
+    type: CHANGE_LANGUAGE,
+    payload: lang
   }
 );

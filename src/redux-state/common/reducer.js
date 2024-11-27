@@ -17,6 +17,7 @@ import {
   GET_PRODUCT_CATALOG_SUCCESS,
   EDIT_PRODUCT_CATALOG,
   EDIT_PRODUCT_CATALOG_SUCCESS,
+  CHANGE_LANGUAGE,
 } from './types';
 
 const INITIAL_STATE = {
@@ -30,12 +31,16 @@ const INITIAL_STATE = {
   editCategoryLoading: false,
   editProductCatalogLoading: false,
   productCatalogs: [],
-  addProductCatalogLodaing: false
+  addProductCatalogLodaing: false,
+  language: 'en'
 };
 
 export default (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
+
+    case CHANGE_LANGUAGE:
+      return { ...state, language: payload };
 
     case GET_PRODUCTS:
       return { ...state, productsLoading: true };
