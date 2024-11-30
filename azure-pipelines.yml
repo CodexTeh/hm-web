@@ -28,4 +28,4 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs: 
     PathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
-    ArtifactName: 'hnm_client' # output artifact named PRO ERP - POS
+    ArtifactName: 'hnm_frontend' # output artifact named PRO ERP - POS
