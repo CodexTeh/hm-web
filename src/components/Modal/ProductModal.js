@@ -11,21 +11,27 @@ import {
   Divider,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import StarIcon from '@mui/icons-material/Star';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { colorPalette } from '@utils/colorPalette';
 
-export const ProductModal = ({ open, handleClose, product }) => {
+export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const [isReadMore, setIsReadMore] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleImageChange = (index) => {
     setSelectedIndex(index);
   };
+  const gallery = [
+    'https://via.placeholder.com/60x60.png?text=1',
+    'https://via.placeholder.com/60x60.png?text=2',
+    'https://via.placeholder.com/60x60.png?text=3',
+    'https://via.placeholder.com/60x60.png?text=3',
+  ]
+
+  const images = imageUrls?.length > 0 ? imageUrls : gallery
 
   const CustomCarousel = () => {
     const renderArrowPrev = (onClickHandler, hasPrev, label) =>
@@ -91,7 +97,7 @@ export const ProductModal = ({ open, handleClose, product }) => {
         renderArrowPrev={renderArrowPrev}
         renderArrowNext={renderArrowNext}
         renderThumbs={() =>
-          product.gallery.map((image, index) => (
+          images.map((image, index) => (
             <div
               key={index}
               style={{
@@ -116,7 +122,7 @@ export const ProductModal = ({ open, handleClose, product }) => {
         }
 
       >
-        {product.gallery.map((image, index) => (
+        {images?.map((image, index) => (
           <div key={index}>
             <img
               src={image}
@@ -139,8 +145,8 @@ export const ProductModal = ({ open, handleClose, product }) => {
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
-      maxWidth="md"
+      onClose={() => setOpen(null)}
+      maxWidth="lg"
       fullWidth
       PaperProps={{
         style: { borderRadius: 10, padding: 20 },
@@ -148,7 +154,7 @@ export const ProductModal = ({ open, handleClose, product }) => {
     >
       <DialogActions>
         <IconButton
-          onClick={handleClose}
+          onClick={() => setOpen(null)}
           sx={{
             position: 'absolute',
             right: 8,
@@ -176,17 +182,17 @@ export const ProductModal = ({ open, handleClose, product }) => {
           {/* Right Section: Details */}
           <Grid item xs={12} md={6}>
             <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-              {product.name}
+              {product?.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-              {product.weight}
+              {product?.size}
             </Typography>
             <Typography
               variant="body2"
               color="textSecondary"
               sx={{ marginBottom: 2, maxHeight: isReadMore ? 'none' : 60, overflow: isReadMore ? 'visible' : 'hidden' }}
             >
-              {product.description}
+              {product?.description}
             </Typography>
             <Button
               variant="text"
@@ -200,7 +206,7 @@ export const ProductModal = ({ open, handleClose, product }) => {
               variant="h4"
               sx={{ fontWeight: 'bold', color: colorPalette.greenButton, marginBottom: 1 }}
             >
-              ${product.price.toFixed(2)}
+              ${product?.price?.toFixed(2)}
               <Typography
                 variant="body2"
                 component="span"
@@ -211,7 +217,7 @@ export const ProductModal = ({ open, handleClose, product }) => {
                   fontSize: '1rem',
                 }}
               >
-                ${product.oldPrice.toFixed(2)}
+                OMR {1}
               </Typography>
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -230,13 +236,13 @@ export const ProductModal = ({ open, handleClose, product }) => {
                 Add to Shopping Cart
               </Button>
               <Typography variant="body2" color="textSecondary">
-                {product.available} pieces available
+                {product?.qty_onhand} pieces available
               </Typography>
             </Box>
 
             <Divider sx={{ marginY: 2 }} />
             <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-              <strong>Categories:</strong> {product.categories.join(', ')}
+              <strong>Categories:</strong> {product?.categories?.join(', ')}
             </Typography>
             {/* <Typography variant="body2" color="textSecondary">
               <strong>Sellers:</strong>{' '}

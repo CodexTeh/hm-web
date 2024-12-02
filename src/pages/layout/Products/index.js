@@ -7,31 +7,10 @@ import { getProducts } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 import { ProductModal } from '@components/Modal/ProductModal';
 
-const product = {
-  name: 'Apples',
-  weight: '1 lb',
-  description:
-    'An apple is a sweet, edible fruit produced by an apple tree (Malus domestica). Apple trees are ble fruit produced by an apple tree (Malus domestica). Apple trees arble fruit produced by an apple tree (Malus domestica). Apple trees ar...',
-  price: 1.6,
-  oldPrice: 2.0,
-  available: 18,
-  categories: ['fruits & vegetables', 'fruits'],
-  seller: 'Grocery Shop',
-  image:
-    'https://via.placeholder.com/300x300.png?text=Product+Image',
-  gallery: [
-    'https://via.placeholder.com/60x60.png?text=1',
-    'https://via.placeholder.com/60x60.png?text=2',
-    'https://via.placeholder.com/60x60.png?text=3',
-    'https://via.placeholder.com/60x60.png?text=3',
-  ],
-};
-
-
 const ProductCardView = ({ drawerWidth = 300 }) => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hasMoreItems, setHasMoreItems] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(null);
 
   const language = GetLanguage(); // Get the current language (en or ar)
   const isRTL = language === 'ar'; // Check if the language is Arabic
@@ -48,8 +27,8 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   const itemsCount = GetAllProductsCount();
   const dispatch = useDispatch();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = (value) => setOpen(value);
+  const handleClose = () => setOpen(null);
 
   useEffect(() => {
     dispatch(getProducts(pagination)); // Fetch products
@@ -83,6 +62,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   useEffect(() => {
     fetchFeedData();
   }, [pagination.perPage, fetchFeedData]);
+  console.log('yoyo', open);
 
   return (
     <Box
@@ -94,127 +74,137 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
         transition: 'margin 0.3s ease',
         direction: isRTL ? 'rtl' : 'ltr',
       }}
-      onClick={handleOpen}
     >
-      {open && <ProductModal open={open} handleClose={handleClose} product={product} />}
       {isFetching && itemsCount > 10 && hasMoreItems && (
         <LinearProgress value={10} />
       )}
-      <Grid container spacing={3}>
-        {products.map((product, index) => (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            key={`${product.id}-${index}`}
-            sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
-          >
-            <Card
-              sx={{
-                maxWidth: 300,
-                margin: 'auto',
-                position: 'relative',
-                textAlign: isRTL ? 'right' : 'left', // Align text based on language
-              }}
+      <Grid
+        container spacing={3}>
+        {products.map((product, index) => {
+
+          const imageUrls = product?.image_urls ? JSON.parse(product?.image_urls.replace(/'/g, '"')) : [];
+
+          return (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              key={`${product.id}-${index}`}
+              sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
             >
-              {/* Discount Badge */}
-              <Box
+              {open === index + 1 && <ProductModal isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} />}
+
+              <Card
                 sx={{
-                  position: 'absolute',
-                  top: 10,
-                  [isRTL ? 'left' : 'right']: 10, // Adjust position for RTL
-                  backgroundColor: colorPalette.yellowGolden,
-                  padding: '3px 8px',
-                  borderRadius: 10,
-                  color: colorPalette.white,
-                  fontSize: 12,
+                  maxWidth: 300,
+                  margin: 'auto',
+                  position: 'relative',
+                  textAlign: isRTL ? 'right' : 'left', // Align text based on language
+                }}
+                onClick={() => {
+                  handleOpen(index + 1)
                 }}
               >
-                {isRTL ? '٪10' : '10%'}
-              </Box>
-              {/* Product Image */}
-              <CardMedia
-                component="img"
-                height="150"
-                image={
-                  'https://pickbazar-react-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F1%2FApples.jpg&w=3840&q=75'
-                }
-                alt={product?.name}
-                sx={{ objectFit: 'contain' }}
-              />
-              <CardContent>
-                {/* Product Name */}
-                <Typography variant="subtitle2" component="div">
-                  {isRTL ? product?.arabicName || product?.name : product?.name}
-                </Typography>
-                {/* Product Weight */}
-                <Typography variant="body2" color="textDisabled">
-                  {isRTL ? '1 باوند' : '1 lb'}
-                </Typography>
+                {/* Discount Badge */}
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: isRTL ? 'row-reverse' : 'row', // Reverse for RTL
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    position: 'absolute',
+                    top: 10,
+                    [isRTL ? 'left' : 'right']: 10, // Adjust position for RTL
+                    backgroundColor: colorPalette.yellowGolden,
+                    padding: '3px 8px',
+                    borderRadius: 10,
+                    color: colorPalette.white,
+                    fontSize: 12,
                   }}
                 >
-                  {/* Pricing */}
+                  {isRTL ? '٪10' : '10%'}
+                </Box>
+                {/* Product Image */}
+                <CardMedia
+                  component="img"
+                  height="150"
+                  image={
+                    imageUrls?.length > 0 ? imageUrls[0] :
+                      'https://pickbazar-react-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F1%2FApples.jpg&w=3840&q=75'
+                  }
+                  alt={product?.name}
+                  sx={{ objectFit: 'contain' }}
+                />
+                <CardContent>
+                  {/* Product Name */}
+                  <Typography variant="subtitle2" component="div">
+                    {isRTL ? product?.arabicName || product?.name : product?.name}
+                  </Typography>
+                  {/* Product Weight */}
+                  <Typography variant="body2" color="textDisabled">
+                    {isRTL ? '1 باوند' : '1 lb'}
+                  </Typography>
                   <Box
                     sx={{
                       display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: isRTL ? 'end' : 'start', // Align text for RTL
-                      marginTop: 1,
+                      flexDirection: isRTL ? 'row-reverse' : 'row', // Reverse for RTL
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}
                   >
-                    {/* Old Price */}
-                    <Typography
-                      variant="caption"
-                      color="textDisabled"
-                      sx={{ textDecoration: 'line-through' }}
-                    >
-                      {isRTL ? '٢ ر۔ع' : '2 OMR'}
-                    </Typography>
-                    {/* Current Price */}
-                    <Typography
-                      variant="subtitle1"
+                    {/* Pricing */}
+                    <Box
                       sx={{
-                        fontWeight: 'bold',
-                        color: colorPalette.greenButton,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: isRTL ? 'end' : 'start', // Align text for RTL
+                        marginTop: 1,
                       }}
                     >
-                      {isRTL ? `د.إ${product?.price.toFixed(2)}` : `$${product?.price.toFixed(2)}`}
-                    </Typography>
+                      {/* Old Price */}
+                      <Typography
+                        variant="caption"
+                        color="textDisabled"
+                        sx={{ textDecoration: 'line-through' }}
+                      >
+                        {isRTL ? '٢ ر۔ع' : '2 OMR'}
+                      </Typography>
+                      {/* Current Price */}
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 'bold',
+                          color: colorPalette.greenButton,
+                        }}
+                      >
+                        {isRTL ? `د.إ${product?.price.toFixed(2)}` : `$${product?.price.toFixed(2)}`}
+                      </Typography>
+                    </Box>
+                    {/* Add to Cart Button */}
+                    <Button
+                      variant="contained"
+                      startIcon={
+                        !isRTL && <LocalMallIcon style={{ width: 16, height: 16 }} />
+                      }
+                      endIcon={
+                        isRTL && <LocalMallIcon style={{ width: 16, height: 16 }} />
+                      } // Adjust icon position for RTL
+                      sx={{
+                        fontWeight: 'bold',
+                        marginTop: 2,
+                        textTransform: 'capitalize',
+                        borderRadius: 10,
+                        background: colorPalette.white,
+                        color: colorPalette.greenButton,
+                        width: 100,
+                      }}
+                    >
+                      {isRTL ? 'السلة' : 'Cart'}
+                    </Button>
                   </Box>
-                  {/* Add to Cart Button */}
-                  <Button
-                    variant="contained"
-                    startIcon={
-                      !isRTL && <LocalMallIcon style={{ width: 16, height: 16 }} />
-                    }
-                    endIcon={
-                      isRTL && <LocalMallIcon style={{ width: 16, height: 16 }} />
-                    } // Adjust icon position for RTL
-                    sx={{
-                      fontWeight: 'bold',
-                      marginTop: 2,
-                      textTransform: 'capitalize',
-                      borderRadius: 10,
-                      background: colorPalette.white,
-                      color: colorPalette.greenButton,
-                      width: 100,
-                    }}
-                  >
-                    {isRTL ? 'السلة' : 'Cart'}
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          )
+        })}
       </Grid>
       {/* Loading Spinner */}
       {isFetching && (
