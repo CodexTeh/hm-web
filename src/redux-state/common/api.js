@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const API_URL = "http://213.210.21.52:8080/api/";
 // const API_URL = "http://localhost:8080/api/";
 
-const SERVER_URL = "https://dessco-stagging-15003402.dev.odoo.com";
+const SERVER_URL = "https://hmoman.com";
 
 export const Api = {
   getProducts: async ({ pagination }) => {

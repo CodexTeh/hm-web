@@ -16,10 +16,66 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { colorPalette } from '@utils/colorPalette';
+import { GetProductCatalogs, GetCategories, GetProducts } from "@redux-state/common/selectors";
+import ProductsView from '@pages/layout/Products/ProductsView';
+
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const [isReadMore, setIsReadMore] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleOpen = (value) => setOpen(value);
+
+  const allCategories = GetCategories();
+  const products = GetProducts();
+
+  const allProductCatalogs = GetProductCatalogs();
+  const splitByTypeAndLanguage = (array) => {
+    return array.reduce((acc, item) => {
+      const { type, language } = item;
+
+      if (!acc[language]) {
+        acc[language] = {};
+      }
+
+      if (!acc[language][type]) {
+        acc[language][type] = [];
+      }
+
+      acc[language][type].push(item);
+      return acc;
+    }, {});
+  };
+
+  const {
+    en: {
+      brand: enBrands = [],
+      'available-color': enAvailableColors = [],
+      material: enMaterials = [],
+      unit: enUnits = [],
+      size: enSizes = []
+    } = {},
+    ar: {
+      brand: arBrands = [],
+      'available-color': arAvailableColors = [],
+      material: arMaterials = [],
+      unit: arUnits = [],
+      size: arSizes = []
+    } = {}
+  } = splitByTypeAndLanguage(allProductCatalogs);
+
+  const enCategory = allCategories.find(category => category?._id === product?.category)
+  const arCategory = allCategories.find(category => category?._id === product?.arabicCategory)
+  const enSubCategory = enCategory?.subcategories.find(category => category?._id === product?.subCategory)
+  const arSubCategory = arCategory?.subcategories.find(category => category?._id === product?.arabicSubCategory)
+
+  const category = isRTL ? arCategory : enCategory;
+  const subCategory = isRTL ? arSubCategory : enSubCategory;
+
+  const enProductSize = enSizes.find(size => size?._id === product?.size)
+  const arProductSize = arSizes.find(size => size?._id === product?.ar_size)
+
+  const size = isRTL ? arSizes.find(size => size?.value === arProductSize?.value) : enSizes.find(size => size?.value === enProductSize?.value)
 
   const handleImageChange = (index) => {
     setSelectedIndex(index);
@@ -31,7 +87,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
     'https://via.placeholder.com/60x60.png?text=3',
   ]
 
-  const images = imageUrls?.length > 0 ? imageUrls : gallery
+  const images = imageUrls?.length > 0 ? imageUrls : gallery;
 
   const CustomCarousel = () => {
     const renderArrowPrev = (onClickHandler, hasPrev, label) =>
@@ -103,7 +159,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               style={{
                 border: selectedIndex === index ? `2px solid ${colorPalette.greenButton}` : null,
                 borderRadius: '8px',
-                boxSizing: 'border-box',
+                boxSizing: 'border-box'
               }}
             >
               <img
@@ -129,8 +185,8 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               alt={`Gallery-${index}`}
               style={{
                 width: '100%',
-                height: 'auto',
-                maxHeight: 300,
+                height: 350,
+                maxHeight: 350,
                 objectFit: 'contain',
                 borderRadius: '8px',
                 outline: 'none'
@@ -173,6 +229,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               <CustomCarousel />
@@ -185,18 +242,19 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               {product?.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-              {product?.size}
+              {size?.title}
             </Typography>
             <Typography
-              variant="body2"
+              variant="subtitle1"
               color="textSecondary"
-              sx={{ marginBottom: 2, maxHeight: isReadMore ? 'none' : 60, overflow: isReadMore ? 'visible' : 'hidden' }}
-            >
-              {product?.description}
-            </Typography>
+              dangerouslySetInnerHTML={{
+                __html: product?.description + ''
+              }}
+              sx={{ marginBottom: 2, maxHeight: isReadMore ? 'none' : 70, overflow: isReadMore ? 'visible' : 'hidden' }}
+            />
             <Button
               variant="text"
-              sx={{ color: colorPalette.greenButton, marginBottom: 2, fontSize: 14, textTransform: 'capitalize', fontWeight: 'bold' }}
+              sx={{ color: colorPalette.greenButton, marginBottom: 5, marginTop: 2, fontSize: 16, textTransform: 'capitalize', fontWeight: 'bold' }}
               onClick={() => setIsReadMore(!isReadMore)}
             >
               {isReadMore ? 'Show less' : 'Read more'}
@@ -220,46 +278,61 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 OMR {1}
               </Typography>
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
               <Button
                 variant="contained"
                 fullWidth
+                size='large'
                 sx={{
                   textTransform: 'capitalize',
                   background: colorPalette.greenButton,
                   padding: '12px',
                   width: '60%',
-                  marginBottom: 2,
                 }}
               >
                 Add to Shopping Cart
               </Button>
-              <Typography variant="body2" color="textSecondary">
+              <Typography variant="body1" color="textSecondary">
                 {product?.qty_onhand} pieces available
               </Typography>
             </Box>
 
             <Divider sx={{ marginY: 2 }} />
-            <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-              <strong>Categories:</strong> {product?.categories?.join(', ')}
-            </Typography>
-            {/* <Typography variant="body2" color="textSecondary">
-              <strong>Sellers:</strong>{' '}
+            {category && <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
+              <strong>Categories:</strong>
               <Button
-                variant="text"
+                variant="outlined"
+                size='small'
                 sx={{
-                  textTransform: 'capitalize',
-                  padding: 0,
-                  margin: 0,
-                  color: 'primary.main',
+                  textTransform: 'lowercase',
+                  color: colorPalette.black,
+                  borderColor: colorPalette.lavenderGray,
+                  marginLeft: 2
+
                 }}
               >
-                {product.seller}
+                {category?.category?.label}
               </Button>
-            </Typography> */}
+              <Button
+                variant="outlined"
+                size='small'
+                sx={{
+                  textTransform: 'lowercase',
+                  color: colorPalette.black,
+                  borderColor: colorPalette.lavenderGray,
+                  marginLeft: 2
+                }}
+              >
+                {subCategory?.label}
+              </Button>
+            </Typography>}
           </Grid>
         </Grid>
+        <Divider sx={{ marginBottom: 10 }} />
+        <Typography variant="h6" marginBottom={5} fontWeight={550}>
+          Related Products
+        </Typography>
+        <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
