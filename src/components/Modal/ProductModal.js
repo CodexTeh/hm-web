@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,25 +9,89 @@ import {
   IconButton,
   Grid,
   Divider,
+  LinearProgress,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
-import { GetProductCatalogs, GetCategories, GetProducts } from "@redux-state/common/selectors";
+import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading } from "@redux-state/common/selectors";
 import ProductsView from '@pages/layout/Products/ProductsView';
+import { getProducts } from '@redux-state/common/action';
 
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const [isReadMore, setIsReadMore] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [hasMoreItems, setHasMoreItems] = useState(true);
+
+  const loopRef = useRef();
 
   const handleOpen = (value) => setOpen(value);
 
+  const dispatch = useDispatch();
+
   const allCategories = GetCategories();
   const products = GetProducts();
+  const itemsCount = GetAllProductsCount();
+  const isFetching = GetProductsLoading();
+
+  const pagination = useMemo(
+    () => ({
+      page: 0,
+      perPage: rowsPerPage,
+    }),
+    [rowsPerPage]
+  );
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const element = loopRef.current;
+      if (!element) return;
+
+      const isBottomReached =
+        element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
+
+
+      if (isBottomReached) {
+        setRowsPerPage((prevRows) => prevRows + 10); // Load more items
+      }
+    };
+
+    const element = loopRef.current;
+    if (element) {
+      element.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (element) {
+        element.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [loopRef?.current?.scrollTop]);
+
+  useEffect(() => {
+    dispatch(getProducts(pagination)); // Fetch products
+  }, [dispatch, pagination]);
+
+
+  window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+  };
+
+  const fetchFeedData = useCallback(() => {
+    if (itemsCount > 0 && itemsCount <= pagination.perPage) {
+      setHasMoreItems(false);
+    }
+  }, [dispatch, pagination, itemsCount, pagination.perPage]);
+
+  useEffect(() => {
+    fetchFeedData();
+  }, [pagination.perPage, fetchFeedData]);
 
   const allProductCatalogs = GetProductCatalogs();
   const splitByTypeAndLanguage = (array) => {
@@ -159,7 +223,8 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               style={{
                 border: selectedIndex === index ? `2px solid ${colorPalette.greenButton}` : null,
                 borderRadius: '8px',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
               }}
             >
               <img
@@ -170,13 +235,16 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                   height: 'auto',
                   borderRadius: '6px',
                   objectFit: 'contain',
-                  outline: 'none'
+                  outline: 'none',
+                  transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
                 }}
               />
             </div>
           ))
         }
-
+        style={{
+          direction: isRTL ? 'rtl' : 'ltr', // Set direction for carousel
+        }}
       >
         {images?.map((image, index) => (
           <div key={index}>
@@ -189,12 +257,14 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 maxHeight: 350,
                 objectFit: 'contain',
                 borderRadius: '8px',
-                outline: 'none'
+                outline: 'none',
+                transform: isRTL ? 'scaleX(-1)' : 'none', // Flip main images if RTL
               }}
             />
           </div>
         ))}
       </Carousel>
+
     );
   };
 
@@ -220,7 +290,23 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
           <CloseIcon />
         </IconButton>
       </DialogActions>
-      <DialogContent>
+      <DialogContent ref={loopRef} sx={{
+        overflowY: 'auto', // Ensure the scrollbar appears when needed
+        '&::-webkit-scrollbar': {
+          width: '8px', // Customize scrollbar width
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: colorPalette.greenButton,
+          borderRadius: '8px',
+          border: '2px solid #fff',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: colorPalette.greenButton,
+        },
+        '&::-webkit-scrollbar-track': {
+          backgroundColor: '#f1f1f1',
+        },
+      }}>
         <Grid container spacing={2}>
           {/* Left Section: Carousel */}
           <Grid item xs={12} md={6}>
@@ -238,44 +324,72 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
           {/* Right Section: Details */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
-              {product?.name}
+            <Typography variant="h5" sx={{
+              fontWeight: 'bold', marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
+              textAlign: isRTL ? 'right' : 'left',
+            }}>
+              {isRTL ? product?.arabicName : product?.name}
             </Typography>
-            <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
+            <Typography variant="body2" color="textSecondary" sx={{
+              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
+              textAlign: isRTL ? 'right' : 'left',
+            }}>
               {size?.title}
             </Typography>
             <Typography
               variant="subtitle1"
               color="textSecondary"
               dangerouslySetInnerHTML={{
-                __html: product?.description + ''
+                __html: isRTL ? product?.arabicDescription : product?.description + ''
               }}
-              sx={{ marginBottom: 2, maxHeight: isReadMore ? 'none' : 70, overflow: isReadMore ? 'visible' : 'hidden' }}
+              sx={{
+                marginBottom: 2, maxHeight: isReadMore ? 'none' : 100, overflow: isReadMore ? 'visible' : 'hidden', direction: isRTL ? 'rtl' : 'ltr',
+                textAlign: isRTL ? 'right' : 'left',
+              }}
             />
             <Button
               variant="text"
-              sx={{ color: colorPalette.greenButton, marginBottom: 5, marginTop: 2, fontSize: 16, textTransform: 'capitalize', fontWeight: 'bold' }}
+              sx={{
+                color: colorPalette.greenButton,
+                marginBottom: 5,
+                marginTop: 2,
+                fontSize: 16,
+                textTransform: 'capitalize',
+                fontWeight: 'bold',
+                direction: isRTL ? 'rtl' : 'ltr', // Adjust text direction dynamically
+                textAlign: isRTL ? 'right' : 'left', // Align text for RTL
+              }}
               onClick={() => setIsReadMore(!isReadMore)}
             >
-              {isReadMore ? 'Show less' : 'Read more'}
+              {isRTL
+                ? isReadMore
+                  ? 'عرض أقل' // Arabic for "Show less"
+                  : 'اقرأ المزيد' // Arabic for "Read more"
+                : isReadMore
+                  ? 'Show less'
+                  : 'Read more'}
             </Button>
+
 
             <Typography
               variant="h4"
               sx={{ fontWeight: 'bold', color: colorPalette.greenButton, marginBottom: 1 }}
             >
-              ${product?.price?.toFixed(2)}
+              {isRTL ? "ر۔ع  " : "OMR  "}{product?.price?.toFixed(2)}
               <Typography
                 variant="body2"
                 component="span"
                 color='textDisabled'
                 sx={{
                   textDecoration: 'line-through',
-                  marginLeft: 1,
+                  marginLeft: 2,
+                  marginRight: 2,
                   fontSize: '1rem',
+                  direction: isRTL ? 'rtl' : 'ltr',
+                  textAlign: isRTL ? 'right' : 'left',
                 }}
               >
-                OMR {1}
+                {isRTL ? "ر۔ع" : "OMR"} {1}
               </Typography>
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
@@ -290,16 +404,19 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                   width: '60%',
                 }}
               >
-                Add to Shopping Cart
+                {isRTL ? "أضف إلى سلة التسوق" : "Add to Shopping Cart"}
               </Button>
-              <Typography variant="body1" color="textSecondary">
-                {product?.qty_onhand} pieces available
+              <Typography sx={{
+                direction: isRTL ? 'rtl' : 'ltr',
+                textAlign: isRTL ? 'right' : 'left',
+              }} variant="body1" color="textSecondary">
+                {product?.qty_onhand} {isRTL ? "القطع المتاحة" : "pieces available"}
               </Typography>
             </Box>
 
             <Divider sx={{ marginY: 2 }} />
             {category && <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-              <strong>Categories:</strong>
+              <strong dir={isRTL && "rtl"}>{isRTL ? "فئات: " : "Categories:"}</strong>
               <Button
                 variant="outlined"
                 size='small'
@@ -329,10 +446,24 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
           </Grid>
         </Grid>
         <Divider sx={{ marginBottom: 10 }} />
-        <Typography variant="h6" marginBottom={5} fontWeight={550}>
-          Related Products
+        <Typography sx={{
+          direction: isRTL ? 'rtl' : 'ltr',
+          textAlign: isRTL ? 'right' : 'left',
+        }} variant="h6" marginBottom={5} fontWeight={550}>
+          {isRTL ? "المنتجات ذات الصلة" : "Related Products"}
         </Typography>
         <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+        {isFetching && itemsCount > 10 && hasMoreItems && (
+          <LinearProgress value={10} />
+        )}
+        {isFetching && (
+          <Typography
+            sx={{ textAlign: 'center', marginTop: 2, color: 'gray' }}
+            variant="body2"
+          >
+            {isRTL ? 'جار تحميل المنتجات...' : 'Loading more products...'}
+          </Typography>
+        )}
       </DialogContent>
     </Dialog>
   );

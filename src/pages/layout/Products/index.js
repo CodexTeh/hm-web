@@ -75,11 +75,11 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
         direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
+      <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+      {/* Loading Spinner */}
       {isFetching && itemsCount > 10 && hasMoreItems && (
         <LinearProgress value={10} />
       )}
-      <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
-      {/* Loading Spinner */}
       {isFetching && (
         <Typography
           sx={{ textAlign: 'center', marginTop: 2, color: 'gray' }}

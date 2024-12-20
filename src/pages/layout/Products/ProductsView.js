@@ -26,6 +26,7 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
             <Card
               sx={{
                 maxWidth: 300,
+                maxHeight: '96%',
                 margin: 'auto',
                 position: 'relative',
                 textAlign: isRTL ? 'right' : 'left', // Align text based on language
@@ -62,11 +63,17 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
               />
               <CardContent>
                 {/* Product Name */}
-                <Typography variant="subtitle2" component="div">
+                <Typography sx={{
+                  display: '-webkit-box',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  WebkitLineClamp: 2, // Limit to two lines
+                  WebkitBoxOrient: 'vertical',
+                }} variant="subtitle2" component="div">
                   {isRTL ? product?.arabicName || product?.name : product?.name}
                 </Typography>
                 {/* Product Weight */}
-                <Typography variant="body2" color="textDisabled">
+                <Typography marginTop={2} variant="body2" color="textDisabled">
                   {isRTL ? '1 باوند' : '1 lb'}
                 </Typography>
                 <Box
@@ -102,21 +109,22 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
                         color: colorPalette.greenButton,
                       }}
                     >
-                      {isRTL ? `د.إ${product?.price.toFixed(2)}` : `$${product?.price.toFixed(2)}`}
+                      {isRTL ? `د.إ ${product?.price.toFixed(2)}` : `OMR ${product?.price.toFixed(2)}`}
                     </Typography>
                   </Box>
                   {/* Add to Cart Button */}
                   <Button
                     variant="contained"
                     startIcon={
-                      !isRTL && <LocalMallIcon style={{ width: 16, height: 16 }} />
+                      !isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginLeft: 10 }} />
                     }
                     endIcon={
-                      isRTL && <LocalMallIcon style={{ width: 16, height: 16 }} />
+                      isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginRight: 10 }} />
                     } // Adjust icon position for RTL
                     sx={{
                       fontWeight: 'bold',
-                      marginTop: 2,
+                      marginTop: 5,
+                      marginBottom: 5,
                       textTransform: 'capitalize',
                       borderRadius: 10,
                       background: colorPalette.white,
