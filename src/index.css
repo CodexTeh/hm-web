@@ -30,7 +30,7 @@ code {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #000; /* Scrollbar thumb color */
+  background-color: #009f7f; /* Scrollbar thumb color */
   border-radius: 10px; /* Rounded edges */
 }
 

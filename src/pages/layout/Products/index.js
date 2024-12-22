@@ -4,6 +4,7 @@ import { Typography, Box, LinearProgress } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import ProductsView from './ProductsView';
+import CategoryDrawer from '../CategoryDrawer';
 
 const ProductCardView = ({ drawerWidth = 300 }) => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
@@ -65,30 +66,34 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
 
 
   return (
-    <Box
-      sx={{
-        padding: 2,
-        cursor: 'pointer',
-        marginLeft: isRTL ? 0 : `${drawerWidth}px`,
-        marginRight: isRTL ? `${drawerWidth}px` : 0,
-        transition: 'margin 0.3s ease',
-        direction: isRTL ? 'rtl' : 'ltr',
-      }}
-    >
-      <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
-      {/* Loading Spinner */}
+    <>
+      <Box
+        sx={{
+          padding: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          cursor: 'pointer',
+          transition: 'margin 0.3s ease',
+          direction: isRTL ? 'rtl' : 'ltr',
+        }}
+      >
+        <CategoryDrawer height={'100vh'} />
+
+        <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+        {/* Loading Spinner */}
+      </Box>
       {isFetching && itemsCount > 10 && hasMoreItems && (
         <LinearProgress value={10} />
       )}
       {isFetching && (
         <Typography
-          sx={{ textAlign: 'center', marginTop: 2, color: 'gray' }}
+          sx={{ textAlign: 'center', color: 'gray' }}
           variant="body2"
         >
           {isRTL ? 'جار تحميل المنتجات...' : 'Loading more products...'}
         </Typography>
       )}
-    </Box>
+    </>
   );
 };
 

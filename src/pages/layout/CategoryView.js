@@ -22,8 +22,8 @@ export default function CategoryView({ category, index, language }) {
         boxShadow: 'none', // Remove default shadow
         border: 'none', // Remove border
         margin: 0,
-        paddingLeft: 7,
-        paddingRight: 7,
+        paddingLeft: 3,
+        paddingRight: 4,
         paddingTop: index === 0 ? 10 : 0,
         '&:before': {
           display: 'none', // Remove the default divider line (black line)
@@ -43,13 +43,13 @@ export default function CategoryView({ category, index, language }) {
           margin: '0', // Remove margin
         }}
       >
-        <Typography color={highlightColor} variant='subtitle2' fontWeight={520} width={130}>
+        <Typography color={highlightColor} variant='subtitle1' fontWeight={510} width={150}>
           {category.category.label}
         </Typography>
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: '0', margin: '0' }}>
+      <AccordionDetails sx={{ padding: '0', margin: '0', paddingBottom: 5, paddingLeft: -100 }}>
         {category.subcategories.map((subCat, index) =>
-          <Typography sx={{ color: colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={520} width={130} key={index} marginTop={2}>
+          <Typography sx={{ color: colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle1' fontWeight={510} width={150} key={index} marginTop={2}>
             {subCat.label}
           </Typography>
         )

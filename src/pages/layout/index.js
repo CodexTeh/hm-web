@@ -7,6 +7,7 @@ import TopBar from './TopBar';
 import CartFloatButton from './CartFloatButton';
 import Banner from './Banner';
 import ProductCardView from './Products';
+import { Box } from '@mui/material';
 
 export default function Layout() {
 
@@ -28,7 +29,7 @@ export default function Layout() {
 
   return (
     <>
-      <TopBar />
+      <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}><TopBar /></Box>
       <Banner />
       <ProductCardView />
       <CardDrawer open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />

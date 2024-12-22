@@ -105,7 +105,6 @@ const Banner = () => {
           </div>
         </div>
       </div>
-      <CategoryDrawer height={drawerVisible ? '100vh' : 0} />
     </section>
   );
 };

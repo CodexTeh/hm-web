@@ -11,13 +11,16 @@ const CategoryDrawer = ({ height }) => {
   const language = GetLanguage();
 
   const drawerStyle = {
-    position: 'fixed',
-    bottom: 0,
+    position: 'sticky',
+    top: 0,
     left: language === 'ar' ? 'auto' : 0, // For RTL, align to the right
     right: language === 'ar' ? 0 : 'auto', // For RTL, align to the right
     backgroundColor: colorPalette.white,
     color: colorPalette.white,
+    width: 300,
     height: height,
+    paddingTop: 10,
+    overflowY: 'auto',
     transition: 'height 1s ease', // Smooth transition for height change
     zIndex: 15, // Ensure the drawer is above other content
     overflow: 'auto', // Prevent overflow when the drawer is closed

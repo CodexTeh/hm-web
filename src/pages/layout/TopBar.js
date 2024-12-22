@@ -84,7 +84,7 @@ const TopBar = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar sx={{ background: colorPalette.white }} position="static">
+      <AppBar sx={{ background: colorPalette.white, height: 80 }} position="static">
         <Container maxWidth="xl">
           <Toolbar
             sx={{
@@ -95,7 +95,7 @@ const TopBar = () => {
             disableGutters
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt="logo" style={{ width: 50, height: 50, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
+              <img src={logo} alt="logo" style={{ width: 50, height: 60, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
               {/* <Typography
                 variant="h6"
                 noWrap
