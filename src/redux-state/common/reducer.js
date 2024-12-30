@@ -1,6 +1,8 @@
 import {
   GET_PRODUCTS,
   GET_PRODUCTS_SUCCESS,
+  GET_PRODUCTS_BY_CATEGORY,
+  GET_PRODUCTS_BY_CATEGORY_SUCCESS,
   EDIT_PRODUCT,
   EDIT_PRODUCT_SUCCESS,
   GET_SEARCHED_PRODUCTS,
@@ -22,8 +24,11 @@ import {
 
 const INITIAL_STATE = {
   productsLoading: false,
+  productsByCategoryLoading: false,
   editProductLoading: false,
   products: [],
+  productsByCategory: [],
+  totalProductsByCategory: 0,
   totalProducts: 0,
   categories: [],
   getCategoriesLoading: false,
@@ -47,6 +52,12 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_PRODUCTS_SUCCESS:
       return { ...state, productsLoading: false, products: action.payload.products, totalProducts: action.payload.count };
+
+    case GET_PRODUCTS_BY_CATEGORY:
+      return { ...state, productsByCategoryLoading: true };
+
+    case GET_PRODUCTS_BY_CATEGORY_SUCCESS:
+      return { ...state, productsByCategoryLoading: false, productsByCategory: action.payload.products, totalProductsByCategory: action.payload?.products?.length };
 
     case GET_CATEGORIES:
       return { ...state, getCategoriesLoading: true };

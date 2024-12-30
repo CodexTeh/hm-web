@@ -8,7 +8,7 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
 
   return (
     <Grid
-      sx={{ marginLeft: 0.5 }}
+      sx={{ marginLeft: !open ? 0.5 : null }}
       container spacing={3}>
       {products.map((product, index) => {
         const imageUrls = product?.image_urls ? JSON.parse(product?.image_urls.replace(/'/g, '"')) : [];

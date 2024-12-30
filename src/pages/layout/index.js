@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginModal from '@components/Modal/LoginModal';
 import { getCategories } from '@redux-state/common/action';
-import CardDrawer from './CartDrawer';
+import CardDrawer from './CardDrawer/CartDrawer';
 import TopBar from './TopBar';
 import CartFloatButton from './CartFloatButton';
 import Banner from './Banner';

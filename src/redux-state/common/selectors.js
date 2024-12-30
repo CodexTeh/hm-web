@@ -8,6 +8,15 @@ export const GetProducts = () =>
     (state) => state.common.products);
 export const GetAllProductsCount = () =>
   useSelector(
+    (state) => state.common.totalProductsByCategory);
+export const GetProductsByCategoryLoading = () =>
+  useSelector(
+    (state) => state.common.productsByCategoryLoading);
+export const GetProductsByCategory = () =>
+  useSelector(
+    (state) => state.common.productsByCategory);
+export const GetAllProductsByCategoryCount = () =>
+  useSelector(
     (state) => state.common.totalProducts);
 export const GetEditProductLoading = () =>
   useSelector(

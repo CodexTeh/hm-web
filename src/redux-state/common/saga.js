@@ -10,6 +10,7 @@ import {
   GET_CATEGORIES,
   GET_PRODUCT_CATALOG,
   GET_PRODUCTS,
+  GET_PRODUCTS_BY_CATEGORY,
   GET_SEARCHED_PRODUCTS,
 } from './types'
 
@@ -21,6 +22,16 @@ function* getProducts(action) {
     yield put(Actions.getProductsSuccess(data));
   } catch (error) {
     yield put(Actions.getProductsSuccess([]));
+    console.log("error", error);
+  }
+}
+
+function* getProductsByCategory(action) {
+  try {
+    const data = yield call(Api.getProductsByCategory, action.payload);
+    yield put(Actions.getProductsByCategorySuccess(data));
+  } catch (error) {
+    yield put(Actions.getProductsByCategorySuccess([]));
     console.log("error", error);
   }
 }
@@ -131,6 +142,7 @@ function* editCategory(action) {
 function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
+  yield takeLatest(GET_PRODUCTS_BY_CATEGORY, getProductsByCategory);
   yield takeLatest(GET_CATEGORIES, getCategories);
   yield takeLatest(GET_PRODUCT_CATALOG, getProductCatalog);
   yield takeLatest(EDIT_PRODUCT, editProduct);

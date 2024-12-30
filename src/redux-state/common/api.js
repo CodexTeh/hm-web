@@ -39,6 +39,37 @@ export const Api = {
       console.log("Error", e);
     }
   },
+  getProductsByCategory: async ({ pagination, category }) => {
+    try {
+      let response;
+      const options = {
+        method: 'GET',
+      };
+
+      const { page = 1, perPage = 10 } = pagination || {};
+      const query = {
+        page: JSON.stringify(page + 1),
+        limit: JSON.stringify(perPage)
+      };
+
+      response = await fetch(`${SERVER_URL}/get_products_for_categories?category=['${category}']`, options);
+
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          return data;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
   getSearchedProducts: async (searchText) => {
     try {
       let response;

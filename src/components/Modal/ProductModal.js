@@ -18,9 +18,9 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
-import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading } from "@redux-state/common/selectors";
+import { GetProductCatalogs, GetCategories, GetProductsByCategory, GetAllProductsCount, GetProductsByCategoryLoading } from "@redux-state/common/selectors";
 import ProductsView from '@pages/layout/Products/ProductsView';
-import { getProducts } from '@redux-state/common/action';
+import { getProductsByCategory } from '@redux-state/common/action';
 
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
@@ -36,9 +36,10 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const dispatch = useDispatch();
 
   const allCategories = GetCategories();
-  const products = GetProducts();
+  const products = GetProductsByCategory();
   const itemsCount = GetAllProductsCount();
-  const isFetching = GetProductsLoading();
+  const isFetching = GetProductsByCategoryLoading();
+console.log('yoyo', products);
 
   const pagination = useMemo(
     () => ({
@@ -75,7 +76,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   }, [loopRef?.current?.scrollTop]);
 
   useEffect(() => {
-    dispatch(getProducts(pagination)); // Fetch products
+    dispatch(getProductsByCategory(pagination, category.id)); // Fetch products
   }, [dispatch, pagination]);
 
 
@@ -430,7 +431,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               >
                 {category?.category?.label}
               </Button>
-              <Button
+              {subCategory && <Button
                 variant="outlined"
                 size='small'
                 sx={{
@@ -441,7 +442,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 }}
               >
                 {subCategory?.label}
-              </Button>
+              </Button>}
             </Typography>}
           </Grid>
         </Grid>

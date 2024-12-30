@@ -15,6 +15,8 @@ import {
   GET_PRODUCT_CATALOG,
   GET_PRODUCT_CATALOG_SUCCESS,
   GET_PRODUCTS,
+  GET_PRODUCTS_BY_CATEGORY,
+  GET_PRODUCTS_BY_CATEGORY_SUCCESS,
   GET_PRODUCTS_SUCCESS,
   GET_SEARCHED_PRODUCTS,
   GET_SEARCHED_PRODUCTS_SUCCESS
@@ -30,6 +32,20 @@ export const getProducts = (pagination) => (
 export const getProductsSuccess = (data) => (
   {
     type: GET_PRODUCTS_SUCCESS,
+    payload: data
+  }
+);
+
+export const getProductsByCategory = (pagination, category) => (
+  {
+    type: GET_PRODUCTS_BY_CATEGORY,
+    payload: { pagination, category }
+  }
+);
+
+export const getProductsByCategorySuccess = (data) => (
+  {
+    type: GET_PRODUCTS_BY_CATEGORY_SUCCESS,
     payload: data
   }
 );
