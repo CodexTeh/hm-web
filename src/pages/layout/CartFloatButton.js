@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { useDispatch } from 'react-redux';
 import LoginModal from '@components/Modal/LoginModal';
 import { colorPalette } from '@utils/colorPalette';
-import { GetLanguage } from '@redux-state/common/selectors';
+import { GetLanguage, GetCartDetails } from '@redux-state/selectors';
 
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { StyledCartBoxContainer, StyledCartContainer } from './styles';
@@ -35,7 +33,7 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
     borderBottomRightRadius: 4,
   };
 
-  const dispatch = useDispatch();
+  const cartDetails = GetCartDetails();
   const language = GetLanguage();
 
   return (
@@ -54,7 +52,7 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
             }}
             variant="body2"
           >
-            {language === 'ar' ? '0 عنصر' : '0 Item'}
+            {language === 'ar' ? cartDetails.items.length + ' عنصر' : cartDetails.items.length + ' Items'}
           </Typography>
         </StyledCartBoxContainer>
         <Box
@@ -69,7 +67,7 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
             sx={{ color: colorPalette.greenButton }}
             variant="body2"
           >
-            {language === 'ar' ? '٠ دولار' : '$ 0.00'}
+            {language === 'ar' ? cartDetails.totalPrice.toFixed(2) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(2)}
           </Typography>
         </Box>
       </StyledCartContainer>

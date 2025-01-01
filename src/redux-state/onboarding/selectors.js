@@ -9,3 +9,6 @@ export const GetUserLoginLoader = () =>
 export const GetToken = () =>
   useSelector(
     (state) => state.onboarding.token);
+export const GetUser= () =>
+  useSelector(
+    (state) => state.onboarding.user);

@@ -1,11 +1,10 @@
-import { useDispatch } from 'react-redux';
 import CloseIcon from '@mui/icons-material/CancelRounded';
 import LoginModal from '@components/Modal/LoginModal';
-import { Box, Divider, IconButton, LinearProgress, Typography } from '@mui/material';
+import { Box, Divider, IconButton, Typography } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import Drawer from '@mui/material/Drawer';
 import { colorPalette } from '@utils/colorPalette';
-import { GetLanguage } from '@redux-state/common/selectors';
+import { GetLanguage, GetCartDetails } from '@redux-state/common/selectors';
 import EmptyCart from './EmptyCart';
 import { StyledMainBox } from '../styles';
 import CheckoutButton from './CheckoutButton';
@@ -16,18 +15,13 @@ const drawerWidth = 500;
 export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }) {
 
   const language = GetLanguage();
+  const cartDetails = GetCartDetails();
+
   const isRTL = language === 'ar';
 
-  const loading = false;
-
-  const dispatch = useDispatch();
 
   return (
     <>
-      {
-        loading &&
-        <LinearProgress color="primary" />
-      }
       <Drawer
         sx={{
           width: drawerWidth,
@@ -43,9 +37,6 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
         open={open}
       >
         <StyledMainBox>
-          {loading &&
-            <LinearProgress color="primary" />
-          }
           <Box
             sx={{
               width: '100%',
@@ -72,7 +63,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
                   marginRight: isRTL ? 1 : 0, // Adjust margin for RTL
                 }}
               >
-                {isRTL ? '0 عنصر' : '0 Item'}  {/* Arabic translation for RTL */}
+                {isRTL ? cartDetails.items.length + ' عنصر' : cartDetails.items.length + ' Items'}
               </Typography>
             </Box>
             <IconButton
@@ -96,14 +87,17 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
               flex: 1,
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'space-between',
               textAlign: 'center',
             }}
           >
             <Box />
-            {/* <EmptyCart isRTL={isRTL} /> */}
-            <Cart />
-            <CheckoutButton isRTL={isRTL} />
+            {cartDetails?.items > 0
+              ?
+              <Cart cartDetails={cartDetails} />
+              :
+              <EmptyCart isRTL={isRTL} />}
+
+            <CheckoutButton isRTL={isRTL} cartDetails={cartDetails} />
           </Box>
         </StyledMainBox>
       </Drawer>

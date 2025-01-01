@@ -1,4 +1,5 @@
 import {
+  ADD_TO_CART,
   ADD_PRODUCT_CATALOG,
   ADD_PRODUCT_CATALOG_SUCCESS,
   CHANGE_LANGUAGE,
@@ -21,6 +22,13 @@ import {
   GET_SEARCHED_PRODUCTS,
   GET_SEARCHED_PRODUCTS_SUCCESS
 } from './types';
+
+export const addToCart = (cart) => (
+  {
+    type: ADD_TO_CART,
+    payload: cart
+  }
+);
 
 export const getProducts = (pagination, filter) => (
   {

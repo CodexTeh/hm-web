@@ -20,6 +20,7 @@ import {
   EDIT_PRODUCT_CATALOG,
   EDIT_PRODUCT_CATALOG_SUCCESS,
   CHANGE_LANGUAGE,
+  ADD_TO_CART,
 } from './types';
 
 const INITIAL_STATE = {
@@ -27,6 +28,11 @@ const INITIAL_STATE = {
   productsByCategoryLoading: false,
   editProductLoading: false,
   products: [],
+  cart: {
+    items: [],
+    user: {},
+    totalPrice: 0,
+  },
   productsByCategory: [],
   totalProductsByCategory: 0,
   totalProducts: 0,
@@ -46,6 +52,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case CHANGE_LANGUAGE:
       return { ...state, language: payload };
+
+    case ADD_TO_CART:
+      return { ...state, cart: payload };
 
     case GET_PRODUCTS:
       return { ...state, productsLoading: true };

@@ -45,3 +45,6 @@ export const EditProductCatalogLoading = () =>
 export const GetLanguage = () =>
   useSelector(
     (state) => state.common.language);
+export const GetCartDetails = () =>
+  useSelector(
+    (state) => state.common.cart);

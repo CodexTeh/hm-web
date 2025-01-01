@@ -12,7 +12,6 @@ const INITIAL_STATE = {
   signInloading: false,
   token: null,
   user: null,
-
 };
 
 export default (state = INITIAL_STATE, action) => {

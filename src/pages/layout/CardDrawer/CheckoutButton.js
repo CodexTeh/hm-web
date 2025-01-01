@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
 
-const CheckoutButton = ({ isRTL }) => {
+const CheckoutButton = ({ isRTL, cartDetails }) => {
   return (
     <Box
       sx={{
@@ -10,6 +10,9 @@ const CheckoutButton = ({ isRTL }) => {
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
+        position: 'absolute',
+        bottom: 0,
+        background: colorPalette.white
       }}
     >
       <Button
@@ -18,10 +21,11 @@ const CheckoutButton = ({ isRTL }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          width: '100%',
+          width: '90%',
+          marginBottom: 2,
           borderRadius: '50px', // Rounded corners
           backgroundColor: colorPalette.greenButton, // Green color
-          padding: '10px 10px',
+          padding: '15px 10px',
           color: 'white',
           textTransform: 'none',
           fontWeight: 'bold',
@@ -53,7 +57,7 @@ const CheckoutButton = ({ isRTL }) => {
             fontWeight: 'bold',
           }}
         >
-          {isRTL ? `د.إ 0.00` : `OMR 0.00`}
+          {isRTL ? cartDetails.totalPrice.toFixed(2) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(2)}
 
         </Box>
       </Button>

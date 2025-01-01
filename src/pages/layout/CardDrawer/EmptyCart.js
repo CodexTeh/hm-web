@@ -10,6 +10,7 @@ const EmptyCart = ({ isRTL }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 15,
         textAlign: isRTL ? 'right' : 'left',
       }}
     >
