@@ -10,6 +10,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
+  const [filter, setFilter] = useState({});
 
   const language = GetLanguage(); // Get the current language (en or ar)
   const isRTL = language === 'ar'; // Check if the language is Arabic
@@ -30,10 +31,13 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   const handleClose = () => setOpen(null);
 
   useEffect(() => {
-    dispatch(getProducts(pagination)); // Fetch products
     dispatch(getProductCatalog());
     dispatch(getCategories());
-  }, [dispatch, pagination]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getProducts(pagination, filter));
+  }, [dispatch, filter, pagination]);
 
   const products = GetProducts();
 
@@ -43,12 +47,14 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
         window.innerHeight + document.documentElement.scrollTop + 1 >=
         document.documentElement.scrollHeight
       ) {
-        setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
+        if (products?.length > 0) {
+          setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
+        }
       }
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [products]);
 
   window.onbeforeunload = function () {
     window.scrollTo(0, 0);
@@ -77,21 +83,25 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
           direction: isRTL ? 'rtl' : 'ltr',
         }}
       >
-        <CategoryDrawer height={'100vh'} />
+        <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
+        {/* {!isFetching && itemsCount > 10 && hasMoreItems && ( */}
+        {/* <LinearProgress value={10} /> */}
+        {/* )} */}
 
         <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
         {/* Loading Spinner */}
       </Box>
-      {isFetching && itemsCount > 10 && hasMoreItems && (
-        <LinearProgress value={10} />
-      )}
+
       {isFetching && (
-        <Typography
-          sx={{ textAlign: 'center', color: 'gray' }}
-          variant="body2"
-        >
-          {isRTL ? 'جار تحميل المنتجات...' : 'Loading more products...'}
-        </Typography>
+        <>
+          <LinearProgress value={10} />
+          <Typography
+            sx={{ textAlign: 'center', color: 'gray' }}
+            variant="body2"
+          >
+            {isRTL ? 'جار تحميل المنتجات...' : 'Loading more products...'}
+          </Typography>
+        </>
       )}
     </>
   );

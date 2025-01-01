@@ -18,10 +18,9 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
-import { GetProductCatalogs, GetCategories, GetProductsByCategory, GetAllProductsCount, GetProductsByCategoryLoading } from "@redux-state/common/selectors";
+import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading } from "@redux-state/common/selectors";
 import ProductsView from '@pages/layout/Products/ProductsView';
-import { getProductsByCategory } from '@redux-state/common/action';
-
+import { getProducts } from '@redux-state/common/action';
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const [isReadMore, setIsReadMore] = useState(false);
@@ -36,10 +35,9 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const dispatch = useDispatch();
 
   const allCategories = GetCategories();
-  const products = GetProductsByCategory();
+  const products = GetProducts();
   const itemsCount = GetAllProductsCount();
-  const isFetching = GetProductsByCategoryLoading();
-console.log('yoyo', products);
+  const isFetching = GetProductsLoading();
 
   const pagination = useMemo(
     () => ({
@@ -74,11 +72,6 @@ console.log('yoyo', products);
       }
     };
   }, [loopRef?.current?.scrollTop]);
-
-  useEffect(() => {
-    dispatch(getProductsByCategory(pagination, category.id)); // Fetch products
-  }, [dispatch, pagination]);
-
 
   window.onbeforeunload = function () {
     window.scrollTo(0, 0);
@@ -129,7 +122,7 @@ console.log('yoyo', products);
     } = {}
   } = splitByTypeAndLanguage(allProductCatalogs);
 
-  const enCategory = allCategories.find(category => category?._id === product?.category)
+  const enCategory = allCategories.find(category => category?._id === product?.webCategory)
   const arCategory = allCategories.find(category => category?._id === product?.arabicCategory)
   const enSubCategory = enCategory?.subcategories.find(category => category?._id === product?.subCategory)
   const arSubCategory = arCategory?.subcategories.find(category => category?._id === product?.arabicSubCategory)
@@ -153,6 +146,12 @@ console.log('yoyo', products);
   ]
 
   const images = imageUrls?.length > 0 ? imageUrls : gallery;
+
+  useEffect(() => {
+    const filter = isRTL ? { arabicCategory: category?.arabicCategory } : { Category: category?.webCategory };
+    dispatch(getProducts(pagination, filter)); // Fetch products
+  }, [dispatch, pagination]);
+
 
   const CustomCarousel = () => {
     const renderArrowPrev = (onClickHandler, hasPrev, label) =>
@@ -329,7 +328,7 @@ console.log('yoyo', products);
               fontWeight: 'bold', marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
-              {isRTL ? product?.arabicName : product?.name}
+              {isRTL ? product?.arabicName : product?.website_name}
             </Typography>
             <Typography variant="body2" color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
@@ -341,7 +340,7 @@ console.log('yoyo', products);
               variant="subtitle1"
               color="textSecondary"
               dangerouslySetInnerHTML={{
-                __html: isRTL ? product?.arabicDescription : product?.description + ''
+                __html: isRTL ? product?.arabicDescription : product?.webDescription + ''
               }}
               sx={{
                 marginBottom: 2, maxHeight: isReadMore ? 'none' : 100, overflow: isReadMore ? 'visible' : 'hidden', direction: isRTL ? 'rtl' : 'ltr',

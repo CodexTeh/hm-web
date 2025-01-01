@@ -22,10 +22,10 @@ import {
   GET_SEARCHED_PRODUCTS_SUCCESS
 } from './types';
 
-export const getProducts = (pagination) => (
+export const getProducts = (pagination, filter) => (
   {
     type: GET_PRODUCTS,
-    payload: { pagination }
+    payload: { pagination, filter }
   }
 );
 

@@ -1,17 +1,28 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
 
-export default function CategoryView({ category, index, language }) {
-  const [expanded, setExpanded] = React.useState(false);
+export default function CategoryView({ isRTL, setFilter, category, index, language }) {
+  const [expanded, setExpanded] = useState(false);
+  const [child, setChild] = useState();
+
+  const catFilter = isRTL ? { arabicCategory: category?._id } : { Category: category?._d };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  useEffect(() => {
+    if (category) {
+      setFilter(catFilter);
+    }
+  }, [category])
+
 
   const highlightColor = expanded === 'panel1' ? colorPalette.greenButton : colorPalette.darkText;
   return (
@@ -43,16 +54,26 @@ export default function CategoryView({ category, index, language }) {
           margin: '0', // Remove margin
         }}
       >
-        <Typography color={highlightColor} variant='subtitle1' fontWeight={510} width={150}>
-          {category.category.label}
-        </Typography>
+        <Box sx={{ cursor: 'pointer' }} onClick={() => setFilter(catFilter)}>
+          <Typography color={highlightColor} variant='subtitle1' fontWeight={510} width={150}>
+            {category.category.label}
+          </Typography>
+        </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: '0', margin: '0', paddingBottom: 5, paddingLeft: -100 }}>
-        {category.subcategories.map((subCat, index) =>
-          <Typography sx={{ color: colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle1' fontWeight={510} width={150} key={index} marginTop={2}>
-            {subCat.label}
-          </Typography>
-        )
+        {category.subcategories.map((subCat, index) => {
+          const subCatFilter = isRTL ? { arabicSubCategory: subCat._id } : { subCategory: subCat._id };
+          return (
+            <Box sx={{ cursor: 'pointer' }} onClick={() => {
+              setChild(subCat._id)
+              setFilter(subCatFilter)
+            }} key={index}>
+              <Typography sx={{ color: child === subCat._id ? colorPalette.greenButton : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle1' fontWeight={510} width={150} key={index} marginTop={2}>
+                {subCat.label}
+              </Typography>
+            </Box>
+          )
+        })
         }
       </AccordionDetails>
     </Accordion>

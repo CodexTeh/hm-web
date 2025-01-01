@@ -8,7 +8,7 @@ const API_URL = "http://213.210.21.52:8080/api/";
 const SERVER_URL = "https://hmoman.com";
 
 export const Api = {
-  getProducts: async ({ pagination }) => {
+  getProducts: async ({ pagination, filter = null }) => {
     try {
       let response;
       const options = {
@@ -18,7 +18,8 @@ export const Api = {
       const { page = 1, perPage = 10 } = pagination || {};
       const query = {
         page: JSON.stringify(page + 1),
-        limit: JSON.stringify(perPage)
+        limit: JSON.stringify(perPage),
+        ...filter
       };
 
       response = await fetch(`${SERVER_URL}/get_products?${queryString.stringify(query)}`, options);
