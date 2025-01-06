@@ -3,11 +3,12 @@ import Categories from '@pages/categories';
 import Layout from '@pages/layout';
 import Products from '@pages/products';
 import ErrorElement from '@pages/error';
+import Checkout from '../pages/checkout';
 
 
 export const AppRoutes = [
   {
-    element: <Layout />,
+    // element: <Layout />,
     errorElement: <ErrorElement />,
     children: [
       {
@@ -15,15 +16,21 @@ export const AppRoutes = [
         errorElement: <ErrorElement />,
         children: [
           {
-            index: true,
             element: <Layout />,
             key: 'layout',
             errorElement: <ErrorElement />
           },
           {
-            path: 'products',
+            index: true,
+            path: '/',
             key: 'products',
-            element: <Products />,
+            element: <><Layout /><Products /></>,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'checkout',
+            key: 'checkout',
+            element: <><Layout /><Checkout /></>,
             errorElement: <ErrorElement />
           },
           {

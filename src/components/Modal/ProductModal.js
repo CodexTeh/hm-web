@@ -19,7 +19,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
 import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading } from "@redux-state/common/selectors";
-import ProductsView from '@pages/layout/Products/ProductsView';
+import ProductsView from '@pages/products/Products/ProductsView';
 import { getProducts } from '@redux-state/common/action';
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {

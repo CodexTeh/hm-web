@@ -87,6 +87,7 @@ export const colorPalette = {
   softOrange: '#DD7750',
   softRed: '#FF4848',
   spanishGray: '#979494',
+  greyBackground: '#F6F6F6',
   steelBlue: '#577EBF',
   sugarCane: '#f9fff5',
   titaniumWhite: '#E4E4E4',
