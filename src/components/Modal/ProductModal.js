@@ -221,7 +221,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
             <div
               key={index}
               style={{
-                border: selectedIndex === index ? `2px solid ${colorPalette.greenButton}` : null,
+                border: selectedIndex === index ? `2px solid ${colorPalette.theme}` : null,
                 borderRadius: '8px',
                 boxSizing: 'border-box',
                 transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
@@ -296,12 +296,12 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
           width: '8px', // Customize scrollbar width
         },
         '&::-webkit-scrollbar-thumb': {
-          backgroundColor: colorPalette.greenButton,
+          backgroundColor: colorPalette.theme,
           borderRadius: '8px',
           border: '2px solid #fff',
         },
         '&::-webkit-scrollbar-thumb:hover': {
-          backgroundColor: colorPalette.greenButton,
+          backgroundColor: colorPalette.theme,
         },
         '&::-webkit-scrollbar-track': {
           backgroundColor: '#f1f1f1',
@@ -350,7 +350,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
             <Button
               variant="text"
               sx={{
-                color: colorPalette.greenButton,
+                color: colorPalette.theme,
                 marginBottom: 5,
                 marginTop: 2,
                 fontSize: 16,
@@ -373,7 +373,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
             <Typography
               variant="h4"
-              sx={{ fontWeight: 'bold', color: colorPalette.greenButton, marginBottom: 1 }}
+              sx={{ fontWeight: 'bold', color: colorPalette.theme, marginBottom: 1 }}
             >
               {isRTL ? "ر۔ع  " : "OMR  "}{product?.price?.toFixed(2)}
               <Typography
@@ -399,7 +399,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 size='large'
                 sx={{
                   textTransform: 'capitalize',
-                  background: colorPalette.greenButton,
+                  background: colorPalette.theme,
                   padding: '12px',
                   width: '60%',
                 }}

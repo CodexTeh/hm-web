@@ -18,6 +18,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
   const cartDetails = GetCartDetails();
 
   const isRTL = language === 'ar';
+console.log('yoyo', cartDetails.items);
 
 
   return (
@@ -53,10 +54,10 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
                 alignItems: 'center',
               }}
             >
-              <LocalMallIcon sx={{ color: colorPalette.greenButton }} />
+              <LocalMallIcon sx={{ color: colorPalette.theme }} />
               <Typography
                 sx={{
-                  color: colorPalette.greenButton,
+                  color: colorPalette.theme,
                   fontWeight: 510,
                   variant: 'subtitle1',
                   marginLeft: isRTL ? 0 : 1,
@@ -69,7 +70,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             <IconButton
               sx={{
                 '&:hover': {
-                  color: colorPalette.greenButton,  // Apply the green color on hover
+                  color: colorPalette.theme,  // Apply the green color on hover
                 },
                 color: colorPalette.nobel
               }}
@@ -91,12 +92,11 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             }}
           >
             <Box />
-            {cartDetails?.items > 0
+            {cartDetails?.items?.length > 0
               ?
               <Cart cartDetails={cartDetails} />
               :
               <EmptyCart isRTL={isRTL} />}
-
             <CheckoutButton isRTL={isRTL} cartDetails={cartDetails} />
           </Box>
         </StyledMainBox>

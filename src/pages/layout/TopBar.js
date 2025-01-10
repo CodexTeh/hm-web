@@ -10,8 +10,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Input, InputAdornment } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 
 import { alpha, styled, Switch } from '@mui/material';
 import { useDispatch } from 'react-redux';
@@ -32,13 +30,13 @@ const settings = {
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase.Mui-checked': {
-    color: colorPalette.greenButton,
+    color: colorPalette.theme,
     '&:hover': {
-      backgroundColor: alpha(colorPalette.greenButton, theme.palette.action.hoverOpacity),
+      backgroundColor: alpha(colorPalette.theme, theme.palette.action.hoverOpacity),
     },
   },
   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-    backgroundColor: colorPalette.greenButton,
+    backgroundColor: colorPalette.theme,
   },
 }));
 
@@ -115,15 +113,6 @@ const TopBar = () => {
               </Typography> */}
             </Box>
 
-            <Input
-              sx={{ background: 'white', width: '30%', padding: 1, borderRadius: 2 }}
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              }
-            />
-
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               {pages[language].map((page, index) => (
                 <Button
@@ -137,7 +126,7 @@ const TopBar = () => {
               <Button
                 onClick={handleCloseNavMenu}
                 variant="contained"
-                sx={{ my: 2, background: colorPalette.greenButton, mx: 1 }}
+                sx={{ my: 2, background: colorPalette.theme, mx: 1 }}
               >
                 {language === 'ar' ? 'انضم' : 'Join'}
               </Button>

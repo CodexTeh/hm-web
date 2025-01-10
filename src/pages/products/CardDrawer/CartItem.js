@@ -141,7 +141,7 @@ const Cart = ({ cartDetails }) => {
 
           <Box sx={{ marginLeft: 2, textAlign: 'start' }}>
             <Typography variant="subtitle1" fontWeight={510}>{item.website_name}</Typography>
-            <Typography variant="body1" sx={{ color: colorPalette.greenButton }} fontWeight={510}>${(item.price)}</Typography>
+            <Typography variant="body1" sx={{ color: colorPalette.theme }} fontWeight={510}>${(item.price)}</Typography>
             <Typography variant="body2" color="textSecondary">{item.quantity} x lb</Typography>
           </Box>
         </Box>

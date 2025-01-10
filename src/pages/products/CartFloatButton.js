@@ -16,7 +16,7 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
     justifySelf: 'flex-end',
     display: 'flex',
     bottom: '50%',
-    background: colorPalette.greenButton,
+    background: colorPalette.theme,
     right: 0,
     cursor: 'pointer',
     borderTopLeftRadius: 4,
@@ -64,7 +64,7 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
           }}
         >
           <Typography
-            sx={{ color: colorPalette.greenButton }}
+            sx={{ color: colorPalette.theme }}
             variant="body2"
           >
             {language === 'ar' ? cartDetails.totalPrice.toFixed(2) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(2)}

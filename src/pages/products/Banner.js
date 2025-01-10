@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import bannerImage from '@assets/icons/banner.png';
+import bannerImage from '@assets/icons/banner.jpg';
 import constants from '@helpers/constants';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { GetLanguage } from '@redux-state/common/selectors';
-import CategoryDrawer from './CategoryDrawer';
+import SearchBar from '../../components/SearchBar';
 
 const Banner = () => {
   // State to track the drawer visibility
@@ -11,6 +11,8 @@ const Banner = () => {
 
   // Language detection
   const language = GetLanguage();
+
+  const isRTL = language === 'ar';
 
   // Ref to the banner section
   const bannerRef = useRef(null);
@@ -42,13 +44,13 @@ const Banner = () => {
   // Styles for the banner
   const wrapperStyle = {
     position: 'relative',
-    padding: '80px 0',
+    // padding: '80px 0',
     backgroundImage: `url(${bannerImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    height: '70vh',
-    direction: language === 'ar' ? 'rtl' : 'ltr', // Set direction based on language
+    height: '100vh',
+    direction: isRTL ? 'rtl' : 'ltr', // Set direction based on language
   };
 
   const containerStyle = {
@@ -69,10 +71,11 @@ const Banner = () => {
   };
 
   const textContainerStyle = {
-    maxWidth: '724px',
-    marginTop: '15%',
-    textAlign: language === 'ar' ? 'right' : 'left', // Adjust text alignment based on language
+    // maxWidth: '724px',
+    marginTop: '18%',
+    textAlign: 'center', // Adjust text alignment based on language
     zIndex: 20,
+    alignItems: 'center'
   };
 
   const headingStyle = {
@@ -80,7 +83,7 @@ const Banner = () => {
     lineHeight: 1.25,
     color: '#000',
     textAlign: 'center',
-    fontSize: 36,
+    // fontSize: 36,
   };
 
   const descriptionStyle = {
@@ -96,12 +99,15 @@ const Banner = () => {
       <div style={containerStyle}>
         <div style={flexStyle}>
           <div style={textContainerStyle}>
-            <Typography variant="h6" style={headingStyle}>
-              {language === 'ar' ? constants.AR_BANNER_HEADER : constants.BANNER_HEADER}
+            <Typography variant="h3" style={headingStyle}>
+              {isRTL ? constants.AR_BANNER_HEADER : constants.BANNER_HEADER}
             </Typography>
-            <Typography variant="inherit" style={descriptionStyle}>
-              {language === 'ar' ? constants.AR_BANNER_SUB_HEADER : constants.BANNER_SUB_HEADER}
+            <Typography variant="body1" style={descriptionStyle}>
+              {isRTL ? constants.AR_BANNER_SUB_HEADER : constants.BANNER_SUB_HEADER}
             </Typography>
+            <Box sx={{ marginTop: 5 }}>
+              <SearchBar />
+            </Box>
           </div>
         </div>
       </div>

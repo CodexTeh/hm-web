@@ -24,7 +24,7 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
   }, [category])
 
 
-  const highlightColor = expanded === 'panel1' ? colorPalette.greenButton : colorPalette.darkText;
+  const highlightColor = expanded === 'panel1' ? colorPalette.theme : colorPalette.darkText;
   return (
     <Accordion
       expanded={expanded === 'panel1'}
@@ -68,7 +68,7 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
               setChild(subCat._id)
               setFilter(subCatFilter)
             }} key={index}>
-              <Typography sx={{ color: child === subCat._id ? colorPalette.greenButton : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle1' fontWeight={510} width={150} key={index} marginTop={2}>
+              <Typography sx={{ color: child === subCat._id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle1' fontWeight={510} width={150} key={index} marginTop={2}>
                 {subCat.label}
               </Typography>
             </Box>

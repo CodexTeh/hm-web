@@ -1,8 +1,11 @@
 import React from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
+import useRouter from '@helpers/useRouter';
 
 const CheckoutButton = ({ isRTL, cartDetails }) => {
+
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -17,6 +20,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
     >
       <Button
         variant="contained"
+        onClick={() =>router.push('/checkout')}
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -24,13 +28,13 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
           width: '90%',
           marginBottom: 2,
           borderRadius: '50px', // Rounded corners
-          backgroundColor: colorPalette.greenButton, // Green color
+          backgroundColor: colorPalette.theme, // Green color
           padding: '15px 10px',
           color: 'white',
           textTransform: 'none',
           fontWeight: 'bold',
           '&:hover': {
-            backgroundColor: colorPalette.greenButton, // Darker green on hover
+            backgroundColor: colorPalette.theme, // Darker green on hover
           },
         }}
       >
@@ -53,7 +57,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: colorPalette.greenButton, // Green text for the price
+            color: colorPalette.theme, // Green text for the price
             fontWeight: 'bold',
           }}
         >

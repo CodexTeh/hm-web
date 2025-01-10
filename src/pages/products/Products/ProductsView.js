@@ -182,7 +182,7 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
                           variant="subtitle1"
                           sx={{
                             fontWeight: 'bold',
-                            color: colorPalette.greenButton,
+                            color: colorPalette.theme,
                           }}
                         >
                           {isRTL ? `د.إ ${product?.price.toFixed(2)}` : `OMR ${product?.price.toFixed(2)}`}
@@ -196,7 +196,7 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
                           alignItems: 'center',
                           border: `1px solid ${colorPalette.lightGrey}`,
                           borderRadius: 10,
-                          background: colorPalette.greenButton,
+                          background: colorPalette.theme,
                           width: 100,
                           height: 40,
                           marginTop: 4,
@@ -227,7 +227,7 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
                             textTransform: 'capitalize',
                             borderRadius: 10,
                             background: colorPalette.white,
-                            color: colorPalette.greenButton,
+                            color: colorPalette.theme,
                             width: 100,
                           }}
                           onClick={(e) => {
