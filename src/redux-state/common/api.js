@@ -2,10 +2,8 @@ import queryString from 'query-string';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_URL = "http://213.210.21.52:8080/api/";
-// const API_URL = "http://localhost:8080/api/";
-
-const SERVER_URL = "https://hmoman.com";
+const API_URL = process.env.REACT_APP_API_URL;
+const SERVER_URL = process.env.REACT_APP_ODO_API_URL;
 
 export const Api = {
   getProducts: async ({ pagination, filter = null }) => {
@@ -23,6 +21,46 @@ export const Api = {
       };
 
       response = await fetch(`${SERVER_URL}/get_products?${queryString.stringify(query)}`, options);
+
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          return data;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
+
+  getOrders: async (userId) => {
+    try {
+      let response;
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      };
+
+      const { page = 1, perPage = 10 } = {};
+      let rangeStart, rangeEnd;
+      rangeStart = (page) * (perPage);
+      rangeEnd = ((page) + 1) * (perPage) - 1;
+      const query = {
+        sort: JSON.stringify(['createdAt', 'ASC']),
+        range: JSON.stringify([rangeStart, rangeEnd]),
+        filter: JSON.stringify({ '$custom': { 'userId': userId, 'status': 'all' } }),
+      };
+
+      response = await fetch(`${API_URL}orders?${queryString.stringify(query)}`, options);
 
       switch (response.status) {
         case 200:
@@ -365,6 +403,40 @@ export const Api = {
       }
     } catch (e) {
       console.log("Error", e);
+    }
+  },
+  placeOrder: async (data, token, language) => {
+    const { user, cart } = data;
+    try {
+      let response;
+      const options = {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ user, cart, language }),
+      };
+
+      response = await fetch(`${API_URL}orders`, options);
+
+      switch (response.status) {
+        case 200:
+          const url = await response.json();
+          window.open(url);
+          return true;
+        case 400:
+          alert(response.message);
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          alert(response.message);
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      alert(e.message);
+      console.log('Error', e);
     }
   },
 }

@@ -1,16 +1,79 @@
-import React, { useState } from 'react';
-import { Box, Typography, Button, Grid, TextField, Divider, Paper, Card, CardContent } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Grid, TextField, Card, CardContent } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
-import MaxHeightTextarea from '@components/TextArea';
 import PhoneTextInput from '@components/PhoneTextInput';
-import { GetUser, GetLanguage } from '@redux-state/selectors';
+import { GetUser, GetLanguage, GetCartDetails } from '@redux-state/selectors';
 import DeliveryCardSelection from './DeliveryCardSelectios';
 import OrderSummary from './OrderSummary';
+import { useDispatch } from 'react-redux';
+import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
+import { styled } from '@mui/system';
+import { addToCart } from '@redux-state/common/action';
+import pusher from '../../helpers/pusherConfig';
+import constants from '../../helpers/constants';
+import { setLatestOrders } from '../../redux-state/common/action';
+import useRouter from '../../helpers/useRouter';
+
+const blue = {
+  100: '#DAECFF',
+  200: '#b6daff',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  900: '#003A75',
+};
+
+const grey = {
+  50: '#F3F6F9',
+  100: '#E5EAF2',
+  200: '#DAE2ED',
+  300: '#C7D0DD',
+  400: '#B0B8C4',
+  500: '#9DA8B7',
+  600: '#6B7A90',
+  700: '#434D5B',
+  800: '#303740',
+  900: '#1C2025',
+};
+
+const Textarea = styled(BaseTextareaAutosize)(
+  ({ theme }) => `
+    box-sizing: border-box;
+    width: 100%;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+    background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+    box-shadow: 0 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+
+    &:hover {
+      border-color: ${blue[400]};
+    }
+
+    &:focus {
+      border-color: ${blue[400]};
+      box-shadow: 0 0 0 3px ${theme.palette.mode === 'dark' ? blue[600] : blue[200]};
+    }
+
+    /* firefox */
+    &:focus-visible {
+      outline: 0;
+    }
+  `,
+);
 
 const CheckoutPage = () => {
   const user = GetUser();
+  const dispatch = useDispatch();
   const language = GetLanguage();
+  const cart = GetCartDetails();
+
+  const router = useRouter()
   const isRTL = language === 'ar';
 
   const translations = {
@@ -42,7 +105,31 @@ const CheckoutPage = () => {
   );
   const [orderNote, setOrderNote] = useState("");
   const [phone, setPhone] = useState(user.phone);
-  const [selectedOption, setSelectedOption] = useState("Express Delivery");
+  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState("Express Delivery");
+
+  useEffect(() => {
+    dispatch(addToCart({
+      ...cart, orderDetails: {
+        shipping_address: shippingAddress,
+        phone: phone,
+        order_note: orderNote
+      }
+    }))
+  }, [orderNote, phone, selectedDeliveryOption])
+
+  useEffect(() => {
+    const channel = pusher.subscribe(constants.ORDER_PLACE_CHANNEL);
+    channel.bind(constants.order, function (data) {
+      dispatch(
+        setLatestOrders(data.orderId)
+      );
+      router.push('/orders')
+    });
+    return () => {
+      channel.unbind(constants.order);
+      pusher.unsubscribe(constants.ORDER_PLACE_CHANNEL);
+    };
+  }, []);
 
   const Stepper = ({ step, text, buttonText, hasAddButton = true }) => {
     return (
@@ -81,7 +168,7 @@ const CheckoutPage = () => {
             {text}
           </Typography>
         </Box>
-        {hasAddButton && <Button
+        {/* {hasAddButton && <Button
           variant="text"
           sx={{ color: colorPalette.theme }}
           startIcon={!isRTL && <AddIcon sx={{ marginRight: -1, marginLeft: 1 }} />}
@@ -90,7 +177,7 @@ const CheckoutPage = () => {
           <Typography variant="body2" fontWeight={510} sx={{ textTransform: 'none' }}>
             {buttonText}
           </Typography>
-        </Button>}
+        </Button>} */}
       </Box>
     );
   };
@@ -151,8 +238,8 @@ const CheckoutPage = () => {
                 hasAddButton={false}
               />
               <DeliveryCardSelection
-                setSelectedOption={setSelectedOption}
-                selectedOption={selectedOption}
+                setSelectedDeliveryOption={setSelectedDeliveryOption}
+                selectedDeliveryOption={selectedDeliveryOption}
                 isRTL={isRTL}
               />
             </CardContent>
@@ -166,10 +253,12 @@ const CheckoutPage = () => {
                 text={currentTranslations.orderNote}
                 buttonText={currentTranslations.add}
               />
-              <MaxHeightTextarea
+              <Textarea
                 value={orderNote}
+                maxRows={4}
+                minRows={3}
                 onChange={(e) => setOrderNote(e.target.value)}
-                sx={{ marginTop: 1 }}
+                sx={{ marginTop: 1, maxWidth: '100%' }}
               />
             </CardContent>
           </Card>

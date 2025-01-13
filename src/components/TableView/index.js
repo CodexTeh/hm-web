@@ -46,7 +46,8 @@ const StyledTablePaginationContainer = styled(TablePagination)(({ theme }) => ({
 
 const StyledTableCell = styled(TableCell)({
   [`&.${tableCellClasses.head}`]: {
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: 'bold',
     verticalAlign: 'bottom',
     padding: '10px 20px 10px 0px',
     background: colorPalette.lightGrey,

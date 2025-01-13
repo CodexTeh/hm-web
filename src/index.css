@@ -54,3 +54,11 @@ code {
 .carousel .carousel-status {
   direction: ltr !important;
 }
+
+.css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+  color: #009f7f !important
+}
+
+.css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
+  color: #009f7f !important
+}

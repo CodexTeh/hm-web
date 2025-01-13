@@ -8,13 +8,17 @@ import {
   EDIT_PRODUCT,
   EDIT_PRODUCT_CATALOG,
   GET_CATEGORIES,
+  GET_ORDERS,
   GET_PRODUCT_CATALOG,
   GET_PRODUCTS,
   GET_PRODUCTS_BY_CATEGORY,
   GET_SEARCHED_PRODUCTS,
+  PLACE_ORDER,
 } from './types'
 
 const getToken = state => state.onboarding.token;
+const getLanguage = state => state.common.language;
+const getUser = state => state.onboarding.user;
 
 function* getProducts(action) {
   try {
@@ -22,6 +26,17 @@ function* getProducts(action) {
     yield put(Actions.getProductsSuccess(data));
   } catch (error) {
     yield put(Actions.getProductsSuccess([]));
+    console.log("error", error);
+  }
+}
+
+function* getOrders(action) {
+  try {
+    const user = yield select(getUser);
+    const data = yield call(Api.getOrders, user._id);
+    yield put(Actions.getOrdersSuccess(data));
+  } catch (error) {
+    yield put(Actions.getOrdersSuccess([]));
     console.log("error", error);
   }
 }
@@ -139,9 +154,23 @@ function* editCategory(action) {
   }
 }
 
+function* placeOrder(action) {
+  const token = yield select(getToken);
+  const language = yield select(getLanguage);
+
+  try {
+    yield call(Api.placeOrder, action.payload, token, language);
+    yield put(Actions.placeOrderSuccess());
+  } catch (error) {
+    yield put(Actions.placeOrderSuccess());
+    console.log('error', error);
+  }
+}
+
 function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
+  yield takeLatest(GET_ORDERS, getOrders);
   yield takeLatest(GET_PRODUCTS_BY_CATEGORY, getProductsByCategory);
   yield takeLatest(GET_CATEGORIES, getCategories);
   yield takeLatest(GET_PRODUCT_CATALOG, getProductCatalog);
@@ -150,6 +179,7 @@ function* commonSaga() {
   yield takeLatest(ADD_PRODUCT_CATALOG, addProductCatalog);
   yield takeLatest(EDIT_PRODUCT_CATALOG, editProductCatalog);
   yield takeLatest(EDIT_CATEGORY, editCategory);
+  yield takeLatest(PLACE_ORDER, placeOrder);
 }
 
 export default commonSaga;

@@ -21,6 +21,11 @@ import {
   EDIT_PRODUCT_CATALOG_SUCCESS,
   CHANGE_LANGUAGE,
   ADD_TO_CART,
+  PLACE_ORDER,
+  PLACE_ORDER_SUCCESS,
+  GET_ORDERS,
+  GET_ORDERS_SUCCESS,
+  SET_LATEST_ORDER
 } from './types';
 
 const INITIAL_STATE = {
@@ -32,7 +37,11 @@ const INITIAL_STATE = {
     items: [],
     user: {},
     totalPrice: 0,
+    orderDetails: {}
   },
+  orders: [],
+  getOrdersLoading: false,
+  latestOrderId: {},
   productsByCategory: [],
   totalProductsByCategory: 0,
   totalProducts: 0,
@@ -43,6 +52,7 @@ const INITIAL_STATE = {
   editProductCatalogLoading: false,
   productCatalogs: [],
   addProductCatalogLodaing: false,
+  placeOrderLoading: false,
   language: 'en'
 };
 
@@ -55,6 +65,12 @@ export default (state = INITIAL_STATE, action) => {
 
     case ADD_TO_CART:
       return { ...state, cart: payload };
+
+      case PLACE_ORDER:
+        return { ...state, placeOrderLoading: true };
+  
+      case PLACE_ORDER_SUCCESS:
+        return { ...state, placeOrderLoading: false };  
 
     case GET_PRODUCTS:
       return { ...state, productsLoading: true };
@@ -103,6 +119,15 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_PRODUCT_CATALOG_SUCCESS:
       return { ...state, addProductCatalogLodaing: false, productCatalogs: action.payload };
+
+    case GET_ORDERS:
+      return { ...state, getOrdersLoading: true };
+
+    case GET_ORDERS_SUCCESS:
+      return { ...state, getOrdersLoading: false, orders: action.payload.data };
+    
+    case SET_LATEST_ORDER:
+      return { ...state, latestOrderId: action.payload };
 
     case EDIT_CATEGORY:
       return { ...state, editCategoryLoading: true };

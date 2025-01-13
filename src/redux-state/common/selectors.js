@@ -48,3 +48,15 @@ export const GetLanguage = () =>
 export const GetCartDetails = () =>
   useSelector(
     (state) => state.common.cart);
+export const GetPlaceOrderLoading = () =>
+  useSelector(
+    (state) => state.common.placeOrderLoading);    
+export const GetLatestOrder = () =>
+  useSelector(
+    (state) => state.common.latestOrderId);
+export const GetOrders = () =>
+  useSelector(
+    (state) => state.common.orders);
+export const GetOrdersLoading = () =>
+  useSelector(
+    (state) => state.common.getOrdersLoading);    

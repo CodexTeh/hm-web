@@ -4,6 +4,7 @@ import Layout from '@pages/layout';
 import Products from '@pages/products';
 import ErrorElement from '@pages/error';
 import Checkout from '../pages/checkout';
+import OrderList from '../pages/orders';
 
 
 export const AppRoutes = [
@@ -31,6 +32,12 @@ export const AppRoutes = [
             path: 'checkout',
             key: 'checkout',
             element: <><Layout /><Checkout /></>,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'orders',
+            key: 'orders',
+            element: <><Layout /><OrderList /></>,
             errorElement: <ErrorElement />
           },
           {

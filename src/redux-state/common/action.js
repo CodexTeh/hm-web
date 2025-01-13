@@ -20,7 +20,12 @@ import {
   GET_PRODUCTS_BY_CATEGORY_SUCCESS,
   GET_PRODUCTS_SUCCESS,
   GET_SEARCHED_PRODUCTS,
-  GET_SEARCHED_PRODUCTS_SUCCESS
+  GET_SEARCHED_PRODUCTS_SUCCESS,
+  PLACE_ORDER,
+  PLACE_ORDER_SUCCESS,
+  SET_LATEST_ORDER,
+  GET_ORDERS,
+  GET_ORDERS_SUCCESS
 } from './types';
 
 export const addToCart = (cart) => (
@@ -168,5 +173,39 @@ export const changeLanguage = (lang) => (
   {
     type: CHANGE_LANGUAGE,
     payload: lang
+  }
+);
+
+export const placeOrder = (user, cart) => (
+  {
+    type: PLACE_ORDER,
+    payload: { user, cart },
+  }
+);
+
+export const placeOrderSuccess = payload => (
+  {
+    type: PLACE_ORDER_SUCCESS,
+    payload: payload,
+  }
+);
+
+export const setLatestOrders = (latestOrder) => (
+  {
+    type: SET_LATEST_ORDER,
+    payload: latestOrder,
+  }
+);
+
+export const getOrders = () => (
+  {
+    type: GET_ORDERS
+  }
+);
+
+export const getOrdersSuccess = payload => (
+  {
+    type: GET_ORDERS_SUCCESS,
+    payload: payload,
   }
 );

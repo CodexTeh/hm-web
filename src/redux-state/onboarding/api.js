@@ -1,5 +1,4 @@
-const SERVER_URL = "http://213.210.21.52:8080/api/";
-// const SERVER_URL = "http://localhost:8080/api/";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const Api = {
   createAccount: async (data) => {
@@ -16,7 +15,7 @@ export const Api = {
         body: JSON.stringify({ username: username, email: email, password: password, phone: phone, description: description, userType: "client" }),
       };
 
-      response = await fetch(`${SERVER_URL}auth/signup`, options);
+      response = await fetch(`${API_URL}auth/signup`, options);
 
       switch (response.status) {
         case 200:
@@ -47,7 +46,7 @@ export const Api = {
         body: JSON.stringify({ email: email, password: password }),
       };
 
-      response = await fetch(`${SERVER_URL}auth/signin`, options);
+      response = await fetch(`${API_URL}auth/signin`, options);
       switch (response.status) {
         case 200:
           const data = await response.json();

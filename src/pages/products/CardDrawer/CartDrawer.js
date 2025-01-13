@@ -18,8 +18,6 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
   const cartDetails = GetCartDetails();
 
   const isRTL = language === 'ar';
-console.log('yoyo', cartDetails.items);
-
 
   return (
     <>

@@ -25,9 +25,9 @@ const deliveryOptions = [
   },
 ];
 
-const DeliveryCardSelection = ({ selectedOption, setSelectedOption, isRTL }) => {
+const DeliveryCardSelection = ({ selectedDeliveryOption, setSelectedDeliveryOption, isRTL }) => {
   const handleCardClick = (title) => {
-    setSelectedOption(title);
+    setSelectedDeliveryOption(title);
   };
 
   return (
@@ -38,7 +38,7 @@ const DeliveryCardSelection = ({ selectedOption, setSelectedOption, isRTL }) => 
             onClick={() => handleCardClick(option.title)}
             sx={{
               cursor: "pointer",
-              border: selectedOption === option.title ? `1px solid ${colorPalette.theme}` : null,
+              border: selectedDeliveryOption === option.title ? `1px solid ${colorPalette.theme}` : null,
               backgroundColor: "#f9f9f9",
             }}
           >

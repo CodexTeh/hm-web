@@ -1,12 +1,17 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Divider } from '@mui/material';
-import { GetUser, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
-import { colorPalette } from '../../utils/colorPalette';
+import { Box, Typography, Button, Grid, Divider, CircularProgress } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { GetUser, GetCartDetails, GetProductCatalogs, GetPlaceOrderLoading } from '@redux-state/selectors';
+import { placeOrder } from '@redux-state/common/action';
+import { colorPalette } from '@utils/colorPalette';
 
 const OrderSummary = ({ isRTL }) => {
   const user = GetUser();
   const cartDetails = GetCartDetails();
   const allProductCatalogs = GetProductCatalogs();
+  const placeOrderLoading = GetPlaceOrderLoading();
+
+  const dispatch = useDispatch();
 
   const splitByTypeAndLanguage = (array) => {
     return array.reduce((acc, item) => {
@@ -139,12 +144,16 @@ const OrderSummary = ({ isRTL }) => {
           </Typography>
         </Box>
         <Box sx={{ marginTop: 3 }}>
-          <Button sx={{ background: colorPalette.theme, textTransform: 'capitalize', fontSize: 16 }} variant="contained" fullWidth>
-            {currentTranslations.placeOrder}
+          <Button onClick={() => {
+            if (cartDetails.orderDetails) {
+              dispatch(placeOrder(user, cartDetails))
+            }
+          }} sx={{ background: colorPalette.theme, textTransform: 'capitalize', fontSize: 16 }} variant="contained" fullWidth>
+            {placeOrderLoading ? <CircularProgress size={25} color={colorPalette.white}/> : currentTranslations.placeOrder}
           </Button>
         </Box>
       </Box>
-    </Grid>
+    </Grid >
   );
 };
 
