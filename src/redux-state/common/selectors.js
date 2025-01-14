@@ -60,3 +60,12 @@ export const GetOrders = () =>
 export const GetOrdersLoading = () =>
   useSelector(
     (state) => state.common.getOrdersLoading);    
+export const GetToggleToast = () =>
+  useSelector(
+    (state) => state.common.toggleToast);
+export const GetToastMessage = () =>
+  useSelector(
+    (state) => state.common.toastMessage);    
+export const GetToastType = () =>
+  useSelector(
+    (state) => state.common.toastType);    

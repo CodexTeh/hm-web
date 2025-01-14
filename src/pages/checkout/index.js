@@ -9,10 +9,10 @@ import { useDispatch } from 'react-redux';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
 import { addToCart } from '@redux-state/common/action';
-import pusher from '../../helpers/pusherConfig';
-import constants from '../../helpers/constants';
-import { setLatestOrders } from '../../redux-state/common/action';
-import useRouter from '../../helpers/useRouter';
+import pusher from '@helpers/pusherConfig';
+import constants from '@helpers/constants';
+import useRouter from '@helpers/useRouter';
+import { setLatestOrders, toggleToast } from '@redux-state/common/action';
 
 const blue = {
   100: '#DAECFF',
@@ -122,6 +122,9 @@ const CheckoutPage = () => {
     channel.bind(constants.order, function (data) {
       dispatch(
         setLatestOrders(data.orderId)
+      );
+      dispatch(
+        toggleToast(true, `You last order ${data.orderId} is completed successfully!`, 'success')
       );
       router.push('/orders')
     });

@@ -25,7 +25,8 @@ import {
   PLACE_ORDER_SUCCESS,
   SET_LATEST_ORDER,
   GET_ORDERS,
-  GET_ORDERS_SUCCESS
+  GET_ORDERS_SUCCESS,
+  TOGGLE_TOAST
 } from './types';
 
 export const addToCart = (cart) => (
@@ -207,5 +208,12 @@ export const getOrdersSuccess = payload => (
   {
     type: GET_ORDERS_SUCCESS,
     payload: payload,
+  }
+);
+
+export const toggleToast = (isOpen, message, toastType) => (
+  {
+    type: TOGGLE_TOAST,
+    payload: { isOpen, message, toastType },
   }
 );

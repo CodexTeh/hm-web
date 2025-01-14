@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Grid,
@@ -11,6 +11,10 @@ import {
   Chip,
   useMediaQuery,
   useTheme,
+  Select,
+  MenuItem,
+  OutlinedInput,
+  Button,
 } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
 import {
@@ -21,15 +25,17 @@ import {
   GetOrders,
   GetOrdersLoading,
 } from '@redux-state/selectors';
+import HomeIcon from '@mui/icons-material/Home';
 import { useDispatch } from 'react-redux';
 import { getHeaders } from "@components/TableView/getHeaders";
 import TableView from "@components/TableView";
 import { getOrders } from '../../redux-state/common/action';
 import moment from 'moment/moment';
+import useRouter from '../../helpers/useRouter';
 
 const translations = {
   en: {
-    backToHome: '< Back to Home',
+    backToHome: 'Back to Home',
     orderStatus: 'Order Status',
     paymentStatus: 'Payment Status',
     orderNumber: 'Order Number',
@@ -89,6 +95,7 @@ const OrderList = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const router = useRouter();
 
   const [currentOrder, setCurrentOrder] = useState(null);
 
@@ -152,11 +159,22 @@ const OrderList = () => {
     };
   }, [isRTL]);
 
-
+  const statusMapper = {
+    'processing': 1,
+    'local-facility': 2,
+    'out-for-delivery': 3,
+    'delivered': 4,
+  };
 
   useEffect(() => {
     if (orders?.length > 0 && latestOrder) {
       setCurrentOrder(orders.find((item) => item._id === latestOrder));
+    } else if (orders?.length && !latestOrder) {
+      const latestOrder = orders
+        .filter((order) => order?.createdAt) // Ensure the `createdAt` field exists
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]; // Sort by createdAt descending
+      setCurrentOrder(latestOrder);
+
     }
   }, [latestOrder, orders]);
 
@@ -189,11 +207,35 @@ const OrderList = () => {
     { label: t.total, value: currentOrder?.cart?.totalPrice || 0 },
   ]), [currentOrder, t]);
 
+  const InputOrderSelectField = useCallback(
+    ({ }) => {
 
+      return (
+        <Box sx={{ marginTop: 3 }}>
+          <Typography fontWeight={510}>{isRTL ? 'طلبات:' : 'Orders:'}</Typography>
+          <Select
+            sx={{ height: 40, width: 200 }}
+            fullWidth
+            value={currentOrder?._id}
+            onChange={(e) => setCurrentOrder(orders.find((item) => item._id === e.target.value))}
+            label={currentOrder}
+            input={<OutlinedInput />}
+          >
+            {orders?.map((item, itemIndex) => (
+              <MenuItem key={itemIndex} value={item._id}>
+                {item._id}
+              </MenuItem>))}
+          </Select>
+
+        </Box>
+      );
+    },
+    [orders, currentOrder, isRTL]
+  );
 
   const renderStepper = () => (
     <Box sx={{ mb: 4 }}>
-      <Stepper activeStep={1} alternativeLabel sx={{ direction: 'ltr' }}>
+      <Stepper activeStep={statusMapper[currentOrder?.status]} alternativeLabel sx={{ direction: 'ltr' }}>
         {steps.map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
@@ -263,15 +305,29 @@ const OrderList = () => {
       }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <Typography
-        variant="body1"
-        color="primary"
-        sx={{ mb: 2, cursor: 'pointer' }}
-        textAlign={isRTL ? 'right' : 'left'}
-      >
-        {t.backToHome}
-      </Typography>
+      <Box sx={{
+        alignSelf: 'center',
+        width: isMobile ? '100%' : '70%',
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom: 5,
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+      }}>
+        <Button
+          variant="text"
+          sx={{ color: colorPalette.theme }}
+          onClick={() => router.push('/')}
+          startIcon={!isRTL && <HomeIcon sx={{ marginRight: -1, marginLeft: 1 }} />}
+          endIcon={isRTL && <HomeIcon sx={{ marginLeft: -1, marginRight: 1 }} />}
+        >
+          <Typography variant="body1" fontWeight={510} marginLeft={1} sx={{ textTransform: 'none' }}>
+            {t.backToHome}
+          </Typography>
+        </Button>
+        <InputOrderSelectField />
 
+      </Box>
       <Box
         sx={{
           background: colorPalette.white,

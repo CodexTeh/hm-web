@@ -41,3 +41,5 @@ export const SET_LATEST_ORDER = 'SET_LATEST_ORDER';
 
 export const GET_ORDERS = 'GET_ORDERS';
 export const GET_ORDERS_SUCCESS = 'GET_ORDERS_SUCCESS';
+
+export const TOGGLE_TOAST = 'TOGGLE_TOAST';

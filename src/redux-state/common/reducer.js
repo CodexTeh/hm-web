@@ -25,7 +25,8 @@ import {
   PLACE_ORDER_SUCCESS,
   GET_ORDERS,
   GET_ORDERS_SUCCESS,
-  SET_LATEST_ORDER
+  SET_LATEST_ORDER,
+  TOGGLE_TOAST
 } from './types';
 
 const INITIAL_STATE = {
@@ -33,6 +34,9 @@ const INITIAL_STATE = {
   productsByCategoryLoading: false,
   editProductLoading: false,
   products: [],
+  toggleToast: false,
+  toastType: '',
+  toastMessage: '',
   cart: {
     items: [],
     user: {},
@@ -41,7 +45,7 @@ const INITIAL_STATE = {
   },
   orders: [],
   getOrdersLoading: false,
-  latestOrderId: {},
+  latestOrderId: null,
   productsByCategory: [],
   totalProductsByCategory: 0,
   totalProducts: 0,
@@ -63,14 +67,17 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_LANGUAGE:
       return { ...state, language: payload };
 
+    case TOGGLE_TOAST:
+      return { ...state, toggleToast: payload.isOpen, toastMessage: payload.message, toastType: payload.type };
+
     case ADD_TO_CART:
       return { ...state, cart: payload };
 
-      case PLACE_ORDER:
-        return { ...state, placeOrderLoading: true };
-  
-      case PLACE_ORDER_SUCCESS:
-        return { ...state, placeOrderLoading: false };  
+    case PLACE_ORDER:
+      return { ...state, placeOrderLoading: true };
+
+    case PLACE_ORDER_SUCCESS:
+      return { ...state, placeOrderLoading: false };
 
     case GET_PRODUCTS:
       return { ...state, productsLoading: true };
@@ -125,7 +132,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_ORDERS_SUCCESS:
       return { ...state, getOrdersLoading: false, orders: action.payload.data };
-    
+
     case SET_LATEST_ORDER:
       return { ...state, latestOrderId: action.payload };
 
