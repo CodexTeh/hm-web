@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Typography, Box, LinearProgress } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
+import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
 import CategoryDrawer from '../CategoryDrawer';
 
 const ProductCardView = ({ drawerWidth = 300 }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
   const [filter, setFilter] = useState({});
@@ -35,9 +36,14 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     dispatch(getCategories());
   }, [dispatch]);
 
-  useEffect(() => {
+  const loadProducts = () => {
     dispatch(getProducts(pagination, filter));
-  }, [dispatch, filter, pagination]);
+  }
+
+  useEffect(() => {
+    loadProducts();
+  }, [dispatch, filter]);
+
 
   const products = GetProducts();
 
@@ -70,9 +76,8 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     fetchFeedData();
   }, [pagination.perPage, fetchFeedData]);
 
-
   return (
-    <>
+    <Box sx={{ background: colorPalette.greyBackground }}>
       <Box
         sx={{
           padding: 2,
@@ -83,27 +88,11 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
           direction: isRTL ? 'rtl' : 'ltr',
         }}
       >
-        <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
-        {/* {!isFetching && itemsCount > 10 && hasMoreItems && ( */}
-        {/* <LinearProgress value={10} /> */}
-        {/* )} */}
-
-        <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
-        {/* Loading Spinner */}
+        <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'110vh'} />
+        <ProductsView hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
       </Box>
 
-      {isFetching && (
-        <>
-          <LinearProgress value={10} />
-          <Typography
-            sx={{ textAlign: 'center', color: 'gray' }}
-            variant="body2"
-          >
-            {isRTL ? 'جار تحميل المنتجات...' : 'Loading more products...'}
-          </Typography>
-        </>
-      )}
-    </>
+    </Box>
   );
 };
 

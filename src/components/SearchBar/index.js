@@ -1,71 +1,106 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Box, OutlinedInput } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { colorPalette } from '@utils/colorPalette';
 import { GetLanguage } from '@redux-state/common/selectors';
+import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from 'react-redux';
+import { getProducts } from '@redux-state/common/action';
+
 
 const SearchBar = () => {
-  const language = GetLanguage(); // Gets the current language
+  const language = GetLanguage();
+  const dispatch = useDispatch();
+  
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [searchText, setSearchText] = useState(20);
   const isRTL = language === 'ar'; // Checks if the language is Arabic
+
+  const filter = {barcode: searchText }
+  // const filter = isRTL ? { arabicCategory: category?._id } : { Category: category?._d };
+
+  const pagination = useMemo(
+    () => ({
+      page: 0,
+      perPage: rowsPerPage,
+    }),
+    [rowsPerPage]
+  );
+
 
   // Dynamic placeholder translation
   const placeholderText = isRTL
     ? 'ابحث عن منتجاتك من هنا' // Arabic translation for "Search your products from here"
     : 'Search your products from here';
 
-  // Dynamic search text
-  const searchText = isRTL ? 'بحث' : 'Search'; // Arabic for "Search"
+  const searchProducts = () => {
+    dispatch(getProducts(pagination, filter));
+  }
 
   return (
-    <OutlinedInput
-      sx={{
-        borderRadius: '5px',
-        fontSize: 14,
-        borderColor: 'transparent', // Makes border outline transparent
-        backgroundColor: 'white', // Sets the background color to white
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Adds shadow on all sides
-        padding: 0,
-        paddingRight: isRTL ? 2 : 0,
-        direction: isRTL ? 'rtl' : 'ltr', // Sets the input direction
-        '& fieldset': {
-          borderColor: 'transparent', // Ensures the fieldset border is transparent
-        },
-        '&:hover': {
-          boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', // Slightly stronger shadow on hover
-        },
-      }}
-      fullWidth
-      placeholder={placeholderText} // Uses the dynamic placeholder
-      endAdornment={
-        <Box
-          sx={{
-            background: colorPalette.theme,
-            display: 'flex',
-            flexDirection: isRTL ? 'row-reverse' : 'row', // Adjusts flex direction for RTL
-            justifyContent: 'center',
-            height: 40,
-            alignItems: 'center',
-            padding: 1,
-            width: '20%',
-            color: colorPalette.white,
-            borderTopRightRadius: !isRTL ? 5 : 0,
-            borderBottomRightRadius: !isRTL ? 5 : 0,
-            borderTopLeftRadius: isRTL ? 5 : 0,
-            borderBottomLeftRadius: isRTL ? 5 : 0,
-          }}
-          position="end"
-        >
+    <Box sx={{ display: 'flex', flexDirection: 'row', padding: 1, alignItems: 'end', justifyContent: 'center', width: '60%' }}>
+      <OutlinedInput
+        sx={{
+          borderRadius: '5px',
+          fontSize: 17,
+          borderColor: colorPalette.theme, // Makes border outline transparent
+          background: colorPalette.lightShadow, // Sets the background color to white
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Adds shadow on all sides
+          padding: 0,
+          paddingRight: isRTL ? 2 : 0,
+          direction: isRTL ? 'rtl' : 'ltr', // Sets the input direction
+          '& fieldset': {
+            borderColor: colorPalette.theme, // Ensures the fieldset border is transparent
+          },
+          '&:hover': {
+            boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', // Slightly stronger shadow on hover
+          },
+        }}
+        fullWidth
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            searchProducts();
+          }
+        }}
+        onChange={(e) => setSearchText(e.target.value)}
+        placeholder={placeholderText} // Uses the dynamic placeholder
+        startAdornment={
           <SearchIcon
             style={{
-              color: colorPalette.white,
-              marginLeft: isRTL ? '10px' : '0',
-              marginRight: isRTL ? '0' : '10px',
+              color: colorPalette.grey,
+              paddingLeft: 20,
+              paddingRight: 20,
             }}
           />
-          {searchText}
-        </Box>
-      }
-    />
+        }
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          height: 57,
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: colorPalette.lightShadow,
+          marginLeft: 5,
+          marginRight: 5,
+          width: 60,
+          cursor: 'pointer',
+          borderRadius: 1,
+          borderColor: colorPalette.theme,
+          borderWidth: 1,
+          borderStyle: 'solid',
+        }}
+      >
+        <CloseIcon
+          style={{
+            color: colorPalette.theme,
+            width: 25,
+            height: 25,
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 

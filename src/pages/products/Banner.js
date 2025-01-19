@@ -61,56 +61,11 @@ const Banner = () => {
     zIndex: 10,
   };
 
-  const flexStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '2.5rem',
-    textAlign: 'center',
-    flexDirection: 'column',
-  };
 
-  const textContainerStyle = {
-    // maxWidth: '724px',
-    marginTop: '18%',
-    textAlign: 'center', // Adjust text alignment based on language
-    zIndex: 20,
-    alignItems: 'center'
-  };
-
-  const headingStyle = {
-    fontWeight: 'bold',
-    lineHeight: 1.25,
-    color: '#000',
-    textAlign: 'center',
-    // fontSize: 36,
-  };
-
-  const descriptionStyle = {
-    fontSize: '1.125rem',
-    lineHeight: 1.7,
-    fontWeight: 'normal',
-    color: '#6B7280',
-    marginTop: '1rem',
-  };
 
   return (
     <section ref={bannerRef} style={wrapperStyle}>
-      <div style={containerStyle}>
-        <div style={flexStyle}>
-          <div style={textContainerStyle}>
-            <Typography variant="h3" style={headingStyle}>
-              {isRTL ? constants.AR_BANNER_HEADER : constants.BANNER_HEADER}
-            </Typography>
-            <Typography variant="body1" style={descriptionStyle}>
-              {isRTL ? constants.AR_BANNER_SUB_HEADER : constants.BANNER_SUB_HEADER}
-            </Typography>
-            <Box sx={{ marginTop: 5 }}>
-              <SearchBar />
-            </Box>
-          </div>
-        </div>
-      </div>
+      <div style={containerStyle} />
     </section>
   );
 };

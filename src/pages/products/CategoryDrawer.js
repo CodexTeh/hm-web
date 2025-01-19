@@ -18,9 +18,12 @@ const CategoryDrawer = ({ setFilter, height }) => {
     right: isRTL ? 0 : 'auto', // For RTL, align to the right
     backgroundColor: colorPalette.white,
     color: colorPalette.white,
-    width: 300,
+    width: 270,
     height: height,
     paddingTop: 10,
+    marginLeft: -15,
+    marginTop: -15,
+    marginBottom: -20,
     overflowY: 'auto',
     transition: 'height 1s ease', // Smooth transition for height change
     zIndex: 15, // Ensure the drawer is above other content
@@ -31,10 +34,10 @@ const CategoryDrawer = ({ setFilter, height }) => {
   return (
     <div style={drawerStyle} className="custom-scrollbar">
       {language === 'ar'
-        ? arCategories.map((cat, index) => (
+        ? arCategories?.map((cat, index) => (
           <CategoryView isRTL={isRTL} setFilter={setFilter} language={language} category={cat} key={index} index={index} />
         ))
-        : enCategories.map((cat, index) => (
+        : enCategories?.map((cat, index) => (
           <CategoryView isRTL={isRTL} setFilter={setFilter} language={language} category={cat} key={index} index={index} />
         ))}
     </div>

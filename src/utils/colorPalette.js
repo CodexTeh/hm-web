@@ -49,6 +49,7 @@ export const colorPalette = {
   lightCyan: '#fbfaff',
   lightGreen: '#35A850',
   lightGrey: '#ededed',
+  lightShadow: '#f3f4f6',
   lightLavender: '#F3EFFF',
   lightPurple: '#ECE7F8',
   lightShadow: '#F8F9FA',

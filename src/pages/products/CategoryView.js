@@ -61,7 +61,7 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
         </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: '0', margin: '0', paddingBottom: 5, paddingLeft: -100 }}>
-        {category.subcategories.map((subCat, index) => {
+        {category?.subcategories?.map((subCat, index) => {
           const subCatFilter = isRTL ? { arabicSubCategory: subCat._id } : { subCategory: subCat._id };
           return (
             <Box sx={{ cursor: 'pointer' }} onClick={() => {

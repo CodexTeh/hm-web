@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton } from '@mui/material';
+import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton, CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { colorPalette } from '@utils/colorPalette';
@@ -10,7 +10,7 @@ import { GetUser, GetCartDetails } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView }) => {
+const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL, open, handleOpen, setOpen, ChildView }) => {
   const user = GetUser();
   const dispatch = useDispatch();
 
@@ -75,7 +75,7 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
   };
 
   return (
-    <>
+    <Box sx={{ width: '80%', marginRight: 5 }}>
       {products?.length ?
         <Grid
           sx={{ marginLeft: !open ? 0.5 : null }}
@@ -246,7 +246,24 @@ const ProductsView = ({ products, isRTL, open, handleOpen, setOpen, ChildView })
           })}
         </Grid>
         : <EmptyView isRTL={isRTL} />}
-    </>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', position: 'initial', zIndex: 20, bottom: -10 }}>
+        <Button
+          sx={{
+            alignSelf: 'center',
+            background: colorPalette.theme
+          }}
+          size='large'
+          disabled={!hasMoreItems}
+          variant='contained'
+          onClick={loadProducts}
+        >
+          {isFetching ? (
+            <CircularProgress color="inherit" size={20} />
+          ) : isRTL ? 'جار تحميل المنتجات' : 'Load more products'}
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

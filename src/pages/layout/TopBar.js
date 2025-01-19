@@ -12,12 +12,13 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
 import { alpha, styled, Switch } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import logo from '@assets/icons/logo.jpeg';
-import { changeLanguage } from '@redux-state/common/action';
-import { colorPalette } from '@utils/colorPalette';
-import { GetLanguage } from '@redux-state/common/selectors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import logo from '@assets/icons/logo.jpg';
+import SearchBar from '@components/SearchBar';
+import { changeLanguage } from '@redux-state/common/action';
+import { GetLanguage } from '@redux-state/common/selectors';
+import { colorPalette } from '@utils/colorPalette';
 
 const pages = {
   en: ['Offers', 'Contact'],
@@ -40,7 +41,7 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const TopBar = () => {
+const TopBar = ({ hasScrolled }) => {
   const dispatch = useDispatch();
   const language = GetLanguage();
 
@@ -82,7 +83,9 @@ const TopBar = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar sx={{ background: colorPalette.white, height: 80 }} position="static">
+      <AppBar sx={{
+        background: colorPalette.white, height: 75
+      }} position="static">
         <Container maxWidth="xl">
           <Toolbar
             sx={{
@@ -93,26 +96,21 @@ const TopBar = () => {
             disableGutters
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt="logo" style={{ width: 50, height: 60, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
-              {/* <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', md: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: colorPalette.black,
-                  textDecoration: 'none',
-                }}
-              >
-                {language === 'ar' ? 'هم' : 'HM'}
-              </Typography> */}
+              <img src={logo} alt="logo" style={{ width: 100, height: 50, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
             </Box>
-
+            {hasScrolled && <Box sx={{
+              background: hasScrolled ? 'rgba(255, 255, 255, 0.4)' : '',
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              zIndex: 10,
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <SearchBar />
+              </Box>
+            </Box>}
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               {pages[language].map((page, index) => (
                 <Button
