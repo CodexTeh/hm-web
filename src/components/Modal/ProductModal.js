@@ -8,24 +8,25 @@ import {
   Button,
   IconButton,
   Grid,
-  Divider,
-  LinearProgress,
+  Divider
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
-import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading } from "@redux-state/common/selectors";
+import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading, GetCartDetails, GetUser } from "@redux-state/selectors";
 import ProductsView from '@pages/products/Products/ProductsView';
-import { getProducts } from '@redux-state/common/action';
+import { getProducts, addToCart } from '@redux-state/common/action';
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
-  const [isReadMore, setIsReadMore] = useState(false);
+
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [hasMoreItems, setHasMoreItems] = useState(true);
 
   const loopRef = useRef();
@@ -38,6 +39,66 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const products = GetProducts();
   const itemsCount = GetAllProductsCount();
   const isFetching = GetProductsLoading();
+  const cartDetails = GetCartDetails();
+  const user = GetUser();
+
+  const handleIncrease = (product) => {
+    // Find the existing product in the cart
+    const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
+
+    if (existingProductIndex !== -1) {
+      const updatedItems = cartDetails.items.map((item, index) => {
+        if (index === existingProductIndex) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+            totalPrice: (item.quantity + 1) * product.price
+          };
+        }
+        return item;
+      });
+
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+
+      // Update the state (or dispatch the action to update the Redux store)
+      dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
+    } else {
+      const updatedItems = [
+        ...cartDetails.items,
+        { ...product, quantity: 1, totalPrice: product.price }
+      ];
+
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+
+      // Update the state (or dispatch the action to update the Redux store)
+      dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
+    }
+  };
+
+  const handleDecrease = (product) => {
+    const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
+
+    if (existingProductIndex !== -1) {
+      const updatedItems = cartDetails.items.map((item, index) => {
+        if (index === existingProductIndex) {
+          const newQuantity = item.quantity > 1 ? item.quantity - 1 : 0;
+          if (newQuantity === 0) {
+            return null; // Remove the item
+          }
+          return {
+            ...item,
+            quantity: newQuantity,
+            totalPrice: newQuantity * product.price
+          };
+        }
+        return item;
+      }).filter(item => item !== null); // Filter out the null values (removed items)
+
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+
+      dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
+    }
+  };
 
   const pagination = useMemo(
     () => ({
@@ -133,7 +194,15 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const enProductSize = enSizes.find(size => size?._id === product?.size)
   const arProductSize = arSizes.find(size => size?._id === product?.ar_size)
 
+  const enProductBrand = enBrands.find(size => size?._id === product?.brand)
+  const arProductBrand = arBrands.find(size => size?._id === product?.ar_brand)
+
   const size = isRTL ? arSizes.find(size => size?.value === arProductSize?.value) : enSizes.find(size => size?.value === enProductSize?.value)
+  const brand = isRTL ? arBrands.find(brand => brand?.value === arProductBrand?.value) : enBrands.find(brand => brand?.value === enProductBrand?.value)
+
+  const existingProduct = cartDetails?.items.find(item => item.id === product.id);
+
+  const qty = parseInt(product?.qty_onhand);
 
   const handleImageChange = (index) => {
     setSelectedIndex(index);
@@ -147,10 +216,14 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
   const images = imageUrls?.length > 0 ? imageUrls : gallery;
 
+  const loadProducts = () => {
+    const filter = isRTL ? { arabicCategory: category?.id } : { webCategory: category?.id };
+    dispatch(getProducts(pagination, filter));
+  }
+
   useEffect(() => {
-    const filter = isRTL ? { arabicCategory: category?.arabicCategory } : { Category: category?.webCategory };
-    dispatch(getProducts(pagination, filter)); // Fetch products
-  }, [dispatch, pagination]);
+    loadProducts();
+  }, [dispatch]);
 
 
   const CustomCarousel = () => {
@@ -330,50 +403,23 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
             }}>
               {isRTL ? product?.arabicName : product?.website_name}
             </Typography>
-            <Typography variant="body2" color="textSecondary" sx={{
+            <Typography variant="body2" marginTop={5} color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
-              {size?.title}
+              {isRTL ? "مقاس: " : "Size: "}{size?.title}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              color="textSecondary"
-              dangerouslySetInnerHTML={{
-                __html: isRTL ? product?.arabicDescription : product?.webDescription + ''
-              }}
-              sx={{
-                marginBottom: 2, maxHeight: isReadMore ? 'none' : 100, overflow: isReadMore ? 'visible' : 'hidden', direction: isRTL ? 'rtl' : 'ltr',
-                textAlign: isRTL ? 'right' : 'left',
-              }}
-            />
-            <Button
-              variant="text"
-              sx={{
-                color: colorPalette.theme,
-                marginBottom: 5,
-                marginTop: 2,
-                fontSize: 16,
-                textTransform: 'capitalize',
-                fontWeight: 'bold',
-                direction: isRTL ? 'rtl' : 'ltr', // Adjust text direction dynamically
-                textAlign: isRTL ? 'right' : 'left', // Align text for RTL
-              }}
-              onClick={() => setIsReadMore(!isReadMore)}
-            >
-              {isRTL
-                ? isReadMore
-                  ? 'عرض أقل' // Arabic for "Show less"
-                  : 'اقرأ المزيد' // Arabic for "Read more"
-                : isReadMore
-                  ? 'Show less'
-                  : 'Read more'}
-            </Button>
+            <Typography variant="body2" marginTop={5} color="textSecondary" sx={{
+              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
+              textAlign: isRTL ? 'right' : 'left',
+            }}>
+              {isRTL ? "ماركة: " : "Brand: "}{brand?.title}
+            </Typography>
 
 
             <Typography
               variant="h4"
-              sx={{ fontWeight: 'bold', color: colorPalette.theme, marginBottom: 1 }}
+              sx={{ fontWeight: 'bold', marginTop: 5, color: colorPalette.theme, marginBottom: 1 }}
             >
               {isRTL ? "ر۔ع  " : "OMR  "}{product?.price?.toFixed(2)}
               <Typography
@@ -393,24 +439,60 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               </Typography>
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
-              <Button
+              {qty > 0 && <Button
                 variant="contained"
                 fullWidth
-                size='large'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleIncrease(product);
+                }}
+                size="large"
                 sx={{
                   textTransform: 'capitalize',
                   background: colorPalette.theme,
                   padding: '12px',
                   width: '60%',
+                  display: 'flex',
+                  justifyContent: 'space-between', // Push icons to corners
+                  alignItems: 'center',
                 }}
               >
-                {isRTL ? "أضف إلى سلة التسوق" : "Add to Shopping Cart"}
-              </Button>
+                {existingProduct && <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIncrease(product);
+                  }}
+                  sx={{ color: colorPalette.white, padding: 0 }}
+                >
+                  <AddIcon />
+                </IconButton>}
+
+                <Typography
+                  sx={{
+                    color: colorPalette.white,
+                    flexGrow: 1,
+                    textAlign: 'center'
+                  }}
+                >
+                  {existingProduct ? existingProduct?.quantity : (isRTL ? "أضف إلى سلة التسوق" : "Add to Shopping Cart")}
+                </Typography>
+
+                {existingProduct && <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDecrease(product);
+                  }}
+                  sx={{ color: colorPalette.white, padding: 0 }}
+                >
+                  <RemoveIcon />
+                </IconButton>}
+              </Button>}
+
               <Typography sx={{
                 direction: isRTL ? 'rtl' : 'ltr',
                 textAlign: isRTL ? 'right' : 'left',
               }} variant="body1" color="textSecondary">
-                {product?.qty_onhand} {isRTL ? "القطع المتاحة" : "pieces available"}
+                {qty > 0 ? `${product?.qty_onhand} ${isRTL ? "القطع المتاحة" : "pieces available"}` : `${isRTL ? "إنتهى من المخزن" : "out of stock"}`}
               </Typography>
             </Box>
 
@@ -449,21 +531,31 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
         <Typography sx={{
           direction: isRTL ? 'rtl' : 'ltr',
           textAlign: isRTL ? 'right' : 'left',
+        }} variant="h6" marginBottom={1} fontWeight={550}>
+          {isRTL ? "تفصیلات" : "Details"}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          dangerouslySetInnerHTML={{
+            __html: isRTL ? product?.arabicDescription : product?.webDescription + ''
+          }}
+          sx={{
+            marginBottom: 2, direction: isRTL ? 'rtl' : 'ltr',
+            textAlign: isRTL ? 'right' : 'left',
+          }}
+        />
+
+        <Divider sx={{ marginBottom: 10 }} />
+
+        <Typography sx={{
+          direction: isRTL ? 'rtl' : 'ltr',
+          textAlign: isRTL ? 'right' : 'left',
         }} variant="h6" marginBottom={5} fontWeight={550}>
           {isRTL ? "المنتجات ذات الصلة" : "Related Products"}
         </Typography>
-        <ProductsView products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
-        {isFetching && itemsCount > 10 && hasMoreItems && (
-          <LinearProgress value={10} />
-        )}
-        {isFetching && (
-          <Typography
-            sx={{ textAlign: 'center', marginTop: 2, color: 'gray' }}
-            variant="body2"
-          >
-            {isRTL ? 'جار تحميل المنتجات...' : 'Loading more products...'}
-          </Typography>
-        )}
+
+        <ProductsView hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
