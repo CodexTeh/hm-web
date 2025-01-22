@@ -13,7 +13,7 @@ const SearchBar = () => {
   const dispatch = useDispatch();
 
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [searchText, setSearchText] = useState(20);
+  const [searchText, setSearchText] = useState('');
   const isRTL = language === 'ar'; // Checks if the language is Arabic
 
   const filter = isRTL ? { arabicName: searchText } : { website_name: searchText };
@@ -61,6 +61,7 @@ const SearchBar = () => {
             searchProducts();
           }
         }}
+        value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         placeholder={placeholderText} // Uses the dynamic placeholder
         startAdornment={
@@ -89,6 +90,12 @@ const SearchBar = () => {
           borderColor: colorPalette.theme,
           borderWidth: 1,
           borderStyle: 'solid',
+        }}
+        onClick={() => {
+          if(searchText){
+            setSearchText('')
+            dispatch(getProducts(pagination, {}));
+          }
         }}
       >
         <CloseIcon

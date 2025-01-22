@@ -6,6 +6,7 @@ import { colorPalette } from '@utils/colorPalette';
 import { ProductModal } from '@components/Modal/ProductModal';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Footer from '@components/Footer';
 import { GetUser, GetCartDetails } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
@@ -75,7 +76,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
   };
 
   return (
-    <Box sx={{ width: '95%', marginRight: 5 }}>
+    <Box sx={{ width: '95%', marginRight: 5, marginTop: 3 }}>
       {products?.length ?
         <Grid
           sx={{ marginLeft: !open ? 0.5 : null }}
@@ -263,6 +264,8 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
           ) : isRTL ? 'جار تحميل المنتجات' : 'Load more products'}
         </Button>
       </Box>
+      <Footer />
+
     </Box>
   );
 };

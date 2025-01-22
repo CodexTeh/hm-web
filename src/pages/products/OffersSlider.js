@@ -18,6 +18,8 @@ function NextArrow(props) {
         borderRadius: "50%",
         width: "40px",
         height: "40px",
+        marginLeft: 20,
+        marginRight: 20,
         zIndex: 1,
         cursor: "pointer",
       }}
@@ -38,6 +40,8 @@ function PrevArrow(props) {
         borderRadius: "50%",
         width: "40px",
         height: "40px",
+        marginLeft: 20,
+        marginRight: 20,
         zIndex: 1,
         cursor: "pointer",
       }}
@@ -86,14 +90,17 @@ export const OffersSlider = () => {
   return (
     <Box
       sx={{
-        width: "90%",
+        width: "99%",
         alignSelf: "center",
         margin: "0 auto",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.1)", // Light border at the bottom
+        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)", // Subtle shadow effect
+        paddingBottom: "1rem",
       }}
     >
       <Slider {...settings}>
         {[...Array(6)].map((_, index) => (
-          <Box key={index} sx={{ padding: "10px" }}>
+          <Box key={index} sx={{ padding: '25px 40px 10px 30px' }}>
             <img src={offerImage} alt="Offer" style={offerImageStyle} />
           </Box>
         ))}

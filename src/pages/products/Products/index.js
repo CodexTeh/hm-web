@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
@@ -80,7 +80,6 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     <Box sx={{ background: colorPalette.greyBackground }}>
       <Box
         sx={{
-          padding: 2,
           display: 'flex',
           flexDirection: 'row',
           cursor: 'pointer',
@@ -88,7 +87,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
           direction: isRTL ? 'rtl' : 'ltr',
         }}
       >
-        <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'110vh'} />
+        <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'120vh'} />
         <ProductsView hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
       </Box>
 
