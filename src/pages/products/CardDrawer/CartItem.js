@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, IconButton, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ClearIcon from '@mui/icons-material/Clear';
+import ClearIcon from '@mui/icons-material/CancelRounded';
 import { colorPalette } from '@utils/colorPalette';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@redux-state/actions';

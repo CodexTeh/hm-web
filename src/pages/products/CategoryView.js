@@ -55,12 +55,12 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
         }}
       >
         <Box sx={{ cursor: 'pointer' }} onClick={() => setFilter(catFilter)}>
-          <Typography color={highlightColor} variant='subtitle1' fontWeight={510} width={150}>
+          <Typography color={highlightColor} variant='subtitle2' fontWeight={510} width={150}>
             {category.category.label}
           </Typography>
         </Box>
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: '0', margin: '0', paddingBottom: 5, paddingLeft: -100 }}>
+      <AccordionDetails sx={{ padding: '0', margin: '0', paddingBottom: 5 }}>
         {category?.subcategories?.map((subCat, index) => {
           const subCatFilter = isRTL ? { arabicSubCategory: subCat._id } : { subCategory: subCat._id };
           return (
@@ -68,7 +68,7 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
               setChild(subCat._id)
               setFilter(subCatFilter)
             }} key={index}>
-              <Typography sx={{ color: child === subCat._id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle1' fontWeight={510} width={150} key={index} marginTop={2}>
+              <Typography sx={{ color: child === subCat._id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={510} width={150} key={index} marginTop={2}>
                 {subCat.label}
               </Typography>
             </Box>

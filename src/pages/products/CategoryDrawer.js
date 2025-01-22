@@ -18,7 +18,7 @@ const CategoryDrawer = ({ setFilter, height }) => {
     right: isRTL ? 0 : 'auto', // For RTL, align to the right
     backgroundColor: colorPalette.white,
     color: colorPalette.white,
-    width: 270,
+    width: 230,
     height: height,
     paddingTop: 10,
     marginLeft: -15,
