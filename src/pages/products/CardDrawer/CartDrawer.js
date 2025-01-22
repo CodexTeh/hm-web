@@ -92,7 +92,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             <Box />
             {cartDetails?.items?.length > 0
               ?
-              <Cart cartDetails={cartDetails} />
+              <Cart isRTL={isRTL} cartDetails={cartDetails} />
               :
               <EmptyCart isRTL={isRTL} />}
             <CheckoutButton isRTL={isRTL} cartDetails={cartDetails} />

@@ -11,13 +11,12 @@ import { getProducts } from '@redux-state/common/action';
 const SearchBar = () => {
   const language = GetLanguage();
   const dispatch = useDispatch();
-  
+
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [searchText, setSearchText] = useState(20);
   const isRTL = language === 'ar'; // Checks if the language is Arabic
 
-  const filter = {barcode: searchText }
-  // const filter = isRTL ? { arabicCategory: category?._id } : { Category: category?._d };
+  const filter = isRTL ? { arabicName: searchText } : { website_name: searchText };
 
   const pagination = useMemo(
     () => ({

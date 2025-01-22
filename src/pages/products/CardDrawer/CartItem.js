@@ -9,9 +9,11 @@ import { addToCart } from '@redux-state/actions';
 import { GetUser } from '@redux-state/selectors';
 
 
-const Cart = ({ cartDetails }) => {
+const Cart = ({ isRTL, cartDetails }) => {
   const user = GetUser();
   const dispatch = useDispatch();
+
+  const currency = isRTL ? "ر۔ع " : "OMR "
 
   const handleIncrease = (product) => {
     // Find the existing product in the cart
@@ -140,13 +142,13 @@ const Cart = ({ cartDetails }) => {
           }
 
           <Box sx={{ marginLeft: 2, textAlign: 'start' }}>
-            <Typography variant="subtitle1" fontWeight={510}>{item.website_name}</Typography>
-            <Typography variant="body1" sx={{ color: colorPalette.theme }} fontWeight={510}>${(item.price)}</Typography>
+            <Typography sx={{ maxWidth: 180 }} variant="subtitle2" fontWeight={510}>{item.website_name}</Typography>
+            <Typography variant="body1" sx={{ color: colorPalette.theme }} fontWeight={510}>{currency}{(item.price)}</Typography>
             <Typography variant="body2" color="textSecondary">{item.quantity} x lb</Typography>
           </Box>
         </Box>
         <Box sx={{ textAlign: 'right', display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 2 }}>
-          <Typography variant="body1" fontWeight={510}>${(item.price * item.quantity)}</Typography>
+          <Typography variant="body2" fontWeight={510}>{currency}{(item.price * item.quantity)}</Typography>
           <IconButton onClick={() => handleRemoveItem(item)} sx={{ marginLeft: 2 }}>
             <ClearIcon sx={{
               width: 15, height: 15, '&:hover': {

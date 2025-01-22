@@ -62,3 +62,11 @@ code {
 .css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
   color: #009f7f !important
 }
+
+.slick-prev:before {
+  color: #6479cc !important;
+}
+
+.slick-next:before {
+  color: #6479cc !important;
+}

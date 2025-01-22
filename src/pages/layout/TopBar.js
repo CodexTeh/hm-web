@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { alpha, styled, Switch } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
-import logo from '@assets/icons/logo.jpg';
+import logo from '@assets/icons/logo.png';
 import SearchBar from '@components/SearchBar';
 import { changeLanguage } from '@redux-state/common/action';
 import { GetLanguage } from '@redux-state/common/selectors';
@@ -90,13 +90,13 @@ const TopBar = ({ hasScrolled }) => {
           <Toolbar
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'flex-end',
               flexDirection: language === 'ar' ? 'row-reverse' : 'row',
             }}
             disableGutters
           >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt="logo" style={{ width: 100, height: 50, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
+            <Box sx={{ display: 'flex', alignItems: 'start', position: 'absolute', left: 0, bottom: -60 }}>
+              <img src={logo} alt="logo" style={{ width: 200, height: 160, marginRight: language === 'ar' ? 0 : 5, marginLeft: language === 'ar' ? 5 : 0 }} />
             </Box>
             {hasScrolled && <Box sx={{
               background: hasScrolled ? 'rgba(255, 255, 255, 0.4)' : '',

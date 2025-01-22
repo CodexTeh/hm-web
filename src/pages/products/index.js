@@ -6,6 +6,7 @@ import CardDrawer from './CardDrawer/CartDrawer';
 import CartFloatButton from './CartFloatButton';
 import Banner from './Banner';
 import ProductCardView from './Products';
+import { OffersSlider } from './OffersSlider';
 
 export default function Products() {
 
@@ -28,6 +29,7 @@ export default function Products() {
   return (
     <>
       <Banner />
+      <OffersSlider />
       <ProductCardView />
       <CardDrawer open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <CartFloatButton open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
