@@ -47,7 +47,7 @@ const Layout = () => {
 
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>
-      <TopBar hasScrolled={hasScrolled} />
+      <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled}/>
       {isFetching && <LinearProgress value={10} />}
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

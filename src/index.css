@@ -70,3 +70,7 @@ code {
 .slick-next:before {
   color: #6479cc !important;
 }
+
+.css-ay3cf-MuiPaper-root-MuiAppBar-root {
+  box-shadow: none !important;
+}

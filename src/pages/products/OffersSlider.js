@@ -1,7 +1,10 @@
 import React from "react";
 import Slider from "react-slick";
 import { Box } from "@mui/material";
-import offerImage from '@assets/icons/express.jpg';
+import expressDeliveryImage from '@assets/icons/express.png';
+import couponImage from '@assets/icons/coupon.png';
+import flashsaleImage from '@assets/icons/flashsale.png';
+import freeDeliveryImage from '@assets/icons/free-delivery.png';
 import { GetLanguage } from '@redux-state/selectors';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -86,6 +89,7 @@ export const OffersSlider = () => {
     outline: "none",
     cursor: "pointer",
   };
+  const images = [flashsaleImage, couponImage, freeDeliveryImage, expressDeliveryImage]
 
   return (
     <Box
@@ -99,9 +103,9 @@ export const OffersSlider = () => {
       }}
     >
       <Slider {...settings}>
-        {[...Array(6)].map((_, index) => (
+        {images.map((image, index) => (
           <Box key={index} sx={{ padding: '25px 40px 10px 30px' }}>
-            <img src={offerImage} alt="Offer" style={offerImageStyle} />
+            <img src={image} alt="Offer" style={offerImageStyle} />
           </Box>
         ))}
       </Slider>

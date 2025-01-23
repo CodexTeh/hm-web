@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { getProducts } from '@redux-state/common/action';
 
 
-const SearchBar = () => {
+const SearchBar = ({ setHasScrolled, hasScrolled }) => {
   const language = GetLanguage();
   const dispatch = useDispatch();
 
@@ -41,10 +41,10 @@ const SearchBar = () => {
       <OutlinedInput
         sx={{
           borderRadius: '5px',
-          fontSize: 17,
+          fontSize: 13,
           borderColor: colorPalette.theme, // Makes border outline transparent
           background: colorPalette.lightShadow, // Sets the background color to white
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Adds shadow on all sides
+          // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Adds shadow on all sides
           padding: 0,
           paddingRight: isRTL ? 2 : 0,
           direction: isRTL ? 'rtl' : 'ltr', // Sets the input direction
@@ -52,7 +52,7 @@ const SearchBar = () => {
             borderColor: colorPalette.theme, // Ensures the fieldset border is transparent
           },
           '&:hover': {
-            boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', // Slightly stronger shadow on hover
+            // boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', // Slightly stronger shadow on hover
           },
         }}
         fullWidth
@@ -78,13 +78,13 @@ const SearchBar = () => {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          height: 57,
+          height: 50,
           justifyContent: 'center',
           alignItems: 'center',
           background: colorPalette.lightShadow,
           marginLeft: 5,
           marginRight: 5,
-          width: 60,
+          width: 55,
           cursor: 'pointer',
           borderRadius: 1,
           borderColor: colorPalette.theme,
@@ -92,17 +92,18 @@ const SearchBar = () => {
           borderStyle: 'solid',
         }}
         onClick={() => {
-          if(searchText){
-            setSearchText('')
+          if (searchText) {
+            setSearchText('');
             dispatch(getProducts(pagination, {}));
           }
+          setHasScrolled(false);
         }}
       >
         <CloseIcon
           style={{
             color: colorPalette.theme,
-            width: 25,
-            height: 25,
+            width: 20,
+            height: 20,
           }}
         />
       </Box>
