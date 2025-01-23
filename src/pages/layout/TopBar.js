@@ -94,9 +94,8 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
       <AppBar
         sx={{
           background: colorPalette.white,
-          // borderBottom: "1px solid rgb(241, 238, 238)",
-          // boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-          // transition: "box-shadow 0.3s ease",
+          boxShadow: "0px 0px 0px rgba(0, 0, 0, 0)",
+          transition: "box-shadow 0.3s ease",
         }}
         position="static"
       >
