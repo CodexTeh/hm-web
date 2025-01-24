@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginModal from '@components/Modal/LoginModal';
+import Footer from '@components/Footer';
 import { getCategories } from '@redux-state/common/action';
 import CardDrawer from './CardDrawer/CartDrawer';
 import CartFloatButton from './CartFloatButton';
@@ -34,6 +35,7 @@ export default function Products() {
       <CardDrawer open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <CartFloatButton open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <LoginModal />
+      <Footer />
     </>
   );
 }

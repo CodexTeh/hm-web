@@ -1,100 +1,211 @@
 import React from "react";
-import { Box, Grid, Typography, Link } from "@mui/material";
-import { colorPalette } from "../../utils/colorPalette";
+import { Box, Typography, TextField, Button, Grid, Link, IconButton } from "@mui/material";
+import { Facebook, Instagram, KeyboardArrowUp, Pinterest, Twitter, YouTube } from "@mui/icons-material";
 
 const Footer = () => {
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <Box
-      component="footer"
-      sx={{
-        alignSelf:'center',
-        width: '100%',
-        marginTop: 2,
-        backgroundColor: colorPalette.lightBlack, // Dark background similar to HM AWANI
-        color: "#fff", // White text
-        padding: "1rem 1.2rem", // Adjust padding for spacing
-      }}
-    >
-      {/* Top Section: Footer Links */}
-      <Grid padding={2} container spacing={4} justifyContent="space-between">
-        {/* Column 1: Customer Support */}
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6" gutterBottom>
-            Customer Support
+    <Box sx={{ backgroundColor: "#333", color: "#fff", padding: "40px 20px 20px" }}>
+      <Grid container spacing={4}>
+        {/* Newsletter Section */}
+        {/* <Grid item xs={3} sm={3} lg={3} md={3}>
+          <Typography variant="body2" fontWeight={510} gutterBottom>
+            SUBSCRIBE TO OUR NEWSLETTER
           </Typography>
-          <Link href="#" color="inherit" underline="hover">
-            Help Center
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Contact Us
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Returns
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Track Order
-          </Link>
+          <Typography variant="body2" gutterBottom>
+            Subscribe to email alerts. We promise not to spam your inbox.
+          </Typography>
+          <Box sx={{ display: "flex", mt: 2 }}>
+            <TextField
+              variant="outlined"
+              placeholder="Email address"
+              size="small"
+              sx={{
+                backgroundColor: "#fff",
+                borderRadius: "4px",
+                marginRight: "8px",
+                flex: 1,
+              }}
+            />
+            <Button
+              variant="contained"
+              color="warning"
+              sx={{ textTransform: "none" }}
+            >
+              Subscribe
+            </Button>
+          </Box>
+        </Grid> */}
+
+        {/* About Section */}
+        <Grid item xs={3} sm={3} lg={3} md={3}>
+          <Typography variant="body2" fontWeight={510} gutterBottom>
+            ABOUT HM AWANI
+          </Typography>
+          <Box>
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              HM AWANI
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Investors
+            </Link>
+          </Box>
         </Grid>
 
-        {/* Column 2: Company Info */}
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6" gutterBottom>
-            Company Info
+        {/* Policies Section */}
+        <Grid item xs={3} sm={3} lg={3} md={3}>
+          <Typography variant="body2" fontWeight={510} gutterBottom>
+            OUR POLICIES
           </Typography>
-          <Link href="#" color="inherit" underline="hover">
-            About Us
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Careers
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Privacy Policy
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Terms of Service
-          </Link>
+          <Box>
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Return Policy
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Terms & Conditions
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Privacy Policy
+            </Link>
+          </Box>
         </Grid>
 
-        {/* Column 3: Social Media / App Links */}
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6" gutterBottom>
-            Stay Connected
+        {/* Information Section */}
+        <Grid item xs={3} sm={3} lg={3} md={3}>
+          <Typography variant="body2" fontWeight={510} gutterBottom>
+            INFORMATION
           </Typography>
-          <Link href="#" color="inherit" underline="hover">
-            Facebook
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Instagram
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Twitter
-          </Link>
-          <br />
-          <Link href="#" color="inherit" underline="hover">
-            Download Our App
-          </Link>
+          <Box>
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              E-Recipe Books
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Blogs & Recipes
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              All Blogs
+            </Link>
+          </Box>
+        </Grid>
+
+        {/* Need Help Section */}
+        <Grid item xs={3} sm={3} lg={3} md={3}>
+          <Typography variant="body2" fontWeight={510} gutterBottom>
+            NEED HELP?
+          </Typography>
+          <Box>
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Track Your Order
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Online Service Request
+            </Link>
+            <br />
+            <Link href="#" fontSize={12} color="inherit" underline="hover">
+              Warranty Registration
+            </Link>
+          </Box>
         </Grid>
       </Grid>
 
-      {/* Bottom Section: Copyright */}
+      {/* Social Media Icons */}
       <Box
         sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "16px",
+          mt: 4,
+        }}
+      >
+        <IconButton
+          sx={{
+            border: "1px solid #fff",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#444" },
+          }}
+        >
+          <Facebook />
+        </IconButton>
+        <IconButton
+          sx={{
+            border: "1px solid #fff",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#444" },
+          }}
+        >
+          <Twitter />
+        </IconButton>
+        <IconButton
+          sx={{
+            border: "1px solid #fff",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#444" },
+          }}
+        >
+          <Instagram />
+        </IconButton>
+        <IconButton
+          sx={{
+            border: "1px solid #fff",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#444" },
+          }}
+        >
+          <Pinterest />
+        </IconButton>
+        <IconButton
+          sx={{
+            border: "1px solid #fff",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#444" },
+          }}
+        >
+          <YouTube />
+        </IconButton>
+      </Box>
+
+      {/* Move to Top Button */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "10px",
+          right: "16px",
+          zIndex: 1000,
+        }}
+      >
+        <IconButton
+          onClick={scrollToTop}
+          sx={{
+            backgroundColor: "#fff",
+            color: "#333",
+            "&:hover": { backgroundColor: "#ddd" },
+          }}
+        >
+          <KeyboardArrowUp />
+        </IconButton>
+      </Box>
+
+      <Box
+        sx={{
+          borderTop: "1px solid #444",
+          mt: 4,
+          pt: 2,
           textAlign: "center",
-          marginTop: "2rem",
-          borderTop: "1px solid rgba(255, 255, 255, 0.2)", // Subtle divider
-          paddingTop: "1rem",
         }}
       >
         <Typography variant="body2">
-          © {new Date().getFullYear()} HM AWANI Clone. All rights reserved.
+          © 2025 HM AWANI Pvt. Ltd
         </Typography>
       </Box>
     </Box>
