@@ -17,13 +17,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch } from "react-redux";
 import logo from "@assets/icons/logo.png";
 import SearchBar from "@components/SearchBar";
+import useRouter from '@helpers/useRouter';
 import { changeLanguage } from "@redux-state/common/action";
 import { GetLanguage } from "@redux-state/common/selectors";
 import { colorPalette } from "@utils/colorPalette";
 
 const pages = {
-  en: ["Offers", "Contact", "Flash Sale"],
-  ar: ["عروض", "اتصل", "بيع فلاش"],
+  en: ["Home", "Offers", "Contact", "Flash Sale"],
+  ar: ["بيت", "العروض", "اتصل", "بيع فلاش"],
 };
 const settings = {
   en: ["Profile", "Account", "Dashboard", "Logout"],
@@ -33,6 +34,8 @@ const settings = {
 const TopBar = ({ hasScrolled, setHasScrolled }) => {
   const dispatch = useDispatch();
   const language = GetLanguage();
+
+  const router = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null); // For mobile menu
   const [anchorElUser, setAnchorElUser] = React.useState(null); // For user settings menu
@@ -84,6 +87,12 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
       </Box>
     </Box>
   ), [hasScrolled, setHasScrolled]);
+
+  const onClickPage = (page) => {
+    if(page === pages[0]) {
+      router.push('/')
+    }
+  }
 
   // Check for mobile screens
   const themeInstance = useTheme();
@@ -167,6 +176,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                         fontSize: 13,
 
                       }}
+                      onClick={() => onClickPage(page)}
                     >
                       {page}
                     </Button>

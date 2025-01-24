@@ -180,7 +180,7 @@ const Footer = () => {
         sx={{
           position: "fixed",
           bottom: "10px",
-          right: "16px",
+          left: "16px",
           zIndex: 1000,
         }}
       >
