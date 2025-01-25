@@ -63,15 +63,15 @@ const Footer = () => {
             OUR POLICIES
           </Typography>
           <Box>
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
+            <Link href="/return-policy" fontSize={12} color="inherit" underline="hover">
               Return Policy
             </Link>
             <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
+            <Link href="/terms" fontSize={12} color="inherit" underline="hover">
               Terms & Conditions
             </Link>
             <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
+            <Link href="/privacy-policy" fontSize={12} color="inherit" underline="hover">
               Privacy Policy
             </Link>
           </Box>
@@ -189,6 +189,8 @@ const Footer = () => {
           sx={{
             backgroundColor: "#fff",
             color: "#333",
+            borderRadius: "50%",  // Makes the button circular
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",  // Adds shadow effect
             "&:hover": { backgroundColor: "#ddd" },
           }}
         >

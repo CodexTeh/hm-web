@@ -20,8 +20,7 @@ const CategoryDrawer = ({ setFilter, height }) => {
     color: colorPalette.white,
     width: 230,
     height: height,
-    paddingTop: 10,
-    marginLeft: -15,
+    marginLeft: -17,
     overflowY: 'auto',
     transition: 'height 1s ease', // Smooth transition for height change
     zIndex: 15, // Ensure the drawer is above other content

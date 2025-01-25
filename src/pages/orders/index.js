@@ -51,7 +51,7 @@ const translations = {
     subTotal: 'Sub Total',
     shippingCharge: 'Shipping Charge',
     discount: 'Discount',
-    cashOnDelivery: 'CASH_ON_DELIVERY',
+    payWithCard: 'PAY_WITH_CARD',
     expressDelivery: 'Express Delivery',
     pending: 'Pending',
     processing: 'Processing',
@@ -76,7 +76,7 @@ const translations = {
     subTotal: 'الإجمالي الفرعي',
     shippingCharge: 'رسوم الشحن',
     discount: 'خصم',
-    cashOnDelivery: 'الدفع عند الاستلام',
+    payWithCard: 'الدفع بالبطاقة',
     expressDelivery: 'توصيل سريع',
     pending: 'في الانتظار',
     processing: 'قيد المعالجة',
@@ -190,7 +190,7 @@ const OrderList = () => {
     { label: t.orderNumber, value: currentOrder?._id || 'N/A' },
     { label: t.date, value: currentOrder?.createdAt ? moment(currentOrder.createdAt).format('MMMM D, YYYY') : 'N/A' },
     { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice || 0}` },
-    { label: t.paymentMethod, value: t.cashOnDelivery },
+    { label: t.paymentMethod, value: t.payWithCard },
   ]), [currentOrder, isRTL, t]);
 
   const details = useMemo(() => ([
@@ -214,7 +214,7 @@ const OrderList = () => {
         <Box sx={{ marginTop: 3 }}>
           <Typography fontWeight={510}>{isRTL ? 'طلبات:' : 'Orders:'}</Typography>
           <Select
-            sx={{ height: 40, width: 200 }}
+            sx={{ height: 40, width: 200, background: colorPalette.white }}
             fullWidth
             value={currentOrder?._id}
             onChange={(e) => setCurrentOrder(orders.find((item) => item._id === e.target.value))}
@@ -246,7 +246,7 @@ const OrderList = () => {
   );
 
   const renderInfoCards = () => (
-    <Grid container spacing={3} sx={{ mb: 4, padding: isMobile ? 2 : 5 }} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Grid container spacing={3} sx={{ mb: 4, padding: isMobile ? 2 : 3 }} dir={isRTL ? 'rtl' : 'ltr'}>
       {infoCards.map((card, index) => (
         <Grid key={index} item xs={12} sm={6} md={3}>
           <Card variant="outlined" sx={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
@@ -301,7 +301,7 @@ const OrderList = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        padding: isMobile ? 3 : 15,
+        padding: isMobile ? 3 : 9,
       }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -372,7 +372,7 @@ const OrderList = () => {
               {t.paymentStatus}:
             </Typography>
             <Chip
-              label={t.cashOnDelivery}
+              label={t.payWithCard}
               sx={{
                 fontSize: 15,
                 fontWeight: 'bold',

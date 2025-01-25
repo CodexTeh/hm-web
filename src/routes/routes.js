@@ -3,9 +3,11 @@ import Categories from '@pages/categories';
 import Layout from '@pages/layout';
 import Products from '@pages/products';
 import ErrorElement from '@pages/error';
-import Checkout from '../pages/checkout';
-import OrderList from '../pages/orders';
-
+import Checkout from '@pages/checkout';
+import OrderList from '@pages/orders';
+import TermsAndConditions from '@pages/terms';
+import PrivacyPolicy from '@pages/privacy-policy';
+import ReturnPolicy from '@pages/return-policy';
 
 export const AppRoutes = [
   {
@@ -44,6 +46,24 @@ export const AppRoutes = [
             path: 'categories',
             key: 'categories',
             element: <Categories />,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'terms',
+            key: 'terms',
+            element: <TermsAndConditions />,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'privacy-policy',
+            key: 'privacy-policy',
+            element: <PrivacyPolicy />,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'return-policy',
+            key: 'return-policy',
+            element: <ReturnPolicy />,
             errorElement: <ErrorElement />
           },
         ]

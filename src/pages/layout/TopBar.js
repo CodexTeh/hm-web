@@ -23,8 +23,8 @@ import { GetLanguage } from "@redux-state/common/selectors";
 import { colorPalette } from "@utils/colorPalette";
 
 const pages = {
-  en: ["Home", "Offers", "Contact", "Flash Sale"],
-  ar: ["بيت", "العروض", "اتصل", "بيع فلاش"],
+  en: ["Shop", "Offers", "Contact", "Flash Sale"],
+  ar: ["محل", "العروض", "اتصل", "بيع فلاش"],
 };
 const settings = {
   en: ["Profile", "Account", "Dashboard", "Logout"],
@@ -88,9 +88,13 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
     </Box>
   ), [hasScrolled, setHasScrolled]);
 
+  const routeToHome = () => {
+    router.push('/')
+  }
+
   const onClickPage = (page) => {
     if(page === pages[0]) {
-      router.push('/')
+      routeToHome()
     }
   }
 
@@ -126,8 +130,10 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                 display: "flex",
                 alignItems: "center",
                 marginLeft: 3,
-                marginRight: 3
+                marginRight: 3,
+                cursor: 'pointer'
               }}
+              onClick={routeToHome}
             >
               <img
                 src={logo}
