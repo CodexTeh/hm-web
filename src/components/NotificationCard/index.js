@@ -1,42 +1,59 @@
 import React from 'react';
-import { Card, CardContent, Typography, IconButton, Box } from '@mui/material';
+import { Card, CardContent, Typography, IconButton, Box, Slide } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const NotificationCard = ({ message, onClose }) => {
+const NotificationCard = ({ message, onClose, type = 'info', open = true }) => {
+  // Define background colors for different message types
+  const bgColor = {
+    success: '#e6f7e6', // Light green
+    error: '#fdecea', // Light red
+    warning: '#fff4e5', // Light orange
+    info: '#e3f2fd', // Light blue
+  }[type] || '#e3f2fd';
+
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '16px',
-        borderRadius: 2,
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #e0e0e0',
-        width: '100%',
-        maxWidth: '400px',
-        margin: '16px auto',
-      }}
-    >
-      <CardContent
+    <Slide direction="down" in={open} mountOnEnter unmountOnExit>
+      <Card
         sx={{
           display: 'flex',
-          flexDirection: 'row',
           alignItems: 'center',
-          padding: '0 !important',
+          justifyContent: 'space-between',
+          padding: 2,
+          borderRadius: 2,
+          boxShadow: 3,
+          border: '1px solid #ddd',
+          // backgroundColor: bgColor,
+          maxWidth: 400,
+          margin: '16px auto',
         }}
       >
-        <Typography variant="body1">
-          {message}
-        </Typography>
-      </CardContent>
-      <IconButton
-        onClick={onClose}
-        sx={{ marginLeft: '8px', padding: '4px' }}
-      >
-        <CloseIcon />
-      </IconButton>
-    </Card>
+        <CardContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 0,
+            flexGrow: 1,
+          }}
+        >
+          <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            {message}
+          </Typography>
+        </CardContent>
+        <IconButton
+          onClick={onClose}
+          sx={{
+            marginLeft: '8px',
+            padding: '4px',
+            color: 'text.secondary',
+            '&:hover': { color: 'red' }, // Change color on hover
+          }}
+          aria-label="Close notification"
+        >
+          <CloseIcon />
+        </IconButton>
+      </Card>
+    </Slide>
   );
 };
 

@@ -33,12 +33,15 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
   const isRTL = language === "ar"; // Check if Arabic is enabled
 
   const login = () => {
-    if (email && password) {
-      dispatch(signIn(email, password))
+    if (!email || !password) {
+      alert(!isRTL ? "Please enter email and password" : "الرجاء إدخال البريد الإلكتروني وكلمة المرور");
+    } else if (emailError) {
+      alert(!isRTL ? "Please enter a valid email" : "الرجاء إدخال بريد إلكتروني صالح");
     } else {
-      alert(!isRTL ? "Please enter email and password" : "الرجاء إدخال البريد الإلكتروني وكلمة المرور")
+      dispatch(signIn(email, password));
     }
-  }
+  };
+
 
   const openRegisterModal = () => {
     setRegisterModal(true);
@@ -55,7 +58,7 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
 
-     if (!validateEmail(newEmail)) {
+    if (!validateEmail(newEmail)) {
       setEmailError(true);
       setEmailHelperText(isRTL ? "صيغة البريد الإلكتروني غير صحيحة" : "Invalid email format");
     } else {

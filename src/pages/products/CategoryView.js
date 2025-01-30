@@ -11,17 +11,17 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
   const [expanded, setExpanded] = useState(false);
   const [child, setChild] = useState();
 
-  const catFilter = isRTL ? { arabicCategory: category?._id } : { Category: category?._d };
+  const catFilter = isRTL ? { arabicCategory: category?._id } : { Category: category?._id };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    if (category) {
-      setFilter(catFilter);
-    }
-  }, [category])
+  // useEffect(() => {
+  //   if (category) {
+  //     setFilter(catFilter);
+  //   }
+  // }, [category])
 
 
   const highlightColor = expanded === 'panel1' ? colorPalette.theme : colorPalette.darkText;

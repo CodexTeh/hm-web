@@ -33,7 +33,8 @@ export const Api = {
 
       }
     } catch (e) {
-      console.log("Error", e);
+      throw new Error(e.message);
+
     }
   },
   signIn: async (data) => {
@@ -67,7 +68,7 @@ export const Api = {
           throw new Error('Something went wrong!');
       }
     } catch (e) {
-      console.log("Error", e);
+      throw new Error(e.message);
     }
   },
 

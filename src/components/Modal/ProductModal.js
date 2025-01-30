@@ -236,7 +236,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   }
 
   useEffect(() => {
-    loadProducts();
+    dispatch(getProducts(pagination, {}));
   }, [dispatch]);
 
   useEffect(() => {

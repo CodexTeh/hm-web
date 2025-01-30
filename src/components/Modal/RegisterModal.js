@@ -59,10 +59,12 @@ const RegisterModal = ({ open, handleClose, setLoginModal }) => {
   }
 
   const signUp = () => {
-    if (email && password && phone && address && username) {
-      dispatch(createAccount(username, email, password, phone, address))
-    } else {
+    if (!email || !password || !phone || !address || !username) {
       alert(!isRTL ? "Please enter all fields" : "الرجاء إدخال كافة الحقول")
+    } else if (emailError) {
+      alert(!isRTL ? "Please enter a valid email" : "الرجاء إدخال بريد إلكتروني صالح");
+    } else {
+      dispatch(createAccount(username, email, password, phone, address))
     }
   }
 

@@ -280,7 +280,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                       },
                     }}
                   >
-                    AR
+                    أربي
                   </Button>
                 </Box>
 

@@ -11,14 +11,19 @@ import { setToken } from '@helpers/tokenActions';
 function* createAccount(action) {
 
   try {
-    yield call(Api.createAccount, action.payload);
+    const data = yield call(Api.createAccount, action.payload);
+    if (data) {
 
-    yield put(
-      toggleToast(true, 'User created successfully!', 'success')
-    );
-    yield put(createAccountSuccess());
+      yield put(
+        toggleToast(true, 'User created successfully!', 'success')
+      );
+      yield put(createAccountSuccess());
+    }
 
   } catch (error) {
+    yield put(
+      toggleToast(true, error.message, 'error')
+    );
     yield put(createAccountSuccess());
 
     // yield put(Actions.requestFailed(error.message));
@@ -37,8 +42,10 @@ function* signIn(action) {
     }
 
   } catch (error) {
+    yield put(
+      toggleToast(true, error.message, 'error')
+    );
     yield put(signInSuccess(null));
-    // yield put(Actions.requestFailed(error.message));
     console.log('error', error);
   }
 }
