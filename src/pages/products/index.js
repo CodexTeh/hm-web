@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import LoginModal from '@components/Modal/LoginModal';
 import Footer from '@components/Footer';
 import { getCategories } from '@redux-state/common/action';
 import WhatsAppButton from '@components/WhatsAppButton';
@@ -36,7 +35,6 @@ export default function Products() {
       <CardDrawer open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <CartFloatButton open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <WhatsAppButton />
-      <LoginModal />
       <Footer />
     </>
   );

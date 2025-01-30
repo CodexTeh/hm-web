@@ -1,8 +1,11 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const Api = {
   createAccount: async (data) => {
-    const { username, email, password, phone, description } = data;
+    const { username, email, password, phone, address } = data;
 
     try {
       let response;
@@ -12,7 +15,7 @@ export const Api = {
           'content-type': 'application/json',
           'Content-Security-Policy': 'default-src https:; script-src https: http:',
         },
-        body: JSON.stringify({ username: username, email: email, password: password, phone: phone, description: description, userType: "client" }),
+        body: JSON.stringify({ username: username, email: email, password: password, phone: phone, location: address }),
       };
 
       response = await fetch(`${API_URL}auth/signup`, options);

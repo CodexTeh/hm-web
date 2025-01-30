@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, TextField, Card, CardContent } from '@mui/material';
+import { Box, Typography, Grid, TextField, Card, CardContent, useTheme, Button } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
-import PhoneTextInput from '@components/PhoneTextInput';
-import { GetUser, GetLanguage, GetCartDetails } from '@redux-state/selectors';
-import DeliveryCardSelection from './DeliveryCardSelectios';
-import OrderSummary from './OrderSummary';
-import { useDispatch } from 'react-redux';
+import HomeIcon from '@mui/icons-material/Home';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
-import { styled } from '@mui/system';
+import { styled, useMediaQuery } from '@mui/system';
+import { GetUser, GetLanguage, GetCartDetails } from '@redux-state/selectors';
+import { useDispatch } from 'react-redux';
+import PhoneTextInput from '@components/PhoneTextInput';
 import { addToCart } from '@redux-state/common/action';
 import pusher from '@helpers/pusherConfig';
 import constants from '@helpers/constants';
 import useRouter from '@helpers/useRouter';
 import { setLatestOrders, toggleToast } from '@redux-state/common/action';
+import DeliveryCardSelection from './DeliveryCardSelectios';
+import OrderSummary from './OrderSummary';
 
 const blue = {
   100: '#DAECFF',
@@ -74,6 +75,10 @@ const CheckoutPage = () => {
   const cart = GetCartDetails();
 
   const router = useRouter()
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const isRTL = language === 'ar';
 
   const translations = {
@@ -97,14 +102,9 @@ const CheckoutPage = () => {
 
   const currentTranslations = isRTL ? translations.ar : translations.en;
 
-  const [billingAddress, setBillingAddress] = useState(
-    "2231 Kidd Avenue, AK, Kansas, 99614, United States"
-  );
-  const [shippingAddress, setShippingAddress] = useState(
-    "2148 Stratford Park, KY, Winchester, 40391, United States"
-  );
+  const [shippingAddress, setShippingAddress] = useState(user?.location);
   const [orderNote, setOrderNote] = useState("");
-  const [phone, setPhone] = useState(user.phone);
+  const [phone, setPhone] = useState(user?.phone);
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState("Express Delivery");
 
   useEffect(() => {
@@ -126,6 +126,7 @@ const CheckoutPage = () => {
       dispatch(
         toggleToast(true, `You last order ${data.orderId} is completed successfully!`, 'success')
       );
+      dispatch(addToCart({ items: [], user: null, totalPrice: 0 }));
       router.push('/orders')
     });
     return () => {
@@ -192,11 +193,11 @@ const CheckoutPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop: 15,
-        background: colorPalette.greyBackground,
+        background: cart?.items?.length > 0 ? colorPalette.greyBackground : colorPalette.white,
         direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
-      <Grid container spacing={3} sx={{ maxWidth: '1200px', width: '100%' }}>
+      {cart?.items?.length > 0 ? <Grid container spacing={3} sx={{ maxWidth: '1200px', width: '100%' }}>
         <Grid item xs={12} md={8}>
           <Card sx={{ marginBottom: 3, padding: 2 }}>
             <CardContent>
@@ -269,7 +270,12 @@ const CheckoutPage = () => {
 
         {/* Right Side */}
         <OrderSummary isRTL={isRTL} />
-      </Grid>
+      </Grid> :
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
+          <Typography variant="h5" color="textSecondary">
+            {isRTL ? "العربة فارغة" : "Cart is Empty"}
+          </Typography>
+        </Box>}
     </Box>
   );
 };

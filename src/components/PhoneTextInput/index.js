@@ -17,6 +17,7 @@ import {
 const PhoneTextInput = ({
   value,
   onChange,
+  size = "medium",
   ...restProps
 }) => {
   const {
@@ -38,6 +39,7 @@ const PhoneTextInput = ({
     <TextField
       variant="outlined"
       color="primary"
+      size={size}
       placeholder="Phone number"
       value={phone}
       fullWidth
@@ -53,7 +55,7 @@ const PhoneTextInput = ({
             <Select
               MenuProps={{
                 style: {
-                  height: "300px",
+                  height: "00px",
                   width: "360px",
                   top: "10px",
                   left: "-34px"

@@ -257,7 +257,6 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const addRemoveInWishlist = () => {
     dispatch(addRemoveToWishlist({ productId: product.id, userId: user.id, type: wishListItem ? 'remove' : 'add' }));
   }
-  console.log('yoyo', wishListItem);
 
   const CustomCarousel = () => {
     const renderArrowPrev = (onClickHandler, hasPrev, label) =>

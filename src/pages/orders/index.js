@@ -26,12 +26,12 @@ import {
   GetOrdersLoading,
 } from '@redux-state/selectors';
 import HomeIcon from '@mui/icons-material/Home';
+import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { getHeaders } from "@components/TableView/getHeaders";
 import TableView from "@components/TableView";
-import { getOrders } from '../../redux-state/common/action';
-import moment from 'moment/moment';
-import useRouter from '../../helpers/useRouter';
+import { getOrders } from '@redux-state/common/action';
+import useRouter from '@helpers/useRouter';
 
 const translations = {
   en: {
@@ -51,7 +51,7 @@ const translations = {
     subTotal: 'Sub Total',
     shippingCharge: 'Shipping Charge',
     discount: 'Discount',
-    payWithCard: 'PAY_WITH_CARD',
+    payOnline: 'PAY_ONLINE',
     expressDelivery: 'Express Delivery',
     pending: 'Pending',
     processing: 'Processing',
@@ -76,7 +76,7 @@ const translations = {
     subTotal: 'الإجمالي الفرعي',
     shippingCharge: 'رسوم الشحن',
     discount: 'خصم',
-    payWithCard: 'الدفع بالبطاقة',
+    payOnline: 'ادفع عبر الإنترنت',
     expressDelivery: 'توصيل سريع',
     pending: 'في الانتظار',
     processing: 'قيد المعالجة',
@@ -190,7 +190,7 @@ const OrderList = () => {
     { label: t.orderNumber, value: currentOrder?._id || 'N/A' },
     { label: t.date, value: currentOrder?.createdAt ? moment(currentOrder.createdAt).format('MMMM D, YYYY') : 'N/A' },
     { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice || 0}` },
-    { label: t.paymentMethod, value: t.payWithCard },
+    { label: t.paymentMethod, value: t.payOnline },
   ]), [currentOrder, isRTL, t]);
 
   const details = useMemo(() => ([
@@ -296,7 +296,7 @@ const OrderList = () => {
   return (
     <Box
       sx={{
-        background: colorPalette.greyBackground,
+        background: orders?.items?.length > 0 ? colorPalette.greyBackground : colorPalette.white,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -325,101 +325,108 @@ const OrderList = () => {
             {t.backToHome}
           </Typography>
         </Button>
-        <InputOrderSelectField />
+        {orders?.length > 0 && <InputOrderSelectField />}
 
       </Box>
-      <Box
-        sx={{
-          background: colorPalette.white,
-          width: isMobile ? '100%' : '70%',
-          alignSelf: 'center',
-          border: 0.2,
-          borderRadius: 2,
-          borderColor: '#e4e7eb',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        {/* Order and Payment Status */}
+      {orders?.length > 0 ?
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : isRTL ? 'row-reverse' : 'row',
-            justifyContent: isMobile ? 'center' : 'space-between',
-            alignItems: 'center',
-            padding: '20px 40px 20px 40px',
-            background: colorPalette.greyBackground,
+            background: colorPalette.white,
+            width: isMobile ? '100%' : '70%',
+            alignSelf: 'center',
+            border: 0.2,
+            borderRadius: 2,
+            borderColor: '#e4e7eb',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              {t.orderStatus}:
-            </Typography>
-            <Chip
-              label={t.processing}
-              sx={{
-                fontSize: 15,
-                fontWeight: 'bold',
-                borderColor: 'transparent',
-                background: colorPalette.coneGreen,
-                color: colorPalette.coneDarkGreen,
-              }}
-              color="warning"
-              variant="outlined"
+          {/* Order and Payment Status */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : isRTL ? 'row-reverse' : 'row',
+              justifyContent: isMobile ? 'center' : 'space-between',
+              alignItems: 'center',
+              padding: '20px 40px 20px 40px',
+              background: colorPalette.greyBackground,
+            }}
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                {t.orderStatus}:
+              </Typography>
+              <Chip
+                label={t.processing}
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  borderColor: 'transparent',
+                  background: colorPalette.coneGreen,
+                  color: colorPalette.coneDarkGreen,
+                }}
+                color="warning"
+                variant="outlined"
+              />
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                {t.paymentStatus}:
+              </Typography>
+              <Chip
+                label={t.payOnline}
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  borderColor: colorPalette.lightGreen,
+                }}
+                color="success"
+                variant="outlined"
+              />
+            </Box>
+          </Box>
+
+          {/* Order Info */}
+          {renderInfoCards()}
+
+          {/* Stepper */}
+          {renderStepper()}
+
+          {/* Total Amount and Order Details */}
+          <Grid container spacing={3} padding={isMobile ? 2 : 5} dir={isRTL ? 'rtl' : 'ltr'}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+                {t.totalAmount}
+              </Typography>
+              {renderDetails(pricing)}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+                {t.orderDetails}
+              </Typography>
+              {renderDetails(details)}
+            </Grid>
+          </Grid>
+
+          <Box padding={5}>
+            <TableView
+              headers={getHeaders(isRTL ? 'arOrder' : 'Order')}
+              page={0}
+              rows={rows}
+              rowsPerPage={null}
+              setPage={null}
+              setRowsPerPage={null}
+              totalRows={0}
+              showPaginations={false}
+              type={'orders'}
             />
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              {t.paymentStatus}:
-            </Typography>
-            <Chip
-              label={t.payWithCard}
-              sx={{
-                fontSize: 15,
-                fontWeight: 'bold',
-                borderColor: colorPalette.lightGreen,
-              }}
-              color="success"
-              variant="outlined"
-            />
-          </Box>
+        </Box> :
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
+          <Typography variant="h5" color="textSecondary">
+            {isRTL ? "لم يتم العثور على أي طلبات" : "No Orders Found"}
+          </Typography>
         </Box>
-
-        {/* Order Info */}
-        {renderInfoCards()}
-
-        {/* Stepper */}
-        {renderStepper()}
-
-        {/* Total Amount and Order Details */}
-        <Grid container spacing={3} padding={isMobile ? 2 : 5} dir={isRTL ? 'rtl' : 'ltr'}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-              {t.totalAmount}
-            </Typography>
-            {renderDetails(pricing)}
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-              {t.orderDetails}
-            </Typography>
-            {renderDetails(details)}
-          </Grid>
-        </Grid>
-
-        <Box padding={5}>
-          <TableView
-            headers={getHeaders(isRTL ? 'arOrder' : 'Order')}
-            page={0}
-            rows={rows}
-            rowsPerPage={null}
-            setPage={null}
-            setRowsPerPage={null}
-            totalRows={0}
-            showPaginations={false}
-            type={'orders'}
-          />
-        </Box>
-      </Box>
+      }
     </Box>
   );
 };

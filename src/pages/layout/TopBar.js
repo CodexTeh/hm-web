@@ -18,8 +18,10 @@ import { useDispatch } from "react-redux";
 import logo from "@assets/icons/logo.png";
 import SearchBar from "@components/SearchBar";
 import useRouter from '@helpers/useRouter';
+import { removeToken } from "@helpers/tokenActions";
 import { changeLanguage } from "@redux-state/common/action";
-import { GetLanguage } from "@redux-state/common/selectors";
+import { GetLanguage, GetUser } from "@redux-state/selectors";
+import { logout } from "@redux-state/onboarding/action";
 import { colorPalette } from "@utils/colorPalette";
 
 const pages = {
@@ -27,14 +29,19 @@ const pages = {
   ar: ["محل", "العروض", "اتصل", "بيع فلاش"],
 };
 const settings = {
-  en: [{ title: "Profile", path: '/' }, { title: "Logout", path: '/' }, { title: 'Wishlist', path: 'wishlist' }],
-  ar: [{ title: "الملف الشخصي", path: '/' }, { title: "تسجيل الخروج", path: '/' }, { title: 'قائمة الرغبات', path: 'wishlist' }],
+  en: [
+    // { title: "Profile", path: '/' }, 
+    { title: 'Wishlist', path: 'wishlist' }, { title: "Logout", path: '/' }],
+  ar: [
+    // { title: "الملف الشخصي", path: '/' }, 
+    { title: 'قائمة الرغبات', path: 'wishlist' }, { title: "تسجيل الخروج", path: '/' }],
 };
 
 const TopBar = ({ hasScrolled, setHasScrolled }) => {
   const dispatch = useDispatch();
   const language = GetLanguage();
-
+  const user = GetUser();
+  const userName = user ? user.username.substring(0, 2).toUpperCase() : "?";
   const router = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null); // For mobile menu
@@ -294,7 +301,14 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                 >
                   {settings[language].map((setting, index) => (
                     <MenuItem key={index} onClick={handleCloseUserMenu}>
-                      <Box onClick={() => routeToPath(setting.path)}><Typography>{setting.title}</Typography></Box>
+                      <Box onClick={() => {
+                        if (setting.title === 'Logout') {
+                          dispatch(logout());
+                          removeToken();
+                        } else {
+                          routeToPath(setting.path)
+                        }
+                      }}><Typography>{setting.title}</Typography></Box>
                     </MenuItem>
                   ))}
                 </Menu>
@@ -306,10 +320,17 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                     p: 0,
                   }}>
                     <Avatar
-                      alt="User Avatar"
-                      src="/static/images/avatar/2.jpg"
-                      sx={{ width: 40, height: 40 }}
-                    />
+                      sx={{
+                        bgcolor: colorPalette.theme, // Customize background color
+                        color: "#fff", // Customize text color
+                        width: 48, // Set width
+                        height: 48, // Set height
+                        fontSize: 20, // Set font size
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {userName}
+                    </Avatar>
                   </IconButton>
                 </Tooltip>
               </Box>

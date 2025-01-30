@@ -1,126 +1,192 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { CircularProgress } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  TextField,
+  Typography,
+  IconButton,
+  InputAdornment,
+  CircularProgress,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useDispatch } from "react-redux";
+import logo from "@assets/icons/logo.png";
+import { GetLanguage, GetUserLoginLoader } from "@redux-state/selectors";
 import { signIn } from '@redux-state/actions';
-import { GetToken, GetUserLoginLoader } from '@redux-state/onboarding/selectors';
-import ModalView from './index';
+import { colorPalette } from '@utils/colorPalette';
 
-const StyledMainBox = styled(Box)({
-  backgroundColor: '#fff',
-  borderRadius: '8px',
-  boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
-  display: 'flex',
-  flexDirection: 'column',
-  height: 'auto',
-  padding: '20px',
-  paddingLeft: '62.5px',
-  paddingTop: '40px',
-  width: '610px'
-});
-
-const StyledHeaderTypography = styled(Typography)({
-  color: '#333!important',
-  fontSize: '23px!important',
-  fontWeight: '600!important',
-  paddingBottom: '0px',
-  textAlign: 'center',
-  width: '489px'
-});
-
-
-const StyledDescriptionTypography = styled(Typography)({
-  color: '#333!important',
-  fontSize: '14px!important',
-  fontWeight: '700!important',
-  paddingBottom: '3px',
-  width: '50 %',
-  marginTop: 5,
-});
-
-const StyledDescriptionFieldText = styled(TextField)({
-  borderRadius: '8px',
-  marginTop: 5,
-  width: '489px'
-});
-
-const StyledFooterBox = styled(Box)({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: '15px',
-  width: '490px'
-});
-
-const StyledLoginButton = styled(Button)({
-  backgroundColor: '#E4CCFF!important',
-  borderRadius: '30px!important',
-  color: '#632DDD!important',
-  fontSize: '14px!important',
-  fontWeight: 'bold',
-  height: '45px',
-  marginRight: '8px',
-  width: '140px'
-});
-
-const LoginModal = () => {
-  const [email, setEmail] = useState('');
+const LoginModal = ({ open, handleClose, setRegisterModal }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailHelperText, setEmailHelperText] = useState("");
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(false);
 
-  const token = GetToken();
   const loading = GetUserLoginLoader();
 
   const dispatch = useDispatch();
 
+  const language = GetLanguage(); // Get the current language (en or ar)
+  const isRTL = language === "ar"; // Check if Arabic is enabled
+
   const login = () => {
-    dispatch(signIn(email, password))
-  }
-
-  useEffect(() => {
-    if (token) {
-      setIsLogin(true)
+    if (email && password) {
+      dispatch(signIn(email, password))
     } else {
-      setIsLogin(false)
+      alert(!isRTL ? "Please enter email and password" : "الرجاء إدخال البريد الإلكتروني وكلمة المرور")
     }
-  }, [token])
-
-
-  const EditModalView = () => {
-    return (
-      <StyledMainBox>
-        <StyledHeaderTypography>
-          Login
-        </StyledHeaderTypography>
-        <StyledDescriptionTypography>Email:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        ></StyledDescriptionFieldText>
-        <StyledDescriptionTypography>Password:</StyledDescriptionTypography>
-        <StyledDescriptionFieldText
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></StyledDescriptionFieldText>
-        <StyledFooterBox>
-          <StyledLoginButton
-            onClick={login}
-          >{loading ? <CircularProgress size={30} color="inherit" /> : 'Login'}</StyledLoginButton>
-        </StyledFooterBox>
-      </StyledMainBox>
-    )
   }
+
+  const openRegisterModal = () => {
+    setRegisterModal(true);
+    handleClose();
+  }
+
+  // Email validation function
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+
+     if (!validateEmail(newEmail)) {
+      setEmailError(true);
+      setEmailHelperText(isRTL ? "صيغة البريد الإلكتروني غير صحيحة" : "Invalid email format");
+    } else {
+      setEmailError(false);
+      setEmailHelperText("");
+    }
+  };
+
+  // Dynamic Text for Arabic/English
+  const text = {
+    title: isRTL ? "تسجيل الدخول" : "Login",
+    email: isRTL ? "البريد الإلكتروني" : "Email",
+    password: isRTL ? "كلمة المرور" : "Password",
+    forgotPassword: isRTL ? "هل نسيت كلمة المرور؟" : "Forgot password?",
+    login: isRTL ? "تسجيل الدخول" : "Login",
+    or: isRTL ? "أو" : "Or",
+    loginWithGoogle: isRTL ? "تسجيل الدخول باستخدام جوجل" : "Login with Google",
+    loginWithMobile: isRTL ? "تسجيل الدخول برقم الهاتف" : "Login with Mobile number",
+    noAccount: isRTL ? "ليس لديك حساب؟" : "Don't have an account?",
+    register: isRTL ? "تسجيل" : "Register",
+  };
 
   return (
-    <ModalView
-      content={EditModalView} open={!isLogin}
-      close={isLogin}
-    />
+    <Dialog
+      open={open}
+      maxWidth="xs"
+      fullWidth
+      sx={{
+        "& .MuiDialog-paper": {
+          borderRadius: "12px",
+          padding: "24px",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          direction: isRTL ? "rtl" : "ltr",
+        },
+      }}
+    >
+      <DialogContent>
+        {/* Logo */}
+        <Box display="flex" justifyContent="center" mb={2}>
+          <img src={logo} alt="HM Logo" width="140" height="140" />
+        </Box>
+
+        {/* Login Title */}
+        <Typography variant="body1" align="center" color="textSecondary" mb={2}>
+          {isRTL ? "قم بتسجيل الدخول باستخدام بريدك الإلكتروني وكلمة المرور" : "Login with your email & password"}
+        </Typography>
+
+        {/* Login Form */}
+        <Box display="flex" flexDirection="column" gap={2}>
+          <TextField
+            size="small"
+            value={email}
+            required
+            onChange={handleEmailChange}
+            label={isRTL ? "البريد الإلكتروني" : "Email"}
+            type="email"
+            variant="outlined"
+            fullWidth
+            error={emailError}
+            helperText={emailHelperText}
+            style={{ textAlign: isRTL ? "right" : "left" }}
+          />
+          {/* Password Field with Visibility Toggle */}
+          <TextField
+            size="small"
+            label={text.password}
+            type={showPassword ? "text" : "password"}
+            variant="outlined"
+            fullWidth
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={() => setShowPassword(!showPassword)} edge="end">
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* Forgot Password Link */}
+          {/* <Typography
+            variant="body2"
+            align={isRTL ? "left" : "right"}
+            sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
+          >
+            {text.forgotPassword}
+          </Typography> */}
+
+          {/* Login Button */}
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={login}
+            sx={{
+              backgroundColor: colorPalette.theme,
+              color: "white",
+              padding: "12px",
+              borderRadius: "6px",
+              "&:hover": { backgroundColor: colorPalette.theme },
+            }}
+          >
+            {loading ? <CircularProgress size={30} color="inherit" /> : text.login}
+          </Button>
+        </Box>
+
+        {/* Separator */}
+        <Box display="flex" alignItems="center" my={2}>
+          <Box flex={1} height="1px" bgcolor="lightgray" />
+          <Typography variant="body2" mx={1} color="textSecondary">
+            {text.or}
+          </Typography>
+          <Box flex={1} height="1px" bgcolor="lightgray" />
+        </Box>
+
+        {/* Register Section */}
+        <Typography variant="body2" align="center" mt={2}>
+          {text.noAccount}{" "}
+          <Typography
+            component="span"
+            sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
+            onClick={openRegisterModal}
+          >
+            {text.register}
+          </Typography>
+        </Typography>
+      </DialogContent>
+    </Dialog>
   );
 };
 

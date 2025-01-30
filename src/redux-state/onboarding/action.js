@@ -6,10 +6,10 @@ import {
   LOGOUT,
 } from './types';
 
-export const createAccount = (username, email, password, phone, description, navigation, t) => (
+export const createAccount = (username, email, password, phone, address) => (
   {
     type: CREATE_ACCOUNT,
-    payload: {username, email, password, phone, description, navigation, t},
+    payload: { username, email, password, phone, address },
   }
 );
 

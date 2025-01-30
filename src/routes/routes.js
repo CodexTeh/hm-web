@@ -70,7 +70,7 @@ export const AppRoutes = [
           {
             path: 'wishlist',
             key: 'wishlist',
-            element: <WishList />,
+            element: <><Layout /><WishList /></>,
             errorElement: <ErrorElement />
           },
         ]
