@@ -26,7 +26,9 @@ import {
   GET_ORDERS,
   GET_ORDERS_SUCCESS,
   SET_LATEST_ORDER,
-  TOGGLE_TOAST
+  TOGGLE_TOAST,
+  ADD_REMOVE_TO_WISHLIST,
+  ADD_TO_WISHLIST_SUCCESS
 } from './types';
 
 const INITIAL_STATE = {
@@ -57,6 +59,8 @@ const INITIAL_STATE = {
   productCatalogs: [],
   addProductCatalogLodaing: false,
   placeOrderLoading: false,
+  wishlistLoading: false,
+  wishList: [],
   language: 'en'
 };
 
@@ -78,6 +82,12 @@ export default (state = INITIAL_STATE, action) => {
 
     case PLACE_ORDER_SUCCESS:
       return { ...state, placeOrderLoading: false };
+
+    case ADD_REMOVE_TO_WISHLIST:
+      return { ...state, wishlistLoading: true };
+
+    case ADD_TO_WISHLIST_SUCCESS:
+      return { ...state, wishlistLoading: false, wishList: payload };
 
     case GET_PRODUCTS:
       return { ...state, productsLoading: true };

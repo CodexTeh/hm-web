@@ -8,6 +8,7 @@ import OrderList from '@pages/orders';
 import TermsAndConditions from '@pages/terms';
 import PrivacyPolicy from '@pages/privacy-policy';
 import ReturnPolicy from '@pages/return-policy';
+import WishList from '@pages/wishlist';
 
 export const AppRoutes = [
   {
@@ -64,6 +65,12 @@ export const AppRoutes = [
             path: 'return-policy',
             key: 'return-policy',
             element: <ReturnPolicy />,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'wishlist',
+            key: 'wishlist',
+            element: <WishList />,
             errorElement: <ErrorElement />
           },
         ]

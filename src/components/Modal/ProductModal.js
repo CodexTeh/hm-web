@@ -8,7 +8,9 @@ import {
   Button,
   IconButton,
   Grid,
-  Divider
+  Divider,
+  Tooltip,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -17,17 +19,23 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
 import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading, GetCartDetails, GetUser } from "@redux-state/selectors";
 import ProductsView from '@pages/products/Products/ProductsView';
 import { getProducts, addToCart } from '@redux-state/common/action';
+import { Api } from '@redux-state/common/api';
+import { addRemoveToWishlist } from '@redux-state/common/action';
+import { GetWishlistLoading } from '@redux-state/common/selectors';
 
 export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [hasMoreItems, setHasMoreItems] = useState(true);
+  const [wishListItem, setWishListItem] = useState(false);
 
   const loopRef = useRef();
 
@@ -40,6 +48,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const itemsCount = GetAllProductsCount();
   const isFetching = GetProductsLoading();
   const cartDetails = GetCartDetails();
+  const wishListLoading = GetWishlistLoading();
   const user = GetUser();
 
   const handleIncrease = (product) => {
@@ -221,10 +230,34 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
     dispatch(getProducts(pagination, filter));
   }
 
+  const checkWishlistProduct = async () => {
+    const isWishlistProduct = await Api.checkWishlistProduct(product?.id, user?.id)
+    setWishListItem(isWishlistProduct);
+  }
+
   useEffect(() => {
     loadProducts();
   }, [dispatch]);
 
+  useEffect(() => {
+    checkWishlistProduct();
+  }, [wishListLoading]);
+
+
+  useEffect(() => {
+  }, [])
+
+  const wishlistTooltipText = () => {
+    if (isRTL) {
+      return wishListItem ? "إزالة من قائمة الأمنيات" : "إضافة إلى قائمة الأمنيات";
+    }
+    return wishListItem ? "Remove from Wishlist" : "Add to Wishlist"
+  }
+
+  const addRemoveInWishlist = () => {
+    dispatch(addRemoveToWishlist({ productId: product.id, userId: user.id, type: wishListItem ? 'remove' : 'add' }));
+  }
+  console.log('yoyo', wishListItem);
 
   const CustomCarousel = () => {
     const renderArrowPrev = (onClickHandler, hasPrev, label) =>
@@ -397,12 +430,40 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
           {/* Right Section: Details */}
           <Grid item xs={12} md={6}>
-            <Typography variant="h5" sx={{
-              fontWeight: 'bold', marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? product?.arabicName : product?.website_name}
-            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h5" sx={{
+                display: '-webkit-box',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: '80%',
+                WebkitLineClamp: 1,
+                WebkitBoxOrient: 'vertical',
+                fontWeight: 'bold',
+                marginBottom: 1,
+                direction: isRTL ? 'rtl' : 'ltr',
+                textAlign: isRTL ? 'right' : 'left',
+              }}>
+                {isRTL ? product?.arabicName : product?.website_name}
+              </Typography>
+              <Tooltip title={wishlistTooltipText()} arrow>
+                <IconButton
+                  onClick={addRemoveInWishlist}
+                  sx={{
+                    color: colorPalette.theme,
+                    padding: 1, // Add some padding for better spacing
+                    border: `1px solid ${wishListItem ? colorPalette.theme : colorPalette.lightGrey}`, // Border color same as theme
+                    borderRadius: '50%', // Makes it fully rounded
+                    width: 40, // Fixed width
+                    height: 40, // Fixed height
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {wishListLoading ? <CircularProgress size={20} /> : wishListItem ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+                </IconButton>
+              </Tooltip>
+            </Box>
             <Typography variant="body2" marginTop={5} color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',

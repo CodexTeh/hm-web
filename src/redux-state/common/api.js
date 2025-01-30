@@ -439,4 +439,62 @@ export const Api = {
       console.log('Error', e);
     }
   },
+  addRemoveToWishlist: async (data, token, language) => {
+    const { userId, productId, type } = data;
+    try {
+      let response;
+      const options = {
+        method: type === 'remove' ? 'DELETE' : 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId, productId }),
+      };
+
+      response = await fetch(`${API_URL}wishlist`, options);
+
+      switch (response.status) {
+        case 200:
+          const responseData = await response.json();
+          return responseData;
+        case 400:
+          throw new Error(response.message);
+        case 409:
+          throw new Error(response.message);
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log('Error', e);
+    }
+  },
+  checkWishlistProduct: async (productId, userId) => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      };
+
+      const response = await fetch(`${API_URL}wishlist/check?userId=${userId}&productId=${productId}`, options);
+
+      switch (response.status) {
+        case 200:
+          const { exists } = await response.json();
+          return exists;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+
+      }
+    } catch (e) {
+      console.log("Error", e);
+      return false;
+    }
+  },
 }

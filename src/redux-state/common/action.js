@@ -26,7 +26,9 @@ import {
   SET_LATEST_ORDER,
   GET_ORDERS,
   GET_ORDERS_SUCCESS,
-  TOGGLE_TOAST
+  TOGGLE_TOAST,
+  ADD_REMOVE_TO_WISHLIST,
+  ADD_TO_WISHLIST_SUCCESS
 } from './types';
 
 export const addToCart = (cart) => (
@@ -187,6 +189,20 @@ export const placeOrder = (user, cart) => (
 export const placeOrderSuccess = payload => (
   {
     type: PLACE_ORDER_SUCCESS,
+    payload: payload,
+  }
+);
+
+export const addRemoveToWishlist = (data) => (
+  {
+    type: ADD_REMOVE_TO_WISHLIST,
+    payload: data,
+  }
+);
+
+export const addRemoveToWishlistSuccess = payload => (
+  {
+    type: ADD_TO_WISHLIST_SUCCESS,
     payload: payload,
   }
 );

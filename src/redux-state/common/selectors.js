@@ -69,3 +69,6 @@ export const GetToastMessage = () =>
 export const GetToastType = () =>
   useSelector(
     (state) => state.common.toastType);    
+export const GetWishlistLoading = () =>
+  useSelector(
+    (state) => state.common.wishlistLoading);    

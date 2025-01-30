@@ -27,8 +27,8 @@ const pages = {
   ar: ["محل", "العروض", "اتصل", "بيع فلاش"],
 };
 const settings = {
-  en: ["Profile", "Account", "Dashboard", "Logout"],
-  ar: ["الملف الشخصي", "الحساب", "لوحة القيادة", "تسجيل الخروج"],
+  en: [{ title: "Profile", path: '/' }, { title: "Logout", path: '/' }, { title: 'Wishlist', path: 'wishlist' }],
+  ar: [{ title: "الملف الشخصي", path: '/' }, { title: "تسجيل الخروج", path: '/' }, { title: 'قائمة الرغبات', path: 'wishlist' }],
 };
 
 const TopBar = ({ hasScrolled, setHasScrolled }) => {
@@ -88,13 +88,13 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
     </Box>
   ), [hasScrolled, setHasScrolled]);
 
-  const routeToHome = () => {
-    router.push('/')
+  const routeToPath = (path) => {
+    router.push(path)
   }
 
   const onClickPage = (page) => {
-    if(page === pages[0]) {
-      routeToHome()
+    if (page === pages[0]) {
+      routeToPath('/')
     }
   }
 
@@ -133,7 +133,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                 marginRight: 3,
                 cursor: 'pointer'
               }}
-              onClick={routeToHome}
+              onClick={() => routeToPath('/')}
             >
               <img
                 src={logo}
@@ -294,7 +294,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                 >
                   {settings[language].map((setting, index) => (
                     <MenuItem key={index} onClick={handleCloseUserMenu}>
-                      <Typography>{setting}</Typography>
+                      <Box onClick={() => routeToPath(setting.path)}><Typography>{setting.title}</Typography></Box>
                     </MenuItem>
                   ))}
                 </Menu>

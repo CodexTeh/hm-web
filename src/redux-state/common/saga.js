@@ -3,6 +3,7 @@ import * as Actions from './action';
 import { Api } from './api'
 import {
   ADD_PRODUCT_CATALOG,
+  ADD_REMOVE_TO_WISHLIST,
   CREATE_CATEGORY,
   EDIT_CATEGORY,
   EDIT_PRODUCT,
@@ -167,6 +168,19 @@ function* placeOrder(action) {
   }
 }
 
+function* addRemoveToWishlist(action) {
+  const token = yield select(getToken);
+  const language = yield select(getLanguage);
+
+  try {
+    yield call(Api.addRemoveToWishlist, action.payload, token, language);
+    yield put(Actions.addRemoveToWishlistSuccess());
+  } catch (error) {
+    yield put(Actions.addRemoveToWishlistSuccess());
+    console.log('error', error);
+  }
+}
+
 function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
@@ -180,6 +194,7 @@ function* commonSaga() {
   yield takeLatest(EDIT_PRODUCT_CATALOG, editProductCatalog);
   yield takeLatest(EDIT_CATEGORY, editCategory);
   yield takeLatest(PLACE_ORDER, placeOrder);
+  yield takeLatest(ADD_REMOVE_TO_WISHLIST, addRemoveToWishlist);
 }
 
 export default commonSaga;
