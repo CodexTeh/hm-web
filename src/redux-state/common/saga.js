@@ -176,8 +176,12 @@ function* addRemoveToWishlist(action) {
     yield call(Api.addRemoveToWishlist, action.payload, token, language);
     yield put(Actions.addRemoveToWishlistSuccess());
   } catch (error) {
+    const { status, message } = JSON.parse(error.message);
+    if (status === 409) {
+      alert("You can not add more than 500 products in wishlist");
+    }
+
     yield put(Actions.addRemoveToWishlistSuccess());
-    console.log('error', error);
   }
 }
 

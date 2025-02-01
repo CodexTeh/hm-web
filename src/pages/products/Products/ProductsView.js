@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton, CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import emptyProductImage from '@assets/icons/empty-product.jpg';
 import { colorPalette } from '@utils/colorPalette';
 import { ProductModal } from '@components/Modal/ProductModal';
 import AddIcon from '@mui/icons-material/Add';
@@ -10,7 +11,7 @@ import { GetUser, GetCartDetails } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL, open, handleOpen, setOpen, ChildView }) => {
+const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
   const user = GetUser();
   const dispatch = useDispatch();
 
@@ -75,10 +76,10 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
   };
 
   return (
-    <Box sx={{ width: '95%', marginRight: 5, marginTop: 3 }}>
+    <Box sx={{ width: '93%', marginRight: 5, marginTop: 3 }}>
       {products?.length ?
         <Grid
-          sx={{ marginLeft: !open ? 0.5 : null }}
+          sx={{ marginLeft: !open ? 0.5 : null, maxWidth: '100%' }}
           container spacing={3}>
           {products.map((product, index) => {
             const existingProduct = cartDetails?.items.find(item => item.id === product.id);
@@ -130,7 +131,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                     height="300"
                     image={
                       imageUrls?.length > 0 ? imageUrls[0] :
-                        'https://pickbazar-react-rest.vercel.app/_next/image?url=https%3A%2F%2Fpickbazarlaravel.s3.ap-southeast-1.amazonaws.com%2F1%2FApples.jpg&w=3840&q=75'
+                        emptyProductImage
                     }
                     alt={product?.website_name}
                     sx={{ objectFit: 'contain' }}
@@ -248,7 +249,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
         : <EmptyView isRTL={isRTL} />}
 
       <Box sx={{ display: 'flex', justifyContent: 'center', position: 'initial', zIndex: 20, bottom: -10 }}>
-        <Button
+        {loadMore && <Button
           sx={{
             alignSelf: 'center',
             background: colorPalette.theme,
@@ -262,7 +263,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
           {isFetching ? (
             <CircularProgress color="inherit" size={20} />
           ) : isRTL ? 'جار تحميل المنتجات' : 'Load more products'}
-        </Button>
+        </Button>}
       </Box>
     </Box>
   );

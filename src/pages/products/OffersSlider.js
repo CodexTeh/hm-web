@@ -82,7 +82,7 @@ export const OffersSlider = () => {
   };
 
   const offerImageStyle = {
-    width: "80%",
+    width: "93%",
     height: "auto",
     borderRadius: "6px",
     objectFit: "contain",
@@ -104,8 +104,8 @@ export const OffersSlider = () => {
     >
       <Slider {...settings}>
         {images.map((image, index) => (
-          <Box key={index} sx={{ padding: '25px 40px 10px 30px' }}>
-            <img src={image} alt="Offer" style={offerImageStyle} />
+          <Box key={index} sx={{ padding: '25px 40px 10px 10px'}}>
+            <img key={index} src={image} alt="Offer" style={offerImageStyle} />
           </Box>
         ))}
       </Slider>

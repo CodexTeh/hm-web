@@ -23,6 +23,7 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
+import emptyProductImage from '@assets/icons/empty-product.jpg';
 import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading, GetCartDetails, GetUser } from "@redux-state/selectors";
 import ProductsView from '@pages/products/Products/ProductsView';
 import { getProducts, addToCart } from '@redux-state/common/action';
@@ -217,10 +218,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
     setSelectedIndex(index);
   };
   const gallery = [
-    'https://via.placeholder.com/60x60.png?text=1',
-    'https://via.placeholder.com/60x60.png?text=2',
-    'https://via.placeholder.com/60x60.png?text=3',
-    'https://via.placeholder.com/60x60.png?text=3',
+    emptyProductImage
   ]
 
   const images = imageUrls?.length > 0 ? imageUrls : gallery;
@@ -435,7 +433,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 width: '80%',
-                WebkitLineClamp: 1,
+                WebkitLineClamp: 3,
                 WebkitBoxOrient: 'vertical',
                 fontWeight: 'bold',
                 marginBottom: 1,
@@ -463,13 +461,13 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 </IconButton>
               </Tooltip>
             </Box>
-            <Typography variant="body2" marginTop={5} color="textSecondary" sx={{
+            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
               {isRTL ? "مقاس: " : "Size: "}{size?.title}
             </Typography>
-            <Typography variant="body2" marginTop={5} color="textSecondary" sx={{
+            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
@@ -479,7 +477,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
             <Typography
               variant="h4"
-              sx={{ fontWeight: 'bold', marginTop: 5, color: colorPalette.theme, marginBottom: 1 }}
+              sx={{ fontWeight: 'bold', marginTop: 2, color: colorPalette.theme, marginBottom: 1 }}
             >
               {isRTL ? "ر۔ع  " : "OMR  "}{product?.price?.toFixed(2)}
               <Typography
@@ -498,7 +496,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 {isRTL ? "ر۔ع" : "OMR"} {1}
               </Typography>
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 2 }}>
               {qty > 0 && <Button
                 variant="contained"
                 fullWidth

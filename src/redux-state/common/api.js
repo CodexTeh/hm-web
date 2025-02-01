@@ -38,6 +38,35 @@ export const Api = {
       console.log("Error", e);
     }
   },
+  getWishListProducts: async (userId) => {
+    try {
+      let response;
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      };
+
+      response = await fetch(`${API_URL}wishlist?userId=${userId}`, options);
+
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          return data;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
 
   getOrders: async (userId) => {
     try {
@@ -461,12 +490,12 @@ export const Api = {
         case 400:
           throw new Error(response.message);
         case 409:
-          throw new Error(response.message);
+          throw { status: response.status, message: response.message };
         default:
           throw new Error('Something went wrong!');
       }
     } catch (e) {
-      console.log('Error', e);
+      throw new Error(JSON.stringify({ status: e.status || 500, message: e.message || 'Unknown error' }));
     }
   },
   checkWishlistProduct: async (productId, userId) => {

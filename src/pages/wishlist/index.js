@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Box, Typography } from '@mui/material';
+import { Box, LinearProgress, Typography } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage } from '@redux-state/common/selectors';
-import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
+import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetUser } from '@redux-state/selectors';
 import { colorPalette } from '@utils/colorPalette';
 import Footer from '@components/Footer';
+import { Api } from '@redux-state/common/api';
 import ProductsView from '../products/Products/ProductsView';
 import CartFloatButton from '../products/CartFloatButton';
 import CardDrawer from '../products/CardDrawer/CartDrawer';
@@ -16,68 +16,69 @@ const WishList = ({ drawerWidth = 300 }) => {
   const [open, setOpen] = useState(null);
   const [filter, setFilter] = useState({});
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [wishListProducts, setWishListProducts] = useState([]);
+  const [loader, setLoader] = useState(false);
 
+  const user = GetUser();
   const language = GetLanguage(); // Get the current language (en or ar)
   const isRTL = language === 'ar'; // Check if the language is Arabic
 
-  const pagination = useMemo(
-    () => ({
-      page: 0,
-      perPage: rowsPerPage,
-    }),
-    [rowsPerPage]
-  );
+  // const pagination = useMemo(
+  //   () => ({
+  //     page: 0,
+  //     perPage: rowsPerPage,
+  //   }),
+  //   [rowsPerPage]
+  // );
 
-  const isFetching = GetProductsLoading();
   const itemsCount = GetAllProductsCount();
   const dispatch = useDispatch();
 
   const handleOpen = (value) => setOpen(value);
   const handleClose = () => setOpen(null);
 
-  useEffect(() => {
-    dispatch(getProductCatalog());
-    dispatch(getCategories());
-  }, [dispatch]);
-
-  const loadProducts = () => {
-    dispatch(getProducts(pagination, filter));
+  const loadProducts = async () => {
+    setLoader(true);
+    const wishListProducts = await Api.getWishListProducts(user.id);
+    if (wishListProducts) {
+      setWishListProducts(wishListProducts);
+    }
+    setLoader(false);
   };
 
   useEffect(() => {
     loadProducts();
-  }, [dispatch, filter]);
+  }, [dispatch]);
 
-  const products = GetProducts();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop + 1 >=
-        document.documentElement.scrollHeight
-      ) {
-        if (products?.length > 0) {
-          setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [products]);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (
+  //       window.innerHeight + document.documentElement.scrollTop + 1 >=
+  //       document.documentElement.scrollHeight
+  //     ) {
+  //       if (products?.length > 0) {
+  //         setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, [products]);
 
-  window.onbeforeunload = function () {
-    window.scrollTo(0, 0);
-  };
+  // window.onbeforeunload = function () {
+  //   window.scrollTo(0, 0);
+  // };
 
-  const fetchFeedData = useCallback(() => {
-    if (itemsCount > 0 && itemsCount <= pagination.perPage) {
-      setHasMoreItems(false);
-    }
-  }, [dispatch, pagination, itemsCount, pagination.perPage]);
+  // const fetchFeedData = useCallback(() => {
+  //   if (itemsCount > 0 && itemsCount <= pagination.perPage) {
+  //     setHasMoreItems(false);
+  //   }
+  // }, [dispatch, pagination, itemsCount, pagination.perPage]);
 
-  useEffect(() => {
-    fetchFeedData();
-  }, [pagination.perPage, fetchFeedData]);
+  // useEffect(() => {
+  //   fetchFeedData();
+  // }, [pagination.perPage, fetchFeedData]);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -90,6 +91,7 @@ const WishList = ({ drawerWidth = 300 }) => {
   return (
     <>
       <Box sx={{ background: colorPalette.greyBackground, minHeight: '100vh', padding: 3 }}>
+
         <Box
           sx={{
             display: 'flex',
@@ -98,8 +100,10 @@ const WishList = ({ drawerWidth = 300 }) => {
             justifyContent: 'center',
             textAlign: 'center',
             padding: '24px 0',
+            marginTop: 10
           }}
         >
+
           {/* Heart Icon */}
           <FavoriteRoundedIcon sx={{ fontSize: 40, color: colorPalette.theme, marginBottom: 1 }} />
 
@@ -108,6 +112,7 @@ const WishList = ({ drawerWidth = 300 }) => {
             {isRTL ? 'قائمتي المفضلة' : 'My Wishlist'}
           </Typography>
         </Box>
+        {loader && <LinearProgress value={10} />}
 
         {/* Product Grid */}
         <Box
@@ -122,10 +127,11 @@ const WishList = ({ drawerWidth = 300 }) => {
           <ProductsView
             hasMoreItems={hasMoreItems}
             loadProducts={loadProducts}
-            isFetching={isFetching}
-            products={products}
+            isFetching={loader}
+            products={wishListProducts}
             isRTL={isRTL}
             open={open}
+            loadMore={loader}
             handleOpen={handleOpen}
             setOpen={setOpen}
           />

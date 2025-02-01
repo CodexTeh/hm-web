@@ -25,16 +25,18 @@ import { logout } from "@redux-state/onboarding/action";
 import { colorPalette } from "@utils/colorPalette";
 
 const pages = {
-  en: ["Shop", "Offers", "Contact", "Flash Sale"],
-  ar: ["محل", "العروض", "اتصل", "بيع فلاش"],
+  en: ["Shop", "Offers", "Wishlist", "Contact", "Flash Sale"],
+  ar: ["محل", "العروض", "قائمة الرغبات", "اتصل", "بيع فلاش"],
 };
 const settings = {
   en: [
     // { title: "Profile", path: '/' }, 
-    { title: 'Wishlist', path: 'wishlist' }, { title: "Logout", path: '/' }],
+    // { title: 'Wishlist', path: 'wishlist' },
+    { title: "Logout", path: '/' }],
   ar: [
     // { title: "الملف الشخصي", path: '/' }, 
-    { title: 'قائمة الرغبات', path: 'wishlist' }, { title: "تسجيل الخروج", path: '/' }],
+    // { title: 'قائمة الرغبات', path: 'wishlist' }, 
+    { title: "تسجيل الخروج", path: '/' }],
 };
 
 const TopBar = ({ hasScrolled, setHasScrolled }) => {
@@ -96,12 +98,14 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
   ), [hasScrolled, setHasScrolled]);
 
   const routeToPath = (path) => {
-    router.push(path)
+    router.push(`/${path}`)
   }
 
   const onClickPage = (page) => {
-    if (page === pages[0]) {
-      routeToPath('/')
+    if (page === pages[language][0]) {
+      routeToPath('')
+    } else if (page === pages[language][2]) {
+      routeToPath('wishlist')
     }
   }
 
