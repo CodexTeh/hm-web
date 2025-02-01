@@ -14,9 +14,10 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch } from "react-redux";
 import logo from "@assets/icons/logo.png";
-import { GetLanguage, GetUserLoginLoader } from "@redux-state/selectors";
+import { GetLanguage, GetUserLoginLoader, GetloginModalState } from "@redux-state/selectors";
 import { signIn } from '@redux-state/actions';
 import { colorPalette } from '@utils/colorPalette';
+import { openLoginModal } from "@redux-state/common/action";
 
 const LoginModal = ({ open, handleClose, setRegisterModal }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +27,7 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
   const [password, setPassword] = useState('');
 
   const loading = GetUserLoginLoader();
+  const loginModal = GetloginModalState();
 
   const dispatch = useDispatch();
 
@@ -42,11 +44,15 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
     }
   };
 
+  const closeLoginModal = () => {
+    dispatch(openLoginModal(false));
+  }
 
   const openRegisterModal = () => {
     setRegisterModal(true);
-    handleClose();
+    closeLoginModal();
   }
+
 
   // Email validation function
   const validateEmail = (email) => {
@@ -83,9 +89,10 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
 
   return (
     <Dialog
-      open={open}
+      open={loginModal}
       maxWidth="xs"
       fullWidth
+      onClose={closeLoginModal}
       sx={{
         "& .MuiDialog-paper": {
           borderRadius: "12px",

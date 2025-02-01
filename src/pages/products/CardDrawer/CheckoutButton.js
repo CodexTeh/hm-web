@@ -2,10 +2,16 @@ import React from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
 import useRouter from '@helpers/useRouter';
+import { GetUser } from '@redux-state/selectors';
+import { openLoginModal } from '@redux-state/actions';
+import { useDispatch } from 'react-redux';
+
 
 const CheckoutButton = ({ isRTL, cartDetails }) => {
-
+  const user = GetUser();
   const router = useRouter();
+
+  const dispatch = useDispatch();
   return (
     <Box
       sx={{
@@ -20,7 +26,10 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
     >
       <Button
         variant="contained"
-        onClick={() =>router.push('/checkout')}
+        onClick={() => {
+          if (!user) return dispatch(openLoginModal(true));
+          router.push('/checkout')
+        }}
         sx={{
           display: 'flex',
           justifyContent: 'space-between',

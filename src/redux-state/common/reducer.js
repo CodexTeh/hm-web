@@ -28,7 +28,8 @@ import {
   SET_LATEST_ORDER,
   TOGGLE_TOAST,
   ADD_REMOVE_TO_WISHLIST,
-  ADD_TO_WISHLIST_SUCCESS
+  ADD_TO_WISHLIST_SUCCESS,
+  OPEN_LOGIN_MODAL
 } from './types';
 
 const INITIAL_STATE = {
@@ -39,6 +40,7 @@ const INITIAL_STATE = {
   toggleToast: false,
   toastType: '',
   toastMessage: '',
+  loginModal: '',
   cart: {
     items: [],
     user: {},
@@ -76,6 +78,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case ADD_TO_CART:
       return { ...state, cart: payload };
+
+    case OPEN_LOGIN_MODAL:
+      return { ...state, loginModal: payload };
 
     case PLACE_ORDER:
       return { ...state, placeOrderLoading: true };

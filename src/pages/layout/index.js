@@ -4,7 +4,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
 import { GetUser, GetToken, GetToastMessage, GetToastType, GetToggleToast, GetProductsLoading } from '@redux-state/selectors';
-import { toggleToast } from '@redux-state/common/action';
+import { toggleToast, openLoginModal } from '@redux-state/actions';
 import NotificationCard from '@components/NotificationCard';
 import LoginModal from '@components/Modal/LoginModal';
 import RegisterModal from '@components/Modal/RegisterModal';
@@ -66,6 +66,12 @@ const Layout = () => {
       setRegisterModal(true)
     }
   }, [token])
+
+  useEffect(() => {
+      if (!user) {
+        dispatch(openLoginModal(true));
+      }
+    }, [dispatch]);
 
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>

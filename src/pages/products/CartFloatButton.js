@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import LoginModal from '@components/Modal/LoginModal';
 import { colorPalette } from '@utils/colorPalette';
 import { GetLanguage, GetCartDetails } from '@redux-state/selectors';
 
@@ -71,7 +70,6 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
           </Typography>
         </Box>
       </StyledCartContainer>
-      <LoginModal />
     </Box>
   );
 }

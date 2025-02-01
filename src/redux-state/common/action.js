@@ -28,7 +28,8 @@ import {
   GET_ORDERS_SUCCESS,
   TOGGLE_TOAST,
   ADD_REMOVE_TO_WISHLIST,
-  ADD_TO_WISHLIST_SUCCESS
+  ADD_TO_WISHLIST_SUCCESS,
+  OPEN_LOGIN_MODAL
 } from './types';
 
 export const addToCart = (cart) => (
@@ -231,5 +232,12 @@ export const toggleToast = (isOpen, message, toastType) => (
   {
     type: TOGGLE_TOAST,
     payload: { isOpen, message, toastType },
+  }
+);
+
+export const openLoginModal = (open) => (
+  {
+    type: OPEN_LOGIN_MODAL,
+    payload: open
   }
 );

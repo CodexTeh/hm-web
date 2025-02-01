@@ -23,6 +23,7 @@ import { changeLanguage } from "@redux-state/common/action";
 import { GetLanguage, GetUser } from "@redux-state/selectors";
 import { logout } from "@redux-state/onboarding/action";
 import { colorPalette } from "@utils/colorPalette";
+import { openLoginModal } from "@redux-state/common/action";
 
 const pages = {
   en: ["Shop", "Offers", "Wishlist", "Contact", "Flash Sale"],
@@ -105,6 +106,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
     if (page === pages[language][0]) {
       routeToPath('')
     } else if (page === pages[language][2]) {
+      if (!user) return dispatch(openLoginModal(true));
       routeToPath('wishlist')
     }
   }
@@ -318,7 +320,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                 </Menu>
               </Box>
 
-              <Box sx={{ marginRight: 3, marginLeft: 3 }}>
+              {user && <Box sx={{ marginRight: 3, marginLeft: 3 }}>
                 <Tooltip title={language === "ar" ? "افتح الإعدادات" : "Open settings"}>
                   <IconButton onClick={handleOpenUserMenu} sx={{
                     p: 0,
@@ -337,7 +339,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                     </Avatar>
                   </IconButton>
                 </Tooltip>
-              </Box>
+              </Box>}
             </Box>
           </Toolbar>
 

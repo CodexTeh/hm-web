@@ -72,3 +72,6 @@ export const GetToastType = () =>
 export const GetWishlistLoading = () =>
   useSelector(
     (state) => state.common.wishlistLoading);    
+export const GetloginModalState = () =>
+  useSelector(
+    (state) => state.common.loginModal);    

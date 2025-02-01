@@ -442,7 +442,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               }}>
                 {isRTL ? product?.arabicName : product?.website_name}
               </Typography>
-              <Tooltip title={wishlistTooltipText()} arrow>
+              {user && <Tooltip title={wishlistTooltipText()} arrow>
                 <IconButton
                   onClick={addRemoveInWishlist}
                   sx={{
@@ -459,7 +459,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 >
                   {wishListLoading ? <CircularProgress size={20} /> : wishListItem ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
                 </IconButton>
-              </Tooltip>
+              </Tooltip>}
             </Box>
             <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',

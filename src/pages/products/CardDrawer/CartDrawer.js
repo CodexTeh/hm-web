@@ -99,7 +99,6 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
           </Box>
         </StyledMainBox>
       </Drawer>
-      <LoginModal />
     </>
   );
 }

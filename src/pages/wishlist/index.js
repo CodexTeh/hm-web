@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, LinearProgress, Typography } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetUser } from '@redux-state/selectors';
+import { GetAllProductsCount, GetLanguage, GetUser } from '@redux-state/selectors';
 import { colorPalette } from '@utils/colorPalette';
 import Footer from '@components/Footer';
 import { Api } from '@redux-state/common/api';
@@ -47,7 +47,9 @@ const WishList = ({ drawerWidth = 300 }) => {
   };
 
   useEffect(() => {
-    loadProducts();
+    if (user) {
+      loadProducts();
+    }
   }, [dispatch]);
 
 
