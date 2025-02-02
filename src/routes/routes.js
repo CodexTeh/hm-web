@@ -9,6 +9,7 @@ import TermsAndConditions from '@pages/terms';
 import PrivacyPolicy from '@pages/privacy-policy';
 import ReturnPolicy from '@pages/return-policy';
 import WishList from '@pages/wishlist';
+import AboutUs from '@pages/about-us';
 
 export const AppRoutes = [
   {
@@ -65,6 +66,12 @@ export const AppRoutes = [
             path: 'return-policy',
             key: 'return-policy',
             element: <ReturnPolicy />,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'about-us',
+            key: 'about-us',
+            element: <AboutUs />,
             errorElement: <ErrorElement />
           },
           {

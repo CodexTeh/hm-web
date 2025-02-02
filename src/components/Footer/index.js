@@ -7,18 +7,18 @@ const Footer = () => {
 
   const language = GetLanguage();
   const rtl = language === 'ar';
-  
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <Box 
-      sx={{ 
-        backgroundColor: "#333", 
-        color: "#fff", 
-        padding: "40px 40px 20px 20px", 
-        direction: rtl ? "rtl" : "ltr" 
+    <Box
+      sx={{
+        backgroundColor: "#333",
+        color: "#fff",
+        padding: "40px 40px 20px 20px",
+        direction: rtl ? "rtl" : "ltr"
       }}
     >
       {/* <Grid container spacing={4} sx={{ flexWrap: "wrap", overflowX: "hidden", flexDirection: rtl ? "row-reverse" : "row" }}> */}
@@ -30,13 +30,9 @@ const Footer = () => {
             {rtl ? "عن HM AWANI" : "ABOUT HM AWANI"}
           </Typography>
           <Box>
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "HM AWANI" : "HM AWANI"}
-            </Link>
-            <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "المستثمرون" : "Investors"}
-            </Link>
+          <Typography variant="caption" gutterBottom>
+            {rtl ? "تأسست شركة حسين مقيبل أواني في عام 1998، وهي متخصصة في توفير مستلزمات المطبخ والديكور المنزلي الفاخرة. وبفضل شغفنا بالجودة والتصميم، فإننا نصنع منتجات تعزز جمال ووظائف مساحة المعيشة الخاصة بك." : "Hussain Muqaibal Awani, founded in 1998, is dedicated to providing premium kitchen essentials and home decor. With a passion for quality and design, we create products that enhance the beauty and functionality of your living space."}
+          </Typography>
           </Box>
         </Grid>
 
@@ -58,13 +54,16 @@ const Footer = () => {
               {rtl ? "سياسة الخصوصية" : "Privacy Policy"}
             </Link>
             <br />
-            <Link href="/terms" fontSize={12} color="inherit" underline="hover">
+            <Link href="/about-us" fontSize={12} color="inherit" underline="hover">
               {rtl ? "معلومات عنا" : "About Us"}
             </Link>
             <br />
-            <Link href="/privacy-policy" fontSize={12} color="inherit" underline="hover">
+            <Box sx={{ cursor: 'pointer' }} onClick={() => window.open('mailto:hamuqaibal@gmail.com')}>
+
+            <Typography href="/privacy-policy" fontSize={12} color="inherit" underline="hover">
               {rtl ? "اتصل بنا" : "Contact Us"}
-            </Link>
+            </Typography>
+            </Box>
           </Box>
         </Grid>
 
@@ -125,6 +124,7 @@ const Footer = () => {
             color: "#fff",
             "&:hover": { backgroundColor: "#444" },
           }}
+          onClick={() => window.open(process.env.REACT_APP_HM_FACEBOOK_URL)}
         >
           <Facebook />
         </IconButton>
@@ -134,6 +134,7 @@ const Footer = () => {
             color: "#fff",
             "&:hover": { backgroundColor: "#444" },
           }}
+          onClick={() => window.open(process.env.REACT_APP_HM_INSTAGRAM_URL)}
         >
           <Instagram />
         </IconButton>
