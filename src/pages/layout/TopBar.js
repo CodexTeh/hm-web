@@ -99,7 +99,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
   ), [hasScrolled, setHasScrolled]);
 
   const routeToPath = (path) => {
-    router.push(`/${path}`)
+      router.push(`${path}`)
   }
 
   const onClickPage = (page) => {
@@ -107,7 +107,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
       routeToPath('')
     } else if (page === pages[language][2]) {
       if (!user) return dispatch(openLoginModal(true));
-      routeToPath('wishlist')
+      routeToPath('/wishlist')
     }
   }
 

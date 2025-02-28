@@ -7,21 +7,15 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
 
-export default function CategoryView({ isRTL, setFilter, category, index, language }) {
+export default function CategoryView({ isRTL, setFilter, category, subCategories, index, language }) {
   const [expanded, setExpanded] = useState(false);
   const [child, setChild] = useState();
 
-  const catFilter = isRTL ? { arabicCategory: category?._id } : { Category: category?._id };
+  const catFilter = isRTL ? { arabicCategory: category?.id } : { Category: category?.id };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  // useEffect(() => {
-  //   if (category) {
-  //     setFilter(catFilter);
-  //   }
-  // }, [category])
 
 
   const highlightColor = expanded === 'panel1' ? colorPalette.theme : colorPalette.darkText;
@@ -56,20 +50,20 @@ export default function CategoryView({ isRTL, setFilter, category, index, langua
       >
         <Box sx={{ cursor: 'pointer' }} onClick={() => setFilter(catFilter)}>
           <Typography color={highlightColor} variant='subtitle2' fontSize={13} fontWeight={510} width={150}>
-            {category.category.label}
+            {isRTL ? category.ar_category : category.category}
           </Typography>
         </Box>
       </AccordionSummary>
       <AccordionDetails sx={{ padding: '0', margin: '0' }}>
-        {category?.subcategories?.map((subCat, index) => {
-          const subCatFilter = isRTL ? { arabicSubCategory: subCat._id } : { subCategory: subCat._id };
+        {subCategories?.map((subCat, index) => {
+          const subCatFilter = isRTL ? { arabicSubCategory: subCat.id } : { subCategory: subCat.id };
           return (
             <Box sx={{ cursor: 'pointer' }} onClick={() => {
-              setChild(subCat._id)
+              setChild(subCat.id)
               setFilter(subCatFilter)
             }} key={index}>
-              <Typography fontSize={13} sx={{ color: child === subCat._id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={510} width={150} key={index} marginTop={2}>
-                {subCat.label}
+              <Typography fontSize={13} sx={{ color: child === subCat.id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={510} width={150} key={index} marginTop={2}>
+                {isRTL ? subCat.ar_subcategory : subCat.subcategory}
               </Typography>
             </Box>
           )

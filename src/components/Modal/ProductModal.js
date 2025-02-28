@@ -24,7 +24,7 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
 import emptyProductImage from '@assets/icons/empty-product.jpg';
-import { GetProductCatalogs, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading, GetCartDetails, GetUser } from "@redux-state/selectors";
+import { GetProductCatalogs, GetSubCategories, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading, GetCartDetails, GetUser } from "@redux-state/selectors";
 import ProductsView from '@pages/products/Products/ProductsView';
 import { getProducts, addToCart } from '@redux-state/common/action';
 import { Api } from '@redux-state/common/api';
@@ -45,6 +45,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const dispatch = useDispatch();
 
   const allCategories = GetCategories();
+  const subCategories = GetSubCategories();
   const products = GetProducts();
   const itemsCount = GetAllProductsCount();
   const isFetching = GetProductsLoading();
@@ -161,8 +162,8 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const allProductCatalogs = GetProductCatalogs();
   const splitByTypeAndLanguage = (array) => {
     return array.reduce((acc, item) => {
-      const { type, language } = item;
-
+      const { type } = item;
+      const language = 'en';
       if (!acc[language]) {
         acc[language] = {};
       }
@@ -184,31 +185,19 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
       unit: enUnits = [],
       size: enSizes = []
     } = {},
-    ar: {
-      brand: arBrands = [],
-      'available-color': arAvailableColors = [],
-      material: arMaterials = [],
-      unit: arUnits = [],
-      size: arSizes = []
-    } = {}
   } = splitByTypeAndLanguage(allProductCatalogs);
 
-  const enCategory = allCategories.find(category => category?._id === product?.webCategory)
-  const arCategory = allCategories.find(category => category?._id === product?.arabicCategory)
-  const enSubCategory = enCategory?.subcategories.find(category => category?._id === product?.subCategory)
-  const arSubCategory = arCategory?.subcategories.find(category => category?._id === product?.arabicSubCategory)
+  const category = allCategories.find(category => category?.id?.toString() === product?.webCategory?.toString())
+  const subCategory = subCategories.find(subcategory => subcategory?.id?.toString() === product?.subCategory?.toString())
 
-  const category = isRTL ? arCategory : enCategory;
-  const subCategory = isRTL ? arSubCategory : enSubCategory;
+  const enProductSize = enSizes.find(size => size?.id === product?.size)
+  const arProductSize = enSizes.find(size => size?.id === product?.ar_size)
 
-  const enProductSize = enSizes.find(size => size?._id === product?.size)
-  const arProductSize = arSizes.find(size => size?._id === product?.ar_size)
+  const enProductBrand = enBrands.find(size => size?.id === product?.brand)
+  const arProductBrand = enBrands.find(size => size?.id === product?.ar_brand)
 
-  const enProductBrand = enBrands.find(size => size?._id === product?.brand)
-  const arProductBrand = arBrands.find(size => size?._id === product?.ar_brand)
-
-  const size = isRTL ? arSizes.find(size => size?.value === arProductSize?.value) : enSizes.find(size => size?.value === enProductSize?.value)
-  const brand = isRTL ? arBrands.find(brand => brand?.value === arProductBrand?.value) : enBrands.find(brand => brand?.value === enProductBrand?.value)
+  const size = isRTL ? enSizes.find(size => size?.value === arProductSize?.value) : enSizes.find(size => size?.value === enProductSize?.value)
+  const brand = isRTL ? enBrands.find(brand => brand?.value === arProductBrand?.value) : enBrands.find(brand => brand?.value === enProductBrand?.value)
 
   const existingProduct = cartDetails?.items.find(item => item.id === product.id);
 
@@ -327,6 +316,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 border: selectedIndex === index ? `2px solid ${colorPalette.theme}` : null,
                 borderRadius: '8px',
                 boxSizing: 'border-box',
+                width: 74,
                 transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
               }}
             >
@@ -334,10 +324,10 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 src={image}
                 alt={`Thumbnail-${index}`}
                 style={{
-                  width: '100%',
-                  height: 'auto',
+                  width: 70,
+                  height: 70,
                   borderRadius: '6px',
-                  objectFit: 'contain',
+                  objectFit: 'fill',
                   outline: 'none',
                   transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
                 }}
@@ -465,13 +455,13 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
-              {isRTL ? "مقاس: " : "Size: "}{size?.title}
+              {isRTL ? "مقاس: " : "Size: "}{isRTL ? size?.ar_title : size?.title}
             </Typography>
             <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
-              {isRTL ? "ماركة: " : "Brand: "}{brand?.title}
+              {isRTL ? "ماركة: " : "Brand: "}{isRTL ? brand?.ar_title : brand?.title}
             </Typography>
 
 
@@ -568,7 +558,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
 
                 }}
               >
-                {category?.category?.label}
+                {isRTL ? category?.ar_category : category?.category}
               </Button>
               {subCategory && <Button
                 variant="outlined"
@@ -580,7 +570,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                   marginLeft: 2
                 }}
               >
-                {subCategory?.label}
+                {isRTL ? subCategory?.ar_subcategory : subCategory?.subcategory}
               </Button>}
             </Typography>}
           </Grid>

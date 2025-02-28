@@ -166,16 +166,19 @@ export const Api = {
   getCategories: async () => {
     try {
       let response;
+      let subCatResponse;
       const options = {
         method: 'GET',
       };
 
-      response = await fetch(`${API_URL}categories`, options);
+      response = await fetch(`${SERVER_URL}/api/get/all/category`, options);
+      subCatResponse = await fetch(`${SERVER_URL}/api/get/all/subcategory`, options);
 
       switch (response.status) {
         case 200:
-          const data = await response.json();
-          return data;
+          const { category } = await response.json();
+          const { subcategory } = await subCatResponse.json();
+          return { category, subcategory };
         case 400:
           throw new Error('All fields are required');
         case 409:
@@ -286,17 +289,14 @@ export const Api = {
 
       const options = {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       };
 
-      const response = await fetch(`${API_URL}product-catalogs`, options);
+      const response = await fetch(`${SERVER_URL}/api/get/all/catalog`, options);
 
       switch (response.status) {
         case 200:
-          const responseData = await response.json();
-          return responseData;
+          const { catalogs } = await response.json();
+          return catalogs;
 
         case 400:
           throw new Error('All fields are required');

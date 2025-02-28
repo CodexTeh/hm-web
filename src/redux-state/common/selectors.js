@@ -27,6 +27,9 @@ export const GetCategoriesLoading = () =>
 export const GetCategories = () =>
   useSelector(
     (state) => state.common.categories);
+export const GetSubCategories = () =>
+  useSelector(
+    (state) => state.common.subCategories);
 export const GetCreateCategoryLoading = () =>
   useSelector(
     (state) => state.common.createCategoryLoading);
@@ -50,7 +53,7 @@ export const GetCartDetails = () =>
     (state) => state.common.cart);
 export const GetPlaceOrderLoading = () =>
   useSelector(
-    (state) => state.common.placeOrderLoading);    
+    (state) => state.common.placeOrderLoading);
 export const GetLatestOrder = () =>
   useSelector(
     (state) => state.common.latestOrderId);
@@ -59,19 +62,19 @@ export const GetOrders = () =>
     (state) => state.common.orders);
 export const GetOrdersLoading = () =>
   useSelector(
-    (state) => state.common.getOrdersLoading);    
+    (state) => state.common.getOrdersLoading);
 export const GetToggleToast = () =>
   useSelector(
     (state) => state.common.toggleToast);
 export const GetToastMessage = () =>
   useSelector(
-    (state) => state.common.toastMessage);    
+    (state) => state.common.toastMessage);
 export const GetToastType = () =>
   useSelector(
-    (state) => state.common.toastType);    
+    (state) => state.common.toastType);
 export const GetWishlistLoading = () =>
   useSelector(
-    (state) => state.common.wishlistLoading);    
+    (state) => state.common.wishlistLoading);
 export const GetloginModalState = () =>
   useSelector(
     (state) => state.common.loginModal);    

@@ -69,7 +69,7 @@ function* getSearchedProducts(action) {
 function* getCategories(action) {
   try {
     const data = yield call(Api.getCategories, action.payload);
-    if (data?.data) {
+    if (data) {
       yield put(Actions.getCategoriesSuccess(data));
     } else {
       yield put(Actions.getCategoriesSuccess([]));
@@ -83,8 +83,8 @@ function* getCategories(action) {
 function* getProductCatalog(action) {
   try {
     const data = yield call(Api.getProductCatalog, action.payload);
-    if (data?.data) {
-      yield put(Actions.getProductCatalogSuccess(data.data));
+    if (data) {
+      yield put(Actions.getProductCatalogSuccess(data));
     } else {
       yield put(Actions.getProductCatalogSuccess([]));
     }
