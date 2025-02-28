@@ -54,6 +54,7 @@ const INITIAL_STATE = {
   totalProductsByCategory: 0,
   totalProducts: 0,
   categories: [],
+  subCategories: [],
   getCategoriesLoading: false,
   createCategoryLoading: false,
   editCategoryLoading: false,
@@ -110,7 +111,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, getCategoriesLoading: true };
 
     case GET_CATEGORIES_SUCCESS:
-      return { ...state, getCategoriesLoading: false, categories: action.payload.data };
+      const { category, subcategory } = payload;
+      return { ...state, getCategoriesLoading: false, categories: category, subCategories: subcategory };
 
     case GET_SEARCHED_PRODUCTS:
       return { ...state, productsLoading: true };
