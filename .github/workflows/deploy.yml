@@ -24,7 +24,7 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_IP} "
-            export GIT_SSH_COMMAND='ssh -i /home/law_firm/.ssh/nabeegh_github' &&
+            export GIT_SSH_COMMAND='ssh -i /home/hmawani/.ssh/nabeegh_github' &&
             cd ${APP_DIR} &&
             git pull origin main &&
             /home/hmawani/.asdf/shims/yarn &&
