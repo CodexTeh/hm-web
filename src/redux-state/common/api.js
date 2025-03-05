@@ -526,4 +526,37 @@ export const Api = {
       return false;
     }
   },
+  getBanners: async () => {
+    try {
+      const options = {
+        method: 'GET',
+      };
+
+      const response = await fetch(`${API_URL}banners`, options);
+
+      switch (response.status) {
+        case 200:
+          const imageUrls = await response.json();
+
+          switch (response.status) {
+            case 200:
+              return imageUrls;
+            case 400:
+              throw new Error('All fields are required');
+            case 409:
+              throw new Error('User already exists!');
+            default:
+              throw new Error('Something went wrong!');
+          }
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
 }

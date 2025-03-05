@@ -29,7 +29,9 @@ import {
   TOGGLE_TOAST,
   ADD_REMOVE_TO_WISHLIST,
   ADD_TO_WISHLIST_SUCCESS,
-  OPEN_LOGIN_MODAL
+  OPEN_LOGIN_MODAL,
+  GET_BANNERS,
+  GET_BANNERS_SUCCESS
 } from './types';
 
 const INITIAL_STATE = {
@@ -55,6 +57,8 @@ const INITIAL_STATE = {
   totalProducts: 0,
   categories: [],
   subCategories: [],
+  getBannersLoading: false,
+  banners: [],
   getCategoriesLoading: false,
   createCategoryLoading: false,
   editCategoryLoading: false,
@@ -107,6 +111,10 @@ export default (state = INITIAL_STATE, action) => {
     case GET_PRODUCTS_BY_CATEGORY_SUCCESS:
       return { ...state, productsByCategoryLoading: false, productsByCategory: action.payload.products, totalProductsByCategory: action.payload?.products?.length };
 
+    case GET_BANNERS:
+      return { ...state, getBannersLoading: true };
+    case GET_BANNERS_SUCCESS:
+      return { ...state, banners: payload, getBannersLoading: false };
     case GET_CATEGORIES:
       return { ...state, getCategoriesLoading: true };
 

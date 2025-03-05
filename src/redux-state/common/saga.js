@@ -8,6 +8,7 @@ import {
   EDIT_CATEGORY,
   EDIT_PRODUCT,
   EDIT_PRODUCT_CATALOG,
+  GET_BANNERS,
   GET_CATEGORIES,
   GET_ORDERS,
   GET_PRODUCT_CATALOG,
@@ -90,6 +91,20 @@ function* getProductCatalog(action) {
     }
   } catch (error) {
     yield put(Actions.getProductCatalogSuccess([]));
+    console.log("error", error);
+  }
+}
+
+function* getBanners(action) {
+  try {
+    const data = yield call(Api.getBanners, action.payload);
+    if (data) {
+      yield put(Actions.getBannersSuccess(data));
+    } else {
+      yield put(Actions.getBannersSuccess([]));
+    }
+  } catch (error) {
+    yield put(Actions.getBannersSuccess([]));
     console.log("error", error);
   }
 }
@@ -193,6 +208,7 @@ function* commonSaga() {
   yield takeLatest(GET_CATEGORIES, getCategories);
   yield takeLatest(GET_PRODUCT_CATALOG, getProductCatalog);
   yield takeLatest(EDIT_PRODUCT, editProduct);
+  yield takeLatest(GET_BANNERS, getBanners);
   yield takeLatest(CREATE_CATEGORY, createCategory);
   yield takeLatest(ADD_PRODUCT_CATALOG, addProductCatalog);
   yield takeLatest(EDIT_PRODUCT_CATALOG, editProductCatalog);
