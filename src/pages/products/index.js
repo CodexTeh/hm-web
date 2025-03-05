@@ -29,7 +29,7 @@ export default function Products() {
   };
 
   return (
-    <Box sx={{ marginTop: 10 }}>
+    <Box sx={{ paddingTop: 10 }}>
       <Banner />
       <OffersSlider />
       <ProductCardView />

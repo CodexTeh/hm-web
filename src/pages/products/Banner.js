@@ -28,7 +28,7 @@ const Banner = () => {
     if (bannerUrls.length > 0) {
       const intervalId = setInterval(() => {
         setCurrentBannerIndex(prevIndex => (prevIndex + 1) % bannerUrls.length); // Loop through banners
-      }, 3000); // Change every 3 seconds
+      }, 5000); // Change every 3 seconds
 
       // Cleanup interval on component unmount
       return () => clearInterval(intervalId);
@@ -67,9 +67,10 @@ const Banner = () => {
     position: 'relative',
     backgroundImage: `url(${bannerUrls[currentBannerIndex] || bannerImage})`, // Use the current banner image
     backgroundSize: 'cover',
-    // backgroundPosition: 'center',
+    backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     height: '100vh',
+    padding: 30,
     direction: isRTL ? 'rtl' : 'ltr', // Set direction based on language
   };
 
