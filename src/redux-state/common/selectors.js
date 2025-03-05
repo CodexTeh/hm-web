@@ -77,4 +77,7 @@ export const GetWishlistLoading = () =>
     (state) => state.common.wishlistLoading);
 export const GetloginModalState = () =>
   useSelector(
-    (state) => state.common.loginModal);    
+    (state) => state.common.loginModal);
+export const GetBanners = () =>
+  useSelector(
+    (state) => state.common.banners);

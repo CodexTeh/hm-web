@@ -1,18 +1,39 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import bannerImage from '@assets/icons/banner.jpg';
-import constants from '@helpers/constants';
-import { Box, Typography } from '@mui/material';
-import { GetLanguage } from '@redux-state/common/selectors';
-import SearchBar from '../../components/SearchBar';
+import { useDispatch } from 'react-redux';
+import { GetLanguage, GetBanners } from '@redux-state/common/selectors';
+import { getBanners } from '@redux-state/common/action';
 
 const Banner = () => {
-  // State to track the drawer visibility
+  // State to track the drawer visibility and current banner image
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBanners());
+  }, []);
 
   // Language detection
   const language = GetLanguage();
+  const banners = GetBanners();
 
   const isRTL = language === 'ar';
+
+  const bannerUrls = useMemo(() => (isRTL ? banners?.arBannerUrls : banners?.bannerUrls)?.filter(item => item !== '') || [], [isRTL, banners]);
+
+  // Use effect to start the banner rotation every 2 seconds
+  useEffect(() => {
+    if (bannerUrls.length > 0) {
+      const intervalId = setInterval(() => {
+        setCurrentBannerIndex(prevIndex => (prevIndex + 1) % bannerUrls.length); // Loop through banners
+      }, 3000); // Change every 3 seconds
+
+      // Cleanup interval on component unmount
+      return () => clearInterval(intervalId);
+    }
+  }, [bannerUrls]);
 
   // Ref to the banner section
   const bannerRef = useRef(null);
@@ -44,8 +65,7 @@ const Banner = () => {
   // Styles for the banner
   const wrapperStyle = {
     position: 'relative',
-    // padding: '80px 0',
-    backgroundImage: `url(${bannerImage})`,
+    backgroundImage: `url(${bannerUrls[currentBannerIndex] || bannerImage})`, // Use the current banner image
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
@@ -60,8 +80,6 @@ const Banner = () => {
     position: 'relative',
     zIndex: 10,
   };
-
-
 
   return (
     <section ref={bannerRef} style={wrapperStyle}>
