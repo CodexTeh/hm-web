@@ -8,6 +8,7 @@ import CartFloatButton from './CartFloatButton';
 import Banner from './Banner';
 import ProductCardView from './Products';
 import { OffersSlider } from './OffersSlider';
+import { Box } from '@mui/material';
 
 export default function Products() {
 
@@ -28,7 +29,7 @@ export default function Products() {
   };
 
   return (
-    <>
+    <Box sx={{ marginTop: 10 }}>
       <Banner />
       <OffersSlider />
       <ProductCardView />
@@ -36,6 +37,6 @@ export default function Products() {
       <CartFloatButton open={open} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <WhatsAppButton />
       <Footer />
-    </>
+    </Box>
   );
 }

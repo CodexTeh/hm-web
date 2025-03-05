@@ -67,7 +67,7 @@ const Banner = () => {
     position: 'relative',
     backgroundImage: `url(${bannerUrls[currentBannerIndex] || bannerImage})`, // Use the current banner image
     backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    // backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     height: '100vh',
     direction: isRTL ? 'rtl' : 'ltr', // Set direction based on language
