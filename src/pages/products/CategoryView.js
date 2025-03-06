@@ -11,7 +11,7 @@ export default function CategoryView({ isRTL, setFilter, category, subCategories
   const [expanded, setExpanded] = useState(false);
   const [child, setChild] = useState();
 
-  const catFilter = isRTL ? { arabicCategory: category?.id } : { Category: category?.id };
+  const catFilter = isRTL ? { arabicCategory: category?.id } : { webCategory: category?.id };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);

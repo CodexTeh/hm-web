@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import bannerImage from '@assets/icons/banner.jpg';
 import { useDispatch } from 'react-redux';
 import { GetLanguage, GetBanners } from '@redux-state/common/selectors';
+import { CustomCarousel } from '@components/CustomCarousal';
 import { getBanners } from '@redux-state/common/action';
 
 const Banner = () => {
@@ -21,7 +22,7 @@ const Banner = () => {
 
   const isRTL = language === 'ar';
 
-  const bannerUrls = useMemo(() => (isRTL ? banners?.arBannerUrls : banners?.bannerUrls)?.filter(item => item !== '') || [], [isRTL, banners]);
+  const bannerUrls = useMemo(() => (isRTL ? banners?.arBannerUrls : banners?.bannerUrls)?.filter(item => item !== '') || [bannerImage], [isRTL, banners]);
 
   // Use effect to start the banner rotation every 2 seconds
   useEffect(() => {
@@ -62,30 +63,23 @@ const Banner = () => {
     };
   }, []);
 
-  // Styles for the banner
-  const wrapperStyle = {
-    position: 'relative',
-    backgroundImage: `url(${bannerUrls[currentBannerIndex] || bannerImage})`, // Use the current banner image
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    height: '100vh',
-    padding: 30,
-    direction: isRTL ? 'rtl' : 'ltr', // Set direction based on language
-  };
-
-  const containerStyle = {
-    margin: '0 auto',
-    maxWidth: '94.75rem',
-    padding: '0 1rem',
-    position: 'relative',
-    zIndex: 10,
+  const handleImageChange = (index) => {
+    setCurrentBannerIndex(index);
   };
 
   return (
-    <section ref={bannerRef} style={wrapperStyle}>
-      <div style={containerStyle} />
-    </section>
+    <CustomCarousel
+      selectedIndex={currentBannerIndex}
+      handleImageChange={handleImageChange}
+      images={bannerUrls} isRTL={isRTL}
+      hasChildImages={false}
+      showThumbs={false}
+      borderRadius={'0px'}
+      showStatus={false}
+      maxHeight='100%'
+      width='100%'
+      height='100%'
+    />
   );
 };
 
