@@ -33,6 +33,25 @@ export const AppRoutes = [
             errorElement: <ErrorElement />
           },
           {
+            index: true,
+            path: '/home',
+            key: 'products',
+            element: <><Layout /><Products /></>,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'flashSale',
+            key: 'flashSale',
+            element: <><Layout /><Products /></>,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'offers',
+            key: 'offers',
+            element: <><Layout /><Products /></>,
+            errorElement: <ErrorElement />
+          },
+          {
             path: 'checkout',
             key: 'checkout',
             element: <><Layout /><Checkout /></>,

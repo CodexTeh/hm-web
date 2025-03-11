@@ -32,7 +32,7 @@ import { addRemoveToWishlist } from '@redux-state/common/action';
 import { GetWishlistLoading } from '@redux-state/common/selectors';
 import { CustomCarousel } from '../CustomCarousal';
 
-export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
+export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls, finalPrice, hasDiscount }) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -54,40 +54,46 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const wishListLoading = GetWishlistLoading();
   const user = GetUser();
 
-  const handleIncrease = (product) => {
+  const handleIncrease = (product, finalPrice) => {
     // Find the existing product in the cart
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
       const updatedItems = cartDetails.items.map((item, index) => {
         if (index === existingProductIndex) {
+          if (item.quantity === parseInt(item?.qty_onhand)) {
+            alert(isRTL
+              ? `لا يمكنك إضافة أكثر من ${item?.qty_onhand}. لدينا فقط ${item?.qty_onhand} قطعة في المخزون.`
+              : `You cannot add more than ${item?.qty_onhand}. We have only ${item?.qty_onhand} items in stock`);
+            return item;
+          }
           return {
             ...item,
             quantity: item.quantity + 1,
-            totalPrice: (item.quantity + 1) * product.price
+            totalPrice: (item.quantity + 1) * Number(finalPrice)
           };
         }
         return item;
       });
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum +  Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     } else {
       const updatedItems = [
         ...cartDetails.items,
-        { ...product, quantity: 1, totalPrice: product.price }
+        { ...product, quantity: 1, totalPrice: finalPrice }
       ];
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
   };
 
-  const handleDecrease = (product) => {
+  const handleDecrease = (product, finalPrice) => {
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
@@ -100,13 +106,13 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
           return {
             ...item,
             quantity: newQuantity,
-            totalPrice: newQuantity * product.price
+            totalPrice: newQuantity * Number(finalPrice)
           };
         }
         return item;
       }).filter(item => item !== null); // Filter out the null values (removed items)
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
@@ -203,7 +209,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
   const enProductMaterial = enMaterials.find(mat => mat?.id === product?.material)
   const arProductMaterial = enMaterials.find(mat => mat?.id === product?.ar_material)
 
-  const enProductColor= enAvailableColors.find(color => color?.id === product?.color)
+  const enProductColor = enAvailableColors.find(color => color?.id === product?.color)
   const arProductColor = enAvailableColors.find(color => color?.id === product?.ar_color)
 
   const size = isRTL ? enSizes.find(size => size?.value === arProductSize?.value) : enSizes.find(size => size?.value === enProductSize?.value)
@@ -385,8 +391,8 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
               variant="h4"
               sx={{ fontWeight: 'bold', marginTop: 2, color: colorPalette.theme, marginBottom: 1 }}
             >
-              {isRTL ? "ر۔ع  " : "OMR  "}{product?.price?.toFixed(2)}
-              <Typography
+              {isRTL ? "ر۔ع  " : "OMR  "}{finalPrice}
+              {hasDiscount && <Typography
                 variant="body2"
                 component="span"
                 color='textDisabled'
@@ -399,8 +405,8 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                   textAlign: isRTL ? 'right' : 'left',
                 }}
               >
-                {isRTL ? "ر۔ع" : "OMR"} {1}
-              </Typography>
+                {isRTL ? "ر۔ع" : "OMR"} {product?.price}
+              </Typography>}
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 2 }}>
               {qty > 0 && <Button
@@ -408,7 +414,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 fullWidth
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleIncrease(product);
+                  handleIncrease(product, finalPrice);
                 }}
                 size="large"
                 sx={{
@@ -424,7 +430,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 {existingProduct && <IconButton
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIncrease(product);
+                    handleIncrease(product, finalPrice);
                   }}
                   sx={{ color: colorPalette.white, padding: 0 }}
                 >
@@ -444,7 +450,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls }) => {
                 {existingProduct && <IconButton
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDecrease(product);
+                    handleDecrease(product, finalPrice);
                   }}
                   sx={{ color: colorPalette.white, padding: 0 }}
                 >

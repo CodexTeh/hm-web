@@ -99,15 +99,21 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
   ), [hasScrolled, setHasScrolled]);
 
   const routeToPath = (path) => {
-      router.push(`${path}`)
+    router.push(`${path}`)
   }
 
   const onClickPage = (page) => {
     if (page === pages[language][0]) {
-      routeToPath('')
+      routeToPath('/home')
+    } else if (page === pages[language][1]) {
+      if (!user) return dispatch(openLoginModal(true));
+      routeToPath('/offers')
     } else if (page === pages[language][2]) {
       if (!user) return dispatch(openLoginModal(true));
       routeToPath('/wishlist')
+    } else if (page === pages[language][4]) {
+      if (!user) return dispatch(openLoginModal(true));
+      routeToPath('/flashSale')
     }
   }
 

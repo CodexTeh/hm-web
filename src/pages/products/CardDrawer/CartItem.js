@@ -15,40 +15,46 @@ const Cart = ({ isRTL, cartDetails }) => {
 
   const currency = isRTL ? "ر۔ع " : "OMR "
 
-  const handleIncrease = (product) => {
+  const handleIncrease = (product, finalPrice) => {
     // Find the existing product in the cart
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
       const updatedItems = cartDetails.items.map((item, index) => {
         if (index === existingProductIndex) {
+          if (item.quantity === parseInt(item?.qty_onhand)) {
+            alert(isRTL
+              ? `لا يمكنك إضافة أكثر من ${item?.qty_onhand}. لدينا فقط ${item?.qty_onhand} قطعة في المخزون.`
+              : `You cannot add more than ${item?.qty_onhand}. We have only ${item?.qty_onhand} items in stock`);
+            return item;
+          }
           return {
             ...item,
             quantity: item.quantity + 1,
-            totalPrice: (item.quantity + 1) * product.price
+            totalPrice: (item.quantity + 1) * Number(finalPrice)
           };
         }
         return item;
       });
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     } else {
       const updatedItems = [
         ...cartDetails.items,
-        { ...product, quantity: 1, totalPrice: product.price }
+        { ...product, quantity: 1, totalPrice: finalPrice }
       ];
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
   };
 
-  const handleDecrease = (product) => {
+  const handleDecrease = (product, finalPrice) => {
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
@@ -61,19 +67,19 @@ const Cart = ({ isRTL, cartDetails }) => {
           return {
             ...item,
             quantity: newQuantity,
-            totalPrice: newQuantity * product.price
+            totalPrice: newQuantity * Number(finalPrice)
           };
         }
         return item;
       }).filter(item => item !== null); // Filter out the null values (removed items)
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
   };
 
-  const handleRemoveItem = (product) => {
+  const handleRemoveItem = (product, finalPrice) => {
     // Find the existing product in the cart
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
@@ -103,6 +109,19 @@ const Cart = ({ isRTL, cartDetails }) => {
       }
     }
 
+    const discountValue = item?.flash_sale > 0 ? item?.flash_sale : item?.discount_offer ? item?.discount_offer : 0;
+
+    const getDiscountedPrice = () => {
+      const numPrice = Number(item?.price);
+      const numDiscount = Number(discountValue);
+      const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
+      return discountedValue.toFixed(1);
+    };
+
+    const hasDiscount = discountValue > 0;
+
+    const finalPrice = hasDiscount ? getDiscountedPrice() : item?.price;
+
     return (
       <Box sx={{
         display: 'flex',
@@ -119,13 +138,14 @@ const Cart = ({ isRTL, cartDetails }) => {
             border: `1px solid ${colorPalette.lightGrey}`,
             borderRadius: 10,
             background: colorPalette.lightGrey,
+            marginRight: 4,
             height: 110,
           }}>
-            <IconButton onClick={() => handleIncrease(item)}>
+            <IconButton onClick={() => handleIncrease(item, finalPrice)}>
               <AddIcon sx={{ width: 17, height: 17, color: colorPalette.black }} />
             </IconButton>
             <Typography variant="body1">{item.quantity}</Typography>
-            <IconButton onClick={() => handleDecrease(item)}>
+            <IconButton onClick={() => handleDecrease(item, finalPrice)}>
               <RemoveIcon sx={{ width: 17, height: 17, color: colorPalette.black }} />
             </IconButton>
           </Box>
@@ -143,13 +163,13 @@ const Cart = ({ isRTL, cartDetails }) => {
 
           <Box sx={{ marginLeft: 2, textAlign: 'start' }}>
             <Typography sx={{ maxWidth: 180 }} variant="subtitle2" fontWeight={510}>{item.website_name}</Typography>
-            <Typography variant="body1" sx={{ color: colorPalette.theme }} fontWeight={510}>{currency}{(item.price)}</Typography>
+            <Typography variant="body1" sx={{ color: colorPalette.theme }} fontWeight={510}>{currency}{(finalPrice)}</Typography>
             <Typography variant="body2" color="textSecondary">{item.quantity} x lb</Typography>
           </Box>
         </Box>
         <Box sx={{ textAlign: 'right', display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 2 }}>
-          <Typography variant="body2" fontWeight={510}>{currency}{(item.price * item.quantity)}</Typography>
-          <IconButton onClick={() => handleRemoveItem(item)} sx={{ marginLeft: 2 }}>
+          <Typography variant="body2" fontWeight={510}>{currency}{(finalPrice * item.quantity).toFixed(1)}</Typography>
+          <IconButton onClick={() => handleRemoveItem(item, finalPrice)} sx={{ marginLeft: 2 }}>
             <ClearIcon sx={{
               width: 15, height: 15, '&:hover': {
                 color: colorPalette.red,  // Apply the green color on hover

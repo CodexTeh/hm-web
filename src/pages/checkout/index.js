@@ -269,7 +269,7 @@ const CheckoutPage = () => {
         </Grid>
 
         {/* Right Side */}
-        <OrderSummary isRTL={isRTL} />
+        <OrderSummary isRTL={isRTL} shippingAddress={shippingAddress} deliverySchedule={selectedDeliveryOption}/>
       </Grid> :
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
           <Typography variant="h5" color="textSecondary">

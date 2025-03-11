@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
@@ -26,10 +27,23 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
 
   const isFetching = GetProductsLoading();
   const itemsCount = GetAllProductsCount();
+
   const dispatch = useDispatch();
 
   const handleOpen = (value) => setOpen(value);
   const handleClose = () => setOpen(null);
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname === '/flashSale' || pathname === '/offers') {
+      const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
+      setFilter({ [filterKey]: filterKey });
+    } else {
+      setFilter({})
+    }
+  }, [pathname]);
+
 
   useEffect(() => {
     dispatch(getProductCatalog());
@@ -42,8 +56,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
 
   useEffect(() => {
     loadProducts();
-  }, [dispatch, filter]);
-
+  }, [dispatch, filter, pathname]);
 
   const products = GetProducts();
 

@@ -5,7 +5,7 @@ import { GetUser, GetCartDetails, GetProductCatalogs, GetPlaceOrderLoading } fro
 import { placeOrder } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 
-const OrderSummary = ({ isRTL }) => {
+const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
   const user = GetUser();
   const cartDetails = GetCartDetails();
   const allProductCatalogs = GetProductCatalogs();
@@ -76,6 +76,19 @@ const OrderSummary = ({ isRTL }) => {
           {currentTranslations.yourOrder}
         </Typography>
         {cartDetails.items.map((item, index) => {
+          const discountValue = item?.flash_sale > 0 ? item?.flash_sale : item?.discount_offer ? item?.discount_offer : 0;
+
+          const getDiscountedPrice = () => {
+            const numPrice = Number(item?.price);
+            const numDiscount = Number(discountValue);
+            const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
+            return discountedValue.toFixed(1);
+          };
+
+          const hasDiscount = discountValue > 0;
+
+          const finalPrice = hasDiscount ? getDiscountedPrice() : item?.price;
+
           const enProductSize = enSizes.find(size => size?._id === item?.size);
           const arProductSize = arSizes.find(size => size?._id === item?.ar_size);
 
@@ -118,7 +131,7 @@ const OrderSummary = ({ isRTL }) => {
               <Typography
                 color='textDisabled'
                 variant="subtitle2">
-                {isRTL ? item.price.toFixed(2) + " ر۔ع" : 'OMR ' + item.price.toFixed(2)}
+                {isRTL ? finalPrice + " ر۔ع" : 'OMR ' + finalPrice}
               </Typography>
             </Box>
           );
@@ -140,16 +153,22 @@ const OrderSummary = ({ isRTL }) => {
           <Typography variant="body2"
             color='textDisabled'
           >
-            {isRTL ? cartDetails.totalPrice.toFixed(2) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(2)}
+            {isRTL ? cartDetails.totalPrice.toFixed(1) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(1)}
           </Typography>
         </Box>
         <Box sx={{ marginTop: 3 }}>
           <Button onClick={() => {
+            if (!shippingAddress && !selectedDeliveryOption) {
+              alert(isRTL
+                ? "يرجى إضافة عنوان الشحن وخيارات التسليم"
+                : "Please add shipping address and delivery options")
+              return
+            }
             if (cartDetails.orderDetails) {
               dispatch(placeOrder(user, cartDetails))
             }
           }} sx={{ background: colorPalette.theme, textTransform: 'capitalize', fontSize: 16 }} variant="contained" fullWidth>
-            {placeOrderLoading ? <CircularProgress size={25} color={colorPalette.white}/> : currentTranslations.placeOrder}
+            {placeOrderLoading ? <CircularProgress size={25} color={colorPalette.white} /> : currentTranslations.placeOrder}
           </Button>
         </Box>
       </Box>

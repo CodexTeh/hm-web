@@ -7,7 +7,7 @@ import { colorPalette } from '@utils/colorPalette';
 import { ProductModal } from '@components/Modal/ProductModal';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { GetUser, GetCartDetails } from '@redux-state/selectors';
+import { GetUser, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
@@ -16,41 +16,71 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
   const dispatch = useDispatch();
 
   const cartDetails = GetCartDetails();
+  const allProductCatalogs = GetProductCatalogs();
 
-  const handleIncrease = (product) => {
+  const splitByTypeAndLanguage = (array) => {
+    return array.reduce((acc, item) => {
+      const { type } = item;
+      const language = 'en';
+      if (!acc[language]) {
+        acc[language] = {};
+      }
+
+      if (!acc[language][type]) {
+        acc[language][type] = [];
+      }
+
+      acc[language][type].push(item);
+      return acc;
+    }, {});
+  };
+
+  const {
+    en: {
+      size: enSizes = []
+    } = {},
+  } = splitByTypeAndLanguage(allProductCatalogs || []);
+
+  const handleIncrease = (product, finalPrice) => {
     // Find the existing product in the cart
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
       const updatedItems = cartDetails.items.map((item, index) => {
         if (index === existingProductIndex) {
+          if (item.quantity === parseInt(item?.qty_onhand)) {
+            alert(isRTL
+              ? `لا يمكنك إضافة أكثر من ${item?.qty_onhand}. لدينا فقط ${item?.qty_onhand} قطعة في المخزون.`
+              : `You cannot add more than ${item?.qty_onhand}. We have only ${item?.qty_onhand} items in stock`);
+            return item;
+          }
           return {
             ...item,
             quantity: item.quantity + 1,
-            totalPrice: (item.quantity + 1) * product.price
+            totalPrice: (item.quantity + 1) * Number(finalPrice)
           };
         }
         return item;
       });
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     } else {
       const updatedItems = [
         ...cartDetails.items,
-        { ...product, quantity: 1, totalPrice: product.price }
+        { ...product, quantity: 1, totalPrice: finalPrice }
       ];
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
   };
 
-  const handleDecrease = (product) => {
+  const handleDecrease = (product, finalPrice) => {
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
@@ -63,13 +93,13 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
           return {
             ...item,
             quantity: newQuantity,
-            totalPrice: newQuantity * product.price
+            totalPrice: newQuantity * Number(finalPrice)
           };
         }
         return item;
       }).filter(item => item !== null); // Filter out the null values (removed items)
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
@@ -84,7 +114,28 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
           {products.map((product, index) => {
             const existingProduct = cartDetails?.items.find(item => item.id === product.id);
 
+            const enProductSize = enSizes.find(size => size?.id?.toString() === product?.size?.toString());
+            const arProductSize = enSizes.find(size => size?.id?.toString() === product?.ar_size?.toString());
+
+            const size = isRTL
+              ? enSizes.find(size => size?.id === arProductSize?.id)
+              : enSizes.find(size => size?.id === enProductSize?.id);
+
             const imageUrls = product?.image_urls ? JSON.parse(product?.image_urls.replace(/'/g, '"')) : [];
+
+            const discountValue = product?.flash_sale > 0 ? product?.flash_sale : product?.discount_offer ? product?.discount_offer : 0;
+
+            const getDiscountedPrice = () => {
+              const numPrice = Number(product?.price);
+              const numDiscount = Number(discountValue);
+              const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
+              return discountedValue.toFixed(1);
+            };
+
+            const hasDiscount = discountValue > 0;
+
+            const finalPrice = hasDiscount ? getDiscountedPrice() : product?.price;
+
             return (
               <Grid
                 item
@@ -95,12 +146,12 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
               >
-                {open === index + 1 && <ProductModal isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} />}
+                {open === index + 1 && <ProductModal hasDiscount={hasDiscount} isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} finalPrice={finalPrice} />}
 
                 <Card
                   sx={{
                     maxWidth: 300,
-                    maxHeight: '96%',
+                    height: '65vh',
                     margin: 'auto',
                     position: 'relative',
                     textAlign: isRTL ? 'right' : 'left', // Align text based on language
@@ -111,7 +162,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                   }}
                 >
                   {/* Discount Badge */}
-                  <Box
+                  {hasDiscount && <Box
                     sx={{
                       position: 'absolute',
                       top: 10,
@@ -123,8 +174,8 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                       fontSize: 12,
                     }}
                   >
-                    {isRTL ? '٪10' : '10%'}
-                  </Box>
+                    {isRTL ? `٪${discountValue}` : `${discountValue}%`}
+                  </Box>}
                   {/* Product Image */}
                   <CardMedia
                     component="img"
@@ -151,7 +202,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                     </Typography>
                     {/* Product Weight */}
                     <Typography marginTop={2} variant="body2" color="textDisabled">
-                      {isRTL ? '1 باوند' : '1 lb'}
+                      {isRTL ? size?.ar_title : size?.title}
                     </Typography>
                     <Box
                       sx={{
@@ -171,13 +222,13 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                         }}
                       >
                         {/* Old Price */}
-                        <Typography
+                        {discountValue > 0 && <Typography
                           variant="caption"
                           color="textDisabled"
                           sx={{ textDecoration: 'line-through' }}
                         >
-                          {isRTL ? '٢ ر۔ع' : '2 OMR'}
-                        </Typography>
+                          {isRTL ? `د.إ ${product?.price}` : `OMR ${product?.price}`}
+                        </Typography>}
                         {/* Current Price */}
                         <Typography
                           variant="subtitle1"
@@ -186,59 +237,69 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                             color: colorPalette.theme,
                           }}
                         >
-                          {isRTL ? `د.إ ${product?.price.toFixed(2)}` : `OMR ${product?.price.toFixed(2)}`}
+                          {isRTL ? `د.إ ${finalPrice}` : `OMR ${finalPrice}`}
                         </Typography>
                       </Box>
                       {/* Add to Cart Button or Quantity Control */}
-                      {existingProduct ? (
-                        <Box sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          border: `1px solid ${colorPalette.lightGrey}`,
-                          borderRadius: 10,
-                          background: colorPalette.theme,
-                          width: 100,
-                          height: 40,
-                          marginTop: 4,
-                          marginBottom: 4,
-                        }} onClick={(e) => e.stopPropagation()}>
-                          <IconButton onClick={() => handleIncrease(product)}>
-                            <AddIcon sx={{ color: colorPalette.white }} />
-                          </IconButton>
-                          <Typography variant="body1" sx={{ color: colorPalette.white }} fontWeight={510}>{existingProduct.quantity}</Typography>
-                          <IconButton onClick={() => handleDecrease(product)}>
-                            <RemoveIcon sx={{ color: colorPalette.white }} />
-                          </IconButton>
-                        </Box>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          startIcon={
-                            !isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginLeft: 10 }} />
-                          }
-                          endIcon={
-                            isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginRight: 10 }} />
-                          }
-                          sx={{
-                            fontWeight: 'bold',
+                      {parseInt(product?.qty_onhand) ?
+
+                        existingProduct ? (
+                          <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            border: `1px solid ${colorPalette.lightGrey}`,
+                            borderRadius: 10,
+                            background: colorPalette.theme,
+                            width: 100,
+                            height: 40,
                             marginTop: 4,
                             marginBottom: 4,
-                            height: 40,
-                            textTransform: 'capitalize',
-                            borderRadius: 10,
-                            background: colorPalette.white,
-                            color: colorPalette.theme,
-                            width: 100,
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleIncrease(product)
-                          }}
-                        >
-                          {isRTL ? 'السلة' : 'Cart'}
-                        </Button>
-                      )}
+                          }} onClick={(e) => e.stopPropagation()}>
+                            <IconButton onClick={() => handleIncrease(product, finalPrice)}>
+                              <AddIcon sx={{ color: colorPalette.white }} />
+                            </IconButton>
+                            <Typography variant="body1" sx={{ color: colorPalette.white }} fontWeight={510}>{existingProduct.quantity}</Typography>
+                            <IconButton onClick={() => handleDecrease(product, finalPrice)}>
+                              <RemoveIcon sx={{ color: colorPalette.white }} />
+                            </IconButton>
+                          </Box>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            startIcon={
+                              !isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginLeft: 10 }} />
+                            }
+                            endIcon={
+                              isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginRight: 10 }} />
+                            }
+                            sx={{
+                              fontWeight: 'bold',
+                              marginTop: 4,
+                              marginBottom: 4,
+                              height: 40,
+                              textTransform: 'capitalize',
+                              borderRadius: 10,
+                              background: colorPalette.white,
+                              color: colorPalette.theme,
+                              width: 100,
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleIncrease(product, finalPrice)
+                            }}
+                          >
+                            {isRTL ? 'السلة' : 'Cart'}
+                          </Button>
+                        )
+                        :
+                        <Typography sx={{
+                          direction: isRTL ? 'rtl' : 'ltr',
+                          textAlign: isRTL ? 'right' : 'left',
+                        }} variant="body1" color="textSecondary">
+                          {`${isRTL ? "إنتهى من المخزن" : "out of stock"}`}
+                        </Typography>
+                      }
                     </Box>
                   </CardContent>
                 </Card>
@@ -253,7 +314,8 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
           sx={{
             alignSelf: 'center',
             background: colorPalette.theme,
-            marginBottom: 3
+            marginBottom: 3,
+            marginTop: 3
           }}
           size='large'
           disabled={!hasMoreItems}
