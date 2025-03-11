@@ -11,7 +11,7 @@ import { GetUser, GetCartDetails, GetProductCatalogs } from '@redux-state/select
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
+const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
   const user = GetUser();
   const dispatch = useDispatch();
 
@@ -146,7 +146,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, products, isRTL,
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
               >
-                {open === index + 1 && <ProductModal hasDiscount={hasDiscount} isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} finalPrice={finalPrice} />}
+                {open === index + 1 && <ProductModal filter={filter} hasDiscount={hasDiscount} isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} finalPrice={finalPrice} />}
 
                 <Card
                   sx={{

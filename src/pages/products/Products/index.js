@@ -101,7 +101,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
         }}
       >
         <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
-        <ProductsView hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+        <ProductsView filter={filter} hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
       </Box>
 
     </Box>

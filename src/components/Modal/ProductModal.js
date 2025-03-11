@@ -32,7 +32,7 @@ import { addRemoveToWishlist } from '@redux-state/common/action';
 import { GetWishlistLoading } from '@redux-state/common/selectors';
 import { CustomCarousel } from '../CustomCarousal';
 
-export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls, finalPrice, hasDiscount }) => {
+export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls, finalPrice, hasDiscount }) => {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -232,8 +232,8 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls, finalPr
   const images = imageUrls?.length > 0 ? imageUrls : gallery;
 
   const loadProducts = () => {
-    const filter = isRTL ? { arabicCategory: category?.id } : { webCategory: category?.id };
-    dispatch(getProducts(pagination, filter));
+    const query = isRTL ? { arabicCategory: category?.id } : { webCategory: category?.id };
+    dispatch(getProducts(pagination, query));
   }
 
   const checkWishlistProduct = async () => {
@@ -242,7 +242,7 @@ export const ProductModal = ({ isRTL, open, setOpen, product, imageUrls, finalPr
   }
 
   useEffect(() => {
-    dispatch(getProducts(pagination, {}));
+    dispatch(getProducts(pagination, filter));
   }, [dispatch]);
 
   useEffect(() => {
