@@ -1,6 +1,6 @@
 const headers = {
-  Order: ['Items', 'Quantity', 'Price'],
-  arOrder: ['أغراض', 'كمية', 'سعر'],
+  Order: ['Barcode', 'Items', 'Quantity', 'Price'],
+  arOrder: ['الباركود', 'أغراض', 'كمية', 'سعر'],
 };
 export const getHeaders = (
   key

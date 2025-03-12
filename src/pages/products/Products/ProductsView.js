@@ -151,7 +151,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
                 <Card
                   sx={{
                     maxWidth: 300,
-                    height: '65vh',
+                    height: '70vh',
                     margin: 'auto',
                     position: 'relative',
                     textAlign: isRTL ? 'right' : 'left', // Align text based on language
@@ -197,8 +197,15 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
                       fontWeight: '510',
                       WebkitLineClamp: 2, // Limit to two lines
                       WebkitBoxOrient: 'vertical',
+                      marginBottom: 2
                     }} variant="body1" component="div">
                       {isRTL ? product?.arabicName || product?.website_name : product?.website_name}
+                    </Typography>
+                    <Typography sx={{
+                      direction: isRTL ? 'rtl' : 'ltr',
+                      textAlign: isRTL ? 'right' : 'left',
+                    }} variant="caption" color="textSecondary">
+                      {`${product?.qty_onhand} ${isRTL ? "القطع المتاحة" : "pieces available"}`}
                     </Typography>
                     {/* Product Weight */}
                     <Typography marginTop={2} variant="body2" color="textDisabled">
@@ -296,7 +303,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
                         <Typography sx={{
                           direction: isRTL ? 'rtl' : 'ltr',
                           textAlign: isRTL ? 'right' : 'left',
-                        }} variant="body1" color="textSecondary">
+                        }} variant="caption" color="textSecondary">
                           {`${isRTL ? "إنتهى من المخزن" : "out of stock"}`}
                         </Typography>
                       }

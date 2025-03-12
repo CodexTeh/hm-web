@@ -20,10 +20,8 @@ import { colorPalette } from '@utils/colorPalette';
 import {
   GetUser,
   GetLanguage,
-  GetCartDetails,
   GetLatestOrder,
   GetOrders,
-  GetOrdersLoading,
 } from '@redux-state/selectors';
 import HomeIcon from '@mui/icons-material/Home';
 import moment from 'moment';
@@ -32,6 +30,21 @@ import { getHeaders } from "@components/TableView/getHeaders";
 import TableView from "@components/TableView";
 import { getOrders } from '@redux-state/common/action';
 import useRouter from '@helpers/useRouter';
+import Barcode from 'react-barcode';
+
+const statusMapper = {
+  'processing': 1,
+  'local-facility': 2,
+  'out-for-delivery': 3,
+  'delivered': 4,
+};
+
+const rtlStatusMapper = {
+  'processing': 'جارٍ المعالجة',
+  'local-facility': 'المرافق المحلية',
+  'out-for-delivery': 'خارج للتوصيل',
+  'delivered': 'تم التوصيل',
+};
 
 const translations = {
   en: {
@@ -128,6 +141,7 @@ const OrderList = () => {
       }
 
       const baseCells = {
+        barcode: <Barcode height={20} width={1} fontSize={14} value={item.barcode} />,
         item: (
           <Box sx={{ display: 'flex', flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center' }}>
             <img
@@ -159,13 +173,6 @@ const OrderList = () => {
     };
   }, [isRTL]);
 
-  const statusMapper = {
-    'processing': 1,
-    'local-facility': 2,
-    'out-for-delivery': 3,
-    'delivered': 4,
-  };
-
   useEffect(() => {
     if (orders?.length > 0 && latestOrder) {
       setCurrentOrder(orders.find((item) => item._id === latestOrder));
@@ -189,7 +196,7 @@ const OrderList = () => {
   const infoCards = useMemo(() => ([
     { label: t.orderNumber, value: currentOrder?._id || 'N/A' },
     { label: t.date, value: currentOrder?.createdAt ? moment(currentOrder.createdAt).format('MMMM D, YYYY') : 'N/A' },
-    { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice || 0}` },
+    { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice?.toFixed(1) || 0}` },
     { label: t.paymentMethod, value: t.payOnline },
   ]), [currentOrder, isRTL, t]);
 
@@ -201,10 +208,10 @@ const OrderList = () => {
   ]), [currentOrder, isRTL, t, user]);
 
   const pricing = useMemo(() => ([
-    { label: t.subTotal, value: currentOrder?.cart?.totalPrice || 0 },
+    { label: t.subTotal, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
     { label: t.shippingCharge, value: '50' },
     { label: t.discount, value: '0' },
-    { label: t.total, value: currentOrder?.cart?.totalPrice || 0 },
+    { label: t.total, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
   ]), [currentOrder, t]);
 
   const InputOrderSelectField = useCallback(
@@ -251,10 +258,10 @@ const OrderList = () => {
         <Grid key={index} item xs={12} sm={6} md={3}>
           <Card variant="outlined" sx={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
             <CardContent>
-              <Typography variant="subtitle2" sx={{ color: colorPalette.black }}>
+              <Typography variant="body1" sx={{ color: colorPalette.black }}>
                 {card.label}
               </Typography>
-              <Typography variant="body2" marginTop={1} color="textSecondary">
+              <Typography variant="caption" marginTop={1} color="textSecondary">
                 {card.value}
               </Typography>
             </CardContent>
@@ -356,7 +363,7 @@ const OrderList = () => {
                 {t.orderStatus}:
               </Typography>
               <Chip
-                label={t.processing}
+                label={isRTL ? rtlStatusMapper[currentOrder?.status] : currentOrder?.status}
                 sx={{
                   fontSize: 15,
                   fontWeight: 'bold',

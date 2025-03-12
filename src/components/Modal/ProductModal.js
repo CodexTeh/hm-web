@@ -13,10 +13,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
@@ -76,7 +73,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
         return item;
       });
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum +  Number(item.totalPrice), 0);
+      const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
 
       // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
@@ -383,9 +380,14 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
               marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
               textAlign: isRTL ? 'right' : 'left',
             }}>
-              {isRTL ? "مادة: " : "Material: "}{isRTL ? material?.ar_title : material?.title}
+              {isRTL ? "رمز العنصر: " : "Material: "}{isRTL ? material?.ar_title : material?.title}
             </Typography>
-
+            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
+              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
+              textAlign: isRTL ? 'right' : 'left',
+            }}>
+              {isRTL ? "الباركود: " : "Item Code: "}{product?.barcode}
+            </Typography>
 
             <Typography
               variant="h4"
