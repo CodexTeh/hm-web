@@ -118,8 +118,8 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
             const arProductSize = enSizes.find(size => size?.id?.toString() === product?.ar_size?.toString());
 
             const size = isRTL
-              ? enSizes.find(size => size?.id === arProductSize?.id)
-              : enSizes.find(size => size?.id === enProductSize?.id);
+              ? enSizes.find(size => size?.id?.toString() === arProductSize?.id?.toString())
+              : enSizes.find(size => size?.id?.toString() === enProductSize?.id);
 
             const imageUrls = product?.image_urls ? JSON.parse(product?.image_urls.replace(/'/g, '"')) : [];
 

@@ -194,26 +194,26 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
   const category = allCategories.find(category => category?.id?.toString() === product?.webCategory?.toString())
   const subCategory = subCategories.find(subcategory => subcategory?.id?.toString() === product?.subCategory?.toString())
 
-  const enProductSize = enSizes.find(size => size?.id === product?.size)
-  const arProductSize = enSizes.find(size => size?.id === product?.ar_size)
+  const enProductSize = enSizes.find(size => size?.id?.toString() === product?.size?.toString())
+  const arProductSize = enSizes.find(size => size?.id?.toString() === product?.ar_size?.toString())
 
-  const enProductBrand = enBrands.find(size => size?.id === product?.brand)
-  const arProductBrand = enBrands.find(size => size?.id === product?.ar_brand)
+  const enProductBrand = enBrands.find(size => size?.id?.toString() === product?.brand?.toString())
+  const arProductBrand = enBrands.find(size => size?.id?.toString() === product?.ar_brand?.toString())
 
-  const enProductUnit = enUnits.find(unit => unit?.id === product?.unit)
-  const arProductUnit = enUnits.find(unit => unit?.id === product?.ar_unit)
+  const enProductUnit = enUnits.find(unit => unit?.id?.toString() === product?.unit?.toString())
+  const arProductUnit = enUnits.find(unit => unit?.id?.toString() === product?.ar_unit?.toString())
 
-  const enProductMaterial = enMaterials.find(mat => mat?.id === product?.material)
-  const arProductMaterial = enMaterials.find(mat => mat?.id === product?.ar_material)
+  const enProductMaterial = enMaterials.find(mat => mat?.id?.toString() === product?.material?.toString())
+  const arProductMaterial = enMaterials.find(mat => mat?.id?.toString() === product?.ar_material?.toString())
 
-  const enProductColor = enAvailableColors.find(color => color?.id === product?.color)
-  const arProductColor = enAvailableColors.find(color => color?.id === product?.ar_color)
+  const enProductColor = enAvailableColors.find(color => color?.id?.toString() === product?.avalable_color?.toString())
+  const arProductColor = enAvailableColors.find(color => color?.id?.toString() === product?.ar_color?.toString())
 
-  const size = isRTL ? enSizes.find(size => size?.value === arProductSize?.value) : enSizes.find(size => size?.value === enProductSize?.value)
-  const brand = isRTL ? enBrands.find(brand => brand?.value === arProductBrand?.value) : enBrands.find(brand => brand?.value === enProductBrand?.value)
-  const unit = isRTL ? enUnits.find(unit => unit?.value === arProductUnit?.value) : enUnits.find(unit => unit?.value === enProductUnit?.value)
-  const material = isRTL ? enMaterials.find(material => material?.value === arProductMaterial?.value) : enMaterials.find(material => material?.value === enProductMaterial?.value)
-  const color = isRTL ? enAvailableColors.find(color => color?.value === arProductColor?.value) : enAvailableColors.find(color => color?.value === enProductColor?.value)
+  const size = isRTL ? enSizes.find(size => size?.id?.toString() === arProductSize?.id?.toString()) : enSizes.find(size => size?.id?.toString() === enProductSize?.id?.toString())
+  const brand = isRTL ? enBrands.find(brand => brand?.id?.toString() === arProductBrand?.id?.toString()) : enBrands.find(brand => brand?.id?.toString() === enProductBrand?.id?.toString())
+  const unit = isRTL ? enUnits.find(unit => unit?.id?.toString() === arProductUnit?.id?.toString()) : enUnits.find(unit => unit?.id?.toString() === enProductUnit?.id?.toString())
+  const material = isRTL ? enMaterials.find(material => material?.id?.toString() === arProductMaterial?.id?.toString()) : enMaterials.find(material => material?.id?.toString() === enProductMaterial?.id?.toString())
+  const color = isRTL ? enAvailableColors.find(color => color?.id?.toString() === arProductColor?.id?.toString()) : enAvailableColors.find(color => color?.id?.toString() === enProductColor?.id?.toString())
 
   const existingProduct = cartDetails?.items.find(item => item.id === product.id);
 

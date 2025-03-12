@@ -89,12 +89,12 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
 
           const finalPrice = hasDiscount ? getDiscountedPrice() : item?.price;
 
-          const enProductSize = enSizes.find(size => size?._id === item?.size);
-          const arProductSize = arSizes.find(size => size?._id === item?.ar_size);
+          const enProductSize = enSizes.find(size => size?.id?.toString() === item?.size?.toString());
+          const arProductSize = arSizes.find(size => size?.id?.toString() === item?.ar_size?.toString());
 
           const size = isRTL
-            ? arSizes.find(size => size?.value === arProductSize?.value)
-            : enSizes.find(size => size?.value === enProductSize?.value);
+            ? arSizes.find(size => size?.id?.toString() === arProductSize?.id?.toString())
+            : enSizes.find(size => size?.id?.toString() === enProductSize?.id?.toString());
 
           return (
             <Box
@@ -108,14 +108,14 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
             >
               <Typography fontWeight={510}>{item.quantity} x </Typography>
               <Typography
-                variant="subtitle2"
+                variant="caption"
                 color='textDisabled'
                 sx={{
                   display: '-webkit-box',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   width: '40%',
-                  WebkitLineClamp: 1,
+                  WebkitLineClamp: 3,
                   WebkitBoxOrient: 'vertical',
                 }}
               >
@@ -123,7 +123,6 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
               </Typography>
               <Typography
                 color='textDisabled'
-
                 variant="subtitle2"
               >
                 | {size?.title}
