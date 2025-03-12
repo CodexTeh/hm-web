@@ -309,7 +309,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
         </Grid>
         : <EmptyView isRTL={isRTL} />}
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', position: 'initial', zIndex: 20, bottom: -10 }}>
+      {products?.length > 0 && <Box sx={{ display: 'flex', justifyContent: 'center', position: 'initial', zIndex: 20, bottom: -10 }}>
         {loadMore && <Button
           sx={{
             alignSelf: 'center',
@@ -326,7 +326,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
             <CircularProgress color="inherit" size={20} />
           ) : isRTL ? 'جار تحميل المنتجات' : 'Load more products'}
         </Button>}
-      </Box>
+      </Box>}
     </Box>
   );
 };

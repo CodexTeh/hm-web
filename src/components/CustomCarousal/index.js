@@ -8,7 +8,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { colorPalette } from '@utils/colorPalette';
 
-export const CustomCarousel = ({ selectedIndex, handleImageChange, images, isRTL, showThumbs = true, width='100%', height=350, maxHeight=350, showStatus= true, borderRadius = '8px' }) => {
+export const CustomCarousel = ({ selectedIndex, handleImageChange, images, isRTL, showThumbs = true, width = '100%', height = 350, maxHeight = 350, showStatus = true, borderRadius = '8px' }) => {
   const renderArrowPrev = (onClickHandler, hasPrev, label) =>
     hasPrev && (
       <Box
@@ -73,30 +73,30 @@ export const CustomCarousel = ({ selectedIndex, handleImageChange, images, isRTL
       renderArrowPrev={renderArrowPrev}
       renderArrowNext={renderArrowNext}
       renderThumbs={() => images.map((image, index) => (
-          <div
-            key={index}
+        <div
+          key={index}
+          style={{
+            border: selectedIndex === index ? `2px solid ${colorPalette.theme}` : null,
+            borderRadius: '8px',
+            boxSizing: 'border-box',
+            width: 74,
+            // transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
+          }}
+        >
+          <img
+            src={image}
+            alt={`Thumbnail-${index}`}
             style={{
-              border: selectedIndex === index ? `2px solid ${colorPalette.theme}` : null,
-              borderRadius: '8px',
-              boxSizing: 'border-box',
-              width: 74,
-              transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
+              width: 70,
+              height: 70,
+              borderRadius: '6px',
+              objectFit: 'fill',
+              outline: 'none',
+              // transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
             }}
-          >
-            <img
-              src={image}
-              alt={`Thumbnail-${index}`}
-              style={{
-                width: 70,
-                height: 70,
-                borderRadius: '6px',
-                objectFit: 'fill',
-                outline: 'none',
-                transform: isRTL ? 'scaleX(-1)' : 'none', // Flip thumbnails if RTL
-              }}
-            />
-          </div>
-        ))
+          />
+        </div>
+      ))
       }
       style={{
         direction: isRTL ? 'rtl' : 'ltr', // Set direction for carousel
@@ -114,7 +114,7 @@ export const CustomCarousel = ({ selectedIndex, handleImageChange, images, isRTL
               objectFit: 'contain',
               borderRadius: borderRadius,
               outline: 'none',
-              transform: isRTL ? 'scaleX(-1)' : 'none', // Flip main images if RTL
+              // transform: isRTL ? 'scaleX(-1)' : 'none', // Flip main images if RTL
             }}
           />
         </div>
