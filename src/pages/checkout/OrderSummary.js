@@ -157,7 +157,7 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
         </Box>
         <Box sx={{ marginTop: 3 }}>
           <Button onClick={() => {
-            if (!shippingAddress && !selectedDeliveryOption) {
+            if (!shippingAddress) {
               alert(isRTL
                 ? "يرجى إضافة عنوان الشحن وخيارات التسليم"
                 : "Please add shipping address and delivery options")

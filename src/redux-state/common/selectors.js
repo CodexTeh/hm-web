@@ -81,3 +81,9 @@ export const GetloginModalState = () =>
 export const GetBanners = () =>
   useSelector(
     (state) => state.common.banners);
+export const GetProfileLoading = () =>
+  useSelector(
+    (state) => state.common.getProfileLoading);
+export const GetProfile = () =>
+  useSelector(
+    (state) => state.common.profile);

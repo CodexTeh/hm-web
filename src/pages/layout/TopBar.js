@@ -5,7 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
@@ -19,26 +18,9 @@ import logo from "@assets/icons/logo.png";
 import SearchBar from "@components/SearchBar";
 import useRouter from '@helpers/useRouter';
 import { removeToken } from "@helpers/tokenActions";
-import { changeLanguage } from "@redux-state/common/action";
 import { GetLanguage, GetUser } from "@redux-state/selectors";
-import { logout } from "@redux-state/onboarding/action";
+import { logout, emptyCart, changeLanguage, openLoginModal } from "@redux-state/actions";
 import { colorPalette } from "@utils/colorPalette";
-import { openLoginModal } from "@redux-state/common/action";
-
-const pages = {
-  en: ["Shop", "Offers", "Wishlist", "Contact", "Flash Sale"],
-  ar: ["محل", "العروض", "قائمة الرغبات", "اتصل", "بيع فلاش"],
-};
-const settings = {
-  en: [
-    // { title: "Profile", path: '/' }, 
-    // { title: 'Wishlist', path: 'wishlist' },
-    { title: "Logout", path: '/' }],
-  ar: [
-    // { title: "الملف الشخصي", path: '/' }, 
-    // { title: 'قائمة الرغبات', path: 'wishlist' }, 
-    { title: "تسجيل الخروج", path: '/' }],
-};
 
 const TopBar = ({ hasScrolled, setHasScrolled }) => {
   const dispatch = useDispatch();
@@ -46,6 +28,23 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
   const user = GetUser();
   const userName = user ? user.username.substring(0, 2).toUpperCase() : "?";
   const router = useRouter();
+
+  const pages = {
+    en: ["Shop", "Offers", "Flash Sale"],
+    ar: ["محل", "العروض", "بيع فلاش"],
+  };
+  const settings = {
+    en: [
+      { title: "Profile", path: `/profile/${user?._id}` },
+      { title: 'Wishlist', path: '/wishlist' },
+      { title: 'My Orders', path: '/orders' },
+      { title: "Logout", path: '/' }],
+    ar: [
+      { title: "الملف الشخصي", path: `/profile/${user?._id}` },
+      { title: 'قائمة الرغبات', path: '/wishlist' },
+      { title: 'طلباتي', path: '/orders' },
+      { title: "تسجيل الخروج", path: '/' }],
+  };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null); // For mobile menu
   const [anchorElUser, setAnchorElUser] = React.useState(null); // For user settings menu
@@ -106,13 +105,8 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
     if (page === pages[language][0]) {
       routeToPath('/home')
     } else if (page === pages[language][1]) {
-      if (!user) return dispatch(openLoginModal(true));
       routeToPath('/offers')
-    } else if (page === pages[language][2]) {
-      if (!user) return dispatch(openLoginModal(true));
-      routeToPath('/wishlist')
-    } else if (page === pages[language][4]) {
-      if (!user) return dispatch(openLoginModal(true));
+    } else if (page === pages[language][3]) {
       routeToPath('/flashSale')
     }
   }
@@ -131,14 +125,12 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
         }}
         position="static"
       >
-        <Container maxWidth="xl">
+        <Box sx={{ width: '100%' }}>
           <Toolbar
             sx={{
               height: 80,
               display: "flex",
               justifyContent: "space-between",
-              marginLeft: -3,
-              marginRight: -3,
               flexDirection: language === "ar" ? "row-reverse" : "row",
             }}
             disableGutters
@@ -316,6 +308,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                       <Box onClick={() => {
                         if (setting.title === 'Logout') {
                           dispatch(logout());
+                          dispatch(emptyCart());
                           removeToken();
                         } else {
                           routeToPath(setting.path)
@@ -353,7 +346,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
           {hasScrolled && (
             renderSearchOverlay()
           )}
-        </Container>
+        </Box>
       </AppBar>
     </ThemeProvider>
   );

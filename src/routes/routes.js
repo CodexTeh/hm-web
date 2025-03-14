@@ -10,6 +10,7 @@ import PrivacyPolicy from '@pages/privacy-policy';
 import ReturnPolicy from '@pages/return-policy';
 import WishList from '@pages/wishlist';
 import AboutUs from '@pages/about-us';
+import UserProfile from '../pages/profile';
 
 export const AppRoutes = [
   {
@@ -49,6 +50,12 @@ export const AppRoutes = [
             path: 'offers',
             key: 'offers',
             element: <><Layout /><Products /></>,
+            errorElement: <ErrorElement />
+          },
+          {
+            path: 'profile/:userId',
+            key: 'profile',
+            element: <><Layout /><UserProfile /></>,
             errorElement: <ErrorElement />
           },
           {

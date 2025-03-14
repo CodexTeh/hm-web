@@ -107,6 +107,35 @@ export const Api = {
       console.log("Error", e);
     }
   },
+  getProfile: async (userId, token) => {
+    try {
+      let response;
+
+      const options = {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      };
+
+      response = await fetch(`${API_URL}profiles/${userId}`, options);
+
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          return data;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
   getProductsByCategory: async ({ pagination, category }) => {
     try {
       let response;

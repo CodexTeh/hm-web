@@ -68,10 +68,10 @@ const Layout = () => {
   }, [token])
 
   useEffect(() => {
-      if (!user) {
-        dispatch(openLoginModal(true));
-      }
-    }, [dispatch]);
+    if (!user) {
+      dispatch(openLoginModal(true));
+    }
+  }, [dispatch]);
 
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>
@@ -93,8 +93,8 @@ const Layout = () => {
       </Snackbar>
       {!user &&
         <>
-          <LoginModal open={loginModal} handleClose={onCLoseLoginModal} setRegisterModal={setRegisterModal} />
-          <RegisterModal setLoginModal={setLoginModal} open={registerModal} handleClose={onCLoseRegisterModal} />
+          {loginModal && <LoginModal open={loginModal} handleClose={onCLoseLoginModal} setRegisterModal={setRegisterModal} />}
+          {registerModal && <RegisterModal setLoginModal={setLoginModal} open={registerModal} handleClose={onCLoseRegisterModal} />}
         </>
       }
     </Box>

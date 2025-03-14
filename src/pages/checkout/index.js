@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, TextField, Card, CardContent, useTheme, Button } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
-import HomeIcon from '@mui/icons-material/Home';
+// import HomeIcon from '@mui/icons-material/Home';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled, useMediaQuery } from '@mui/system';
 import { GetUser, GetLanguage, GetCartDetails } from '@redux-state/selectors';
 import { useDispatch } from 'react-redux';
 import PhoneTextInput from '@components/PhoneTextInput';
-import { addToCart } from '@redux-state/common/action';
+import { emptyCart, addToCart } from '@redux-state/common/action';
 import pusher from '@helpers/pusherConfig';
 import constants from '@helpers/constants';
 import useRouter from '@helpers/useRouter';
 import { setLatestOrders, toggleToast } from '@redux-state/common/action';
-import DeliveryCardSelection from './DeliveryCardSelectios';
+// import DeliveryCardSelection from './DeliveryCardSelectios';
 import OrderSummary from './OrderSummary';
 
 const blue = {
@@ -84,6 +84,8 @@ const CheckoutPage = () => {
   const translations = {
     en: {
       contactNumber: 'Contact Number',
+      email: 'Email',
+      name: 'Name',
       shippingAddress: 'Shipping Address',
       deliverySchedule: 'Delivery Schedule',
       orderNote: 'Order Note',
@@ -92,6 +94,8 @@ const CheckoutPage = () => {
     },
     ar: {
       contactNumber: 'رقم الاتصال',
+      email: 'بريد إلكتروني',
+      name: 'اسم',
       shippingAddress: 'عنوان الشحن',
       deliverySchedule: 'جدول التسليم',
       orderNote: 'ملاحظات الطلب',
@@ -126,7 +130,7 @@ const CheckoutPage = () => {
       dispatch(
         toggleToast(true, `You last order ${data.orderId} is completed successfully!`, 'success')
       );
-      dispatch(addToCart({ items: [], user: null, totalPrice: 0 }));
+      dispatch(emptyCart());
       router.push('/orders')
     });
     return () => {
@@ -212,11 +216,45 @@ const CheckoutPage = () => {
             </CardContent>
           </Card>
 
-          {/* Shipping Address */}
+          {/* Email */}
           <Card sx={{ marginBottom: 3, padding: 2 }}>
             <CardContent>
               <Stepper
                 step={2}
+                text={currentTranslations.email}
+              />
+              <TextField
+                fullWidth
+                disabled
+                value={user?.email}
+                variant="outlined"
+                rows={4}
+                sx={{ marginTop: 1 }}
+              />
+            </CardContent>
+          </Card>
+          {/* Name */}
+          <Card sx={{ marginBottom: 3, padding: 2 }}>
+            <CardContent>
+              <Stepper
+                step={3}
+                text={currentTranslations.name}
+              />
+              <TextField
+                fullWidth
+                disabled
+                value={user?.username}
+                variant="outlined"
+                rows={4}
+                sx={{ marginTop: 1 }}
+              />
+            </CardContent>
+          </Card>
+          {/* Shipping Address */}
+          <Card sx={{ marginBottom: 3, padding: 2 }}>
+            <CardContent>
+              <Stepper
+                step={4}
                 text={currentTranslations.shippingAddress}
                 buttonText={currentTranslations.add}
               />
@@ -233,7 +271,7 @@ const CheckoutPage = () => {
           </Card>
 
           {/* Delivery Schedule */}
-          <Card sx={{ marginBottom: 3, padding: 2 }}>
+          {/* <Card sx={{ marginBottom: 3, padding: 2 }}>
             <CardContent>
               <Stepper
                 step={3}
@@ -247,13 +285,13 @@ const CheckoutPage = () => {
                 isRTL={isRTL}
               />
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Order Note */}
           <Card sx={{ marginBottom: 3, padding: 2 }}>
             <CardContent>
               <Stepper
-                step={4}
+                step={5}
                 text={currentTranslations.orderNote}
                 buttonText={currentTranslations.add}
               />
@@ -269,7 +307,7 @@ const CheckoutPage = () => {
         </Grid>
 
         {/* Right Side */}
-        <OrderSummary isRTL={isRTL} shippingAddress={shippingAddress} deliverySchedule={selectedDeliveryOption}/>
+        <OrderSummary isRTL={isRTL} shippingAddress={shippingAddress} deliverySchedule={selectedDeliveryOption} />
       </Grid> :
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
           <Typography variant="h5" color="textSecondary">

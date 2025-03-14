@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage } from '@redux-state/common/selectors';
+import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetCategories } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
@@ -27,6 +27,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
 
   const isFetching = GetProductsLoading();
   const itemsCount = GetAllProductsCount();
+  const categories = GetCategories();
 
   const dispatch = useDispatch();
 
@@ -40,9 +41,12 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
       const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
       setFilter({ [filterKey]: filterKey });
     } else {
-      setFilter({})
+      if (categories?.length > 0) {
+        const randomIndex = Math.floor(Math.random() * categories.length);
+        setFilter({ webCategory: categories[randomIndex]?.id })
+      }
     }
-  }, [pathname]);
+  }, [pathname, categories]);
 
 
   useEffect(() => {
@@ -55,7 +59,9 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   }
 
   useEffect(() => {
-    loadProducts();
+    if (filter) {
+      loadProducts();
+    }
   }, [dispatch, filter, pathname]);
 
   const products = GetProducts();

@@ -31,7 +31,10 @@ import {
   ADD_TO_WISHLIST_SUCCESS,
   OPEN_LOGIN_MODAL,
   GET_BANNERS,
-  GET_BANNERS_SUCCESS
+  GET_BANNERS_SUCCESS,
+  GET_USER_PROFILE,
+  GET_USER_PROFILE_SUCCESS,
+  EMPTY_CART
 } from './types';
 
 const INITIAL_STATE = {
@@ -43,6 +46,8 @@ const INITIAL_STATE = {
   toastType: '',
   toastMessage: '',
   loginModal: '',
+  profile: null,
+  getProfileLoading: false,
   cart: {
     items: [],
     user: {},
@@ -78,6 +83,17 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_LANGUAGE:
       return { ...state, language: payload };
 
+    case EMPTY_CART:
+      return {
+        ...state,
+        cart: {
+          items: [],
+          user: {},
+          totalPrice: 0,
+          orderDetails: {}
+        }
+      };
+
     case TOGGLE_TOAST:
       return { ...state, toggleToast: payload.isOpen, toastMessage: payload.message, toastType: payload.type };
 
@@ -93,6 +109,12 @@ export default (state = INITIAL_STATE, action) => {
     case PLACE_ORDER_SUCCESS:
       return { ...state, placeOrderLoading: false };
 
+    case GET_USER_PROFILE:
+      return { ...state, getProfileLoading: true };
+
+    case GET_USER_PROFILE_SUCCESS:
+      return { ...state, getProfileLoading: false, profile: payload };
+
     case ADD_REMOVE_TO_WISHLIST:
       return { ...state, wishlistLoading: true };
 
@@ -103,7 +125,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, productsLoading: true };
 
     case GET_PRODUCTS_SUCCESS:
-      return { ...state, productsLoading: false, products: action.payload.products, totalProducts: action.payload.count };
+      return { ...state, productsLoading: false, products: action.payload.products?.filter(item => item.image_urls.trim() !== "[]"), totalProducts: action.payload.count };
 
     case GET_PRODUCTS_BY_CATEGORY:
       return { ...state, productsByCategoryLoading: true };

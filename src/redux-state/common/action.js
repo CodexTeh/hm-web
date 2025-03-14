@@ -31,13 +31,21 @@ import {
   ADD_TO_WISHLIST_SUCCESS,
   OPEN_LOGIN_MODAL,
   GET_BANNERS,
-  GET_BANNERS_SUCCESS
+  GET_BANNERS_SUCCESS,
+  GET_USER_PROFILE,
+  GET_USER_PROFILE_SUCCESS,
+  EMPTY_CART
 } from './types';
 
 export const addToCart = (cart) => (
   {
     type: ADD_TO_CART,
     payload: cart
+  }
+);
+export const emptyCart = () => (
+  {
+    type: EMPTY_CART
   }
 );
 
@@ -226,6 +234,20 @@ export const getOrders = () => (
 export const getOrdersSuccess = payload => (
   {
     type: GET_ORDERS_SUCCESS,
+    payload: payload,
+  }
+);
+
+export const getProfile = (userId) => (
+  {
+    type: GET_USER_PROFILE,
+    payload: userId
+  }
+);
+
+export const getProfileSuccess = payload => (
+  {
+    type: GET_USER_PROFILE_SUCCESS,
     payload: payload,
   }
 );

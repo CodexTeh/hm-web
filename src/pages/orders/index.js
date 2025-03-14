@@ -20,6 +20,7 @@ import { colorPalette } from '@utils/colorPalette';
 import {
   GetUser,
   GetLanguage,
+  GetProfile,
   GetLatestOrder,
   GetOrders,
 } from '@redux-state/selectors';
@@ -31,6 +32,7 @@ import TableView from "@components/TableView";
 import { getOrders } from '@redux-state/common/action';
 import useRouter from '@helpers/useRouter';
 import Barcode from 'react-barcode';
+import { useParams } from 'react-router-dom';
 
 const statusMapper = {
   'processing': 1,
@@ -100,7 +102,9 @@ const translations = {
 };
 
 const OrderList = () => {
-  const user = GetUser();
+    const { userId } = useParams();
+  
+  const user = userId ? GetProfile() : GetUser();
   const dispatch = useDispatch();
   const language = GetLanguage();
   const latestOrder = GetLatestOrder();

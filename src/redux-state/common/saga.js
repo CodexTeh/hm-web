@@ -16,6 +16,7 @@ import {
   GET_PRODUCTS_BY_CATEGORY,
   GET_SEARCHED_PRODUCTS,
   PLACE_ORDER,
+  GET_USER_PROFILE,
 } from './types'
 
 const getToken = state => state.onboarding.token;
@@ -39,6 +40,18 @@ function* getOrders(action) {
     yield put(Actions.getOrdersSuccess(data));
   } catch (error) {
     yield put(Actions.getOrdersSuccess([]));
+    console.log("error", error);
+  }
+}
+
+function* getProfile(action) {
+  try {
+  const token = yield select(getToken);
+
+    const data = yield call(Api.getProfile, action.payload, token);
+    yield put(Actions.getProfileSuccess(data));
+  } catch (error) {
+    yield put(Actions.getProfileSuccess([]));
     console.log("error", error);
   }
 }
@@ -215,6 +228,7 @@ function* commonSaga() {
   yield takeLatest(EDIT_CATEGORY, editCategory);
   yield takeLatest(PLACE_ORDER, placeOrder);
   yield takeLatest(ADD_REMOVE_TO_WISHLIST, addRemoveToWishlist);
+  yield takeLatest(GET_USER_PROFILE, getProfile);
 }
 
 export default commonSaga;

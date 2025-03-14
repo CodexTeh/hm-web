@@ -238,9 +238,6 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     setWishListItem(isWishlistProduct);
   }
 
-  useEffect(() => {
-    dispatch(getProducts(pagination, filter));
-  }, [dispatch]);
 
   useEffect(() => {
     checkWishlistProduct();
