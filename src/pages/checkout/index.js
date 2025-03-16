@@ -124,11 +124,11 @@ const CheckoutPage = () => {
   useEffect(() => {
     const channel = pusher.subscribe(constants.ORDER_PLACE_CHANNEL);
     channel.bind(constants.order, function (data) {
+      // dispatch(
+      //   setLatestOrders(data.orderId)
+      // );
       dispatch(
-        setLatestOrders(data.orderId)
-      );
-      dispatch(
-        toggleToast(true, `You last order ${data.orderId} is completed successfully!`, 'success')
+        toggleToast(true, `Thanks for shopping with HM. Order number: ${data.orderId} You are the next one!`, 'success')
       );
       dispatch(emptyCart());
       router.push('/orders')

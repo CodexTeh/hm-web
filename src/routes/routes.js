@@ -71,6 +71,12 @@ export const AppRoutes = [
             errorElement: <ErrorElement />
           },
           {
+            path: 'orders',
+            key: 'orders?orderId',
+            element: <><Layout /><OrderList /></>,
+            errorElement: <ErrorElement />
+          },
+          {
             path: 'categories',
             key: 'categories',
             element: <Categories />,

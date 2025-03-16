@@ -5,7 +5,7 @@ import Alert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
 import { GetUser, GetToken, GetToastMessage, GetToastType, GetToggleToast, GetProductsLoading } from '@redux-state/selectors';
 import { toggleToast, openLoginModal } from '@redux-state/actions';
-import NotificationCard from '@components/NotificationCard';
+// import NotificationCard from '@components/NotificationCard';
 import LoginModal from '@components/Modal/LoginModal';
 import RegisterModal from '@components/Modal/RegisterModal';
 import TopBar from './TopBar';
@@ -78,17 +78,19 @@ const Layout = () => {
       <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} />
       {isFetching && <LinearProgress value={10} />}
       <Snackbar
-        sx={{ bottom: 20, right: 20 }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={togleToast}
         autoHideDuration={6000}
         onClose={handleClose}>
         <Alert
-          // onClose={handleClose}
+          onClose={handleClose}
           severity={toastType}
+          sx={{
+            width: 350,
+          }}
           variant="filled"
         >
-          <NotificationCard onClose={handleClose} message={toastMessage} />
+          {toastMessage}
         </Alert>
       </Snackbar>
       {!user &&

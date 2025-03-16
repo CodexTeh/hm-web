@@ -29,10 +29,10 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { getHeaders } from "@components/TableView/getHeaders";
 import TableView from "@components/TableView";
-import { getOrders } from '@redux-state/common/action';
+import { getOrders, toggleToast, emptyCart } from '@redux-state/actions';
 import useRouter from '@helpers/useRouter';
 import Barcode from 'react-barcode';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const statusMapper = {
   'processing': 1,
@@ -102,8 +102,14 @@ const translations = {
 };
 
 const OrderList = () => {
-    const { userId } = useParams();
-  
+  const { userId } = useParams();
+
+  const location = useLocation();
+
+  // Extract the query parameter from the URL using URLSearchParams
+  const queryParams = new URLSearchParams(location.search);
+  const orderId = queryParams.get('orderId');
+
   const user = userId ? GetProfile() : GetUser();
   const dispatch = useDispatch();
   const language = GetLanguage();
@@ -126,6 +132,19 @@ const OrderList = () => {
 
   const getCells = useMemo(() => {
     return (item) => {
+
+      const discountValue = item?.flash_sale > 0 ? item?.flash_sale : item?.discount_offer ? item?.discount_offer : 0;
+
+      const getDiscountedPrice = () => {
+        const numPrice = Number(item?.price);
+        const numDiscount = Number(discountValue);
+        const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
+        return discountedValue.toFixed(1);
+      };
+
+      const hasDiscount = discountValue > 0;
+
+      const finalPrice = hasDiscount ? getDiscountedPrice() : item?.price;
       let formattedImages;
       if (item?.image_urls) {
         try {
@@ -160,7 +179,7 @@ const OrderList = () => {
                 {(isRTL ? item.arabicName : item.website_name).slice(0, 40)}
               </Typography>
               <Typography marginLeft={2} fontWeight={510} color={colorPalette.theme}>
-                {isRTL ? 'ر۔ع' : 'OMR'} {item.price}
+                {isRTL ? 'ر۔ع' : 'OMR'} {finalPrice}
               </Typography>
             </Box>
           </Box>
@@ -168,7 +187,7 @@ const OrderList = () => {
         quantity: <Typography color="black">{item?.quantity}</Typography>,
         price: (
           <Typography color="black">
-            {isRTL ? 'ر۔ع' : 'OMR'} {item.price} x {item.quantity} = {item.totalPrice}
+            {isRTL ? 'ر۔ع' : 'OMR'} {finalPrice} x {item.quantity} = {item.totalPrice}
           </Typography>
         ),
       };
@@ -178,20 +197,30 @@ const OrderList = () => {
   }, [isRTL]);
 
   useEffect(() => {
-    if (orders?.length > 0 && latestOrder) {
-      setCurrentOrder(orders.find((item) => item._id === latestOrder));
-    } else if (orders?.length && !latestOrder) {
-      const latestOrder = orders
+    if (orders?.length > 0 && (latestOrder || orderId)) {
+      setCurrentOrder(orders.find((item) => item.orderId === (orderId ? orderId : latestOrder)));
+    } else if (orders?.length && (!latestOrder || !orderId)) {
+      const lastOrder = orders
         .filter((order) => order?.createdAt) // Ensure the `createdAt` field exists
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]; // Sort by createdAt descending
-      setCurrentOrder(latestOrder);
+      setCurrentOrder(lastOrder);
 
     }
-  }, [latestOrder, orders]);
+  }, [latestOrder, orderId, orders]);
 
   useEffect(() => {
+    dispatch(emptyCart());
+
     dispatch(getOrders());
   }, [dispatch]);
+  useEffect(() => {
+    if (orderId && orders?.length > 0) {
+      dispatch(
+        toggleToast(true, `Thanks for shopping with HM. Order number: ${orderId} You are the next one!`, 'success')
+      );
+    }
+
+  }, [dispatch, orderId, orders]);
 
   const steps = useMemo(() => [
     t.pending, t.processing, t.atLocalFacility, t.outForDelivery, t.completed
@@ -206,16 +235,17 @@ const OrderList = () => {
 
   const details = useMemo(() => ([
     { label: t.name, value: user?.username || 'N/A' },
-    { label: t.totalItems, value: `${currentOrder?.cart?.items?.length || 0} ${isRTL ? 'عناصر' : 'items'}` },
-    { label: t.deliveryTime, value: t.expressDelivery },
+    { label: t.totalItems, value: `${currentOrder?.cart?.items?.length || 0}` },
+    // { label: t.deliveryTime, value: t.expressDelivery },
     { label: t.shippingAddress, value: currentOrder?.cart?.orderDetails?.shipping_address || 'N/A' },
+    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
   ]), [currentOrder, isRTL, t, user]);
 
   const pricing = useMemo(() => ([
     { label: t.subTotal, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
-    { label: t.shippingCharge, value: '50' },
-    { label: t.discount, value: '0' },
-    { label: t.total, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
+    // { label: t.shippingCharge, value: '50' },
+    // { label: t.discount, value: '0' },
+    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
   ]), [currentOrder, t]);
 
   const InputOrderSelectField = useCallback(
@@ -227,21 +257,21 @@ const OrderList = () => {
           <Select
             sx={{ height: 40, width: 200, background: colorPalette.white }}
             fullWidth
-            value={currentOrder?._id}
-            onChange={(e) => setCurrentOrder(orders.find((item) => item._id === e.target.value))}
+            value={currentOrder?.orderId}
+            onChange={(e) => setCurrentOrder(orders.find((item) => item.orderId === e.target.value))}
             label={currentOrder}
             input={<OutlinedInput />}
           >
             {orders?.map((item, itemIndex) => (
-              <MenuItem key={itemIndex} value={item._id}>
-                {item._id}
+              <MenuItem key={itemIndex} value={item.orderId}>
+                {item.orderId}
               </MenuItem>))}
           </Select>
 
         </Box>
       );
     },
-    [orders, currentOrder, isRTL]
+    [orders, currentOrder, isRTL, orderId]
   );
 
   const renderStepper = () => (
@@ -404,12 +434,12 @@ const OrderList = () => {
 
           {/* Total Amount and Order Details */}
           <Grid container spacing={3} padding={isMobile ? 2 : 5} dir={isRTL ? 'rtl' : 'ltr'}>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t.totalAmount}
               </Typography>
               {renderDetails(pricing)}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={6}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t.orderDetails}
