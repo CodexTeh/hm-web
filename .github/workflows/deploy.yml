@@ -8,10 +8,7 @@ env:
   SERVER_USER: hmawani
   SERVER_IP: ${{ secrets.SERVER_IP }}
   APP_DIR: "/home/hmawani/app/hm-web"
-  BUILD_DIR: "$APP_DIR/build"
-  DEPLOY_DIR: "/var/www/hmawani-web"
   YARN: "/home/hmawani/.asdf/shims/yarn"
-  TEMP_DIR: "/tmp/hmawani-web-$(date +%s)"
 
 jobs:
   deploy:
@@ -33,7 +30,6 @@ jobs:
             git pull origin main &&
             $YARN install --frozen-lockfile &&
             $YARN build &&
-            cp -r "$BUILD_DIR" "$TEMP_DIR" &&
-            mv "$TEMP_DIR" "$DEPLOY_DIR" &&
+            cp -r /home/hmawani/app/hm-web/build/* /var/www/hmawani-web/ &&
             echo 'Deployment successful!'"
 
