@@ -7,12 +7,11 @@ on:
 env:
   SERVER_USER: hmawani
   SERVER_IP: ${{ secrets.SERVER_IP }}
-  APP_DIR: /home/hmawani/app/hm-web
-  BUILD_DIR="$APP_DIR/build"
-  DEPLOY_DIR="/var/www/hmawani-web"
-  YARN="/home/hmawani/.asdf/shims/yarn"
-  TEMP_DIR="/tmp/hmawani-web-$(date +%s)"
-
+  APP_DIR: "/home/hmawani/app/hm-web"
+  BUILD_DIR: "$APP_DIR/build"
+  DEPLOY_DIR: "/var/www/hmawani-web"
+  YARN: "/home/hmawani/.asdf/shims/yarn"
+  TEMP_DIR: "/tmp/hmawani-web-$(date +%s)"
 
 jobs:
   deploy:
