@@ -227,7 +227,7 @@ const OrderList = () => {
   ], [t]);
 
   const infoCards = useMemo(() => ([
-    { label: t.orderNumber, value: currentOrder?._id || 'N/A' },
+    { label: t.orderNumber, value: currentOrder?.orderId || 'N/A' },
     { label: t.date, value: currentOrder?.createdAt ? moment(currentOrder.createdAt).format('MMMM D, YYYY') : 'N/A' },
     { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice?.toFixed(1) || 0}` },
     { label: t.paymentMethod, value: t.payOnline },

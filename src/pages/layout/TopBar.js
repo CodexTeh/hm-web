@@ -106,7 +106,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
       routeToPath('/home')
     } else if (page === pages[language][1]) {
       routeToPath('/offers')
-    } else if (page === pages[language][3]) {
+    } else if (page === pages[language][2]) {
       routeToPath('/flashSale')
     }
   }

@@ -125,7 +125,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, productsLoading: true };
 
     case GET_PRODUCTS_SUCCESS:
-      return { ...state, productsLoading: false, products: action.payload.products?.filter(item => item.image_urls.trim() !== "[]"), totalProducts: action.payload.count };
+      return { ...state, productsLoading: false, products: action.payload.products?.filter(item => item.image_urls && item?.image_urls?.trim() !== "[]"), totalProducts: action.payload.count };
 
     case GET_PRODUCTS_BY_CATEGORY:
       return { ...state, productsByCategoryLoading: true };

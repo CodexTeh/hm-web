@@ -7,13 +7,14 @@ import { colorPalette } from '@utils/colorPalette';
 import { ProductModal } from '@components/Modal/ProductModal';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { GetUser, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
+import { GetUser, GetCartDetails, GetProductCatalogs, GetProducts } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
+const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts , isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
   const user = GetUser();
   const dispatch = useDispatch();
+  const products = GetProducts();
 
   const cartDetails = GetCartDetails();
   const allProductCatalogs = GetProductCatalogs();
@@ -119,7 +120,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, products
 
             const size = isRTL
               ? enSizes.find(size => size?.id?.toString() === arProductSize?.id?.toString())
-              : enSizes.find(size => size?.id?.toString() === enProductSize?.id);
+              : enSizes.find(size => size?.id?.toString() === enProductSize?.id?.toString());
 
             const imageUrls = product?.image_urls ? JSON.parse(product?.image_urls.replace(/'/g, '"')) : [];
 
