@@ -54,16 +54,6 @@ const Footer = () => {
               {rtl ? "سياسة الخصوصية" : "Privacy Policy"}
             </Link>
             <br />
-            <Link href="/about-us" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "معلومات عنا" : "About Us"}
-            </Link>
-            <br />
-            <Box sx={{ cursor: 'pointer' }} onClick={() => window.open('mailto:hamuqaibal@gmail.com')}>
-
-            <Typography href="/privacy-policy" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "اتصل بنا" : "Contact Us"}
-            </Typography>
-            </Box>
           </Box>
         </Grid>
 
@@ -73,17 +63,14 @@ const Footer = () => {
             {rtl ? "المعلومات" : "INFORMATION"}
           </Typography>
           <Box>
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "كتب الطبخ الإلكترونية" : "E-Recipe Books"}
+          <Link href="/about-us" fontSize={12} color="inherit" underline="hover">
+              {rtl ? "معلومات عنا" : "About Us"}
             </Link>
             <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "المدونات والوصفات" : "Blogs & Recipes"}
+            <Link href="/contact-us" fontSize={12} color="inherit" underline="hover">
+              {rtl ? "اتصل بنا" : "Contact Us"}
             </Link>
             <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "جميع المدونات" : "All Blogs"}
-            </Link>
           </Box>
         </Grid>
 
@@ -93,17 +80,14 @@ const Footer = () => {
             {rtl ? "تحتاج إلى مساعدة؟" : "NEED HELP?"}
           </Typography>
           <Box>
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
+            <Link href="/orders" fontSize={12} color="inherit" underline="hover">
               {rtl ? "تتبع طلبك" : "Track Your Order"}
             </Link>
             <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
+            <Link href="/contact-us" fontSize={12} color="inherit" underline="hover">
               {rtl ? "طلب الخدمة عبر الإنترنت" : "Online Service Request"}
             </Link>
             <br />
-            <Link href="#" fontSize={12} color="inherit" underline="hover">
-              {rtl ? "تسجيل الضمان" : "Warranty Registration"}
-            </Link>
           </Box>
         </Grid>
       </Grid>

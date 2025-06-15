@@ -42,6 +42,8 @@ const WishList = ({ drawerWidth = 300 }) => {
     const wishListProducts = await Api.getWishListProducts(user.id);
     if (wishListProducts) {
       setWishListProducts(wishListProducts);
+    } else {
+      setWishListProducts([]);
     }
     setLoader(false);
   };

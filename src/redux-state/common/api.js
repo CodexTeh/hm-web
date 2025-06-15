@@ -57,6 +57,8 @@ export const Api = {
           return data;
         case 400:
           throw new Error('All fields are required');
+        case 404:
+          return null;
         case 409:
           throw new Error('User already exists!');
         default:

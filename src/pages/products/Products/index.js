@@ -257,7 +257,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
               setValue={setTo}
             />
           </Box>
-          <ProductsView filter={filter} hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+          <ProductsView filter={filter} products={products} hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
         </Box>
       </Box>
 

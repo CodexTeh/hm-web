@@ -19,7 +19,7 @@ import SearchBar from "@components/SearchBar";
 import useRouter from '@helpers/useRouter';
 import { removeToken } from "@helpers/tokenActions";
 import { GetLanguage, GetUser } from "@redux-state/selectors";
-import { logout, emptyCart, changeLanguage, openLoginModal } from "@redux-state/actions";
+import { logout, emptyCart, changeLanguage } from "@redux-state/actions";
 import { colorPalette } from "@utils/colorPalette";
 
 const TopBar = ({ hasScrolled, setHasScrolled }) => {
@@ -30,8 +30,8 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
   const router = useRouter();
 
   const pages = {
-    en: ["Shop", "Offers", "Flash Sale"],
-    ar: ["محل", "العروض", "بيع فلاش"],
+    en: ["Shop", "Offers", "Flash Sale", "Contact Us"],
+    ar: ["محل", "العروض", "بيع فلاش", "اتصل بنا"],
   };
   const settings = {
     en: [
@@ -108,6 +108,8 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
       routeToPath('/offers')
     } else if (page === pages[language][2]) {
       routeToPath('/flashSale')
+    } else if (page === pages[language][3]) {
+      routeToPath('/contact-us')
     }
   }
 
