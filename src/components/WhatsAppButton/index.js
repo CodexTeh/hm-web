@@ -8,7 +8,7 @@ const WhatsAppButton = () => {
   const language = GetLanguage();
   const rtl = language === 'ar';
   const phoneNumber = process.env.REACT_APP_WHATSAPP_NUMBER; // Replace with the desired phone number
-  const message = "Hello! I would like to inquire about your services."; // Replace with a default message
+  const message = rtl ? "مرحبًا، لدي بعض الأسئلة حول منتجاتك وسأكون ممتنًا لمساعدتك." : "Hello, I have a few questions about your products and would appreciate your assistance."; // Replace with a default message
 
   const handleWhatsAppRedirect = () => {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(

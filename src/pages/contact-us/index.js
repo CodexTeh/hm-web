@@ -192,8 +192,8 @@ const ContactPage = () => {
                     <Typography variant="subtitle1" fontWeight="bold">
                       {rtl ? 'دعم البريد الإلكتروني' : 'My Email Support'}
                     </Typography>
-                    <Box sx={{ cursor: 'pointer' }} onClick={() => window.open('mailto:hamuqaibal@gmail.com')}>
-                      <Typography variant="body2">hamuqaibal@gmail.com</Typography>
+                    <Box sx={{ cursor: 'pointer' }} onClick={() => window.open(`mailto:${process.env.REACT_APP_EMAIL_ADDRESS}`, '_blank')}>
+                      <Typography variant="body2">{process.env.REACT_APP_EMAIL_ADDRESS}</Typography>
                     </Box>
                   </Box>
                 </Box>

@@ -286,7 +286,7 @@ const TopBar = ({ hasScrolled, setHasScrolled }) => {
                       },
                     }}
                   >
-                    أربي
+                    عربي
                   </Button>
                 </Box>
 

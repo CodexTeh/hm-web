@@ -86,7 +86,7 @@ export const Api = {
       rangeStart = (page) * (perPage);
       rangeEnd = ((page) + 1) * (perPage) - 1;
       const query = {
-        sort: JSON.stringify(['createdAt', 'ASC']),
+        sort: JSON.stringify(['createdAt', 'DESC']),
         range: JSON.stringify([rangeStart, rangeEnd]),
         filter: JSON.stringify({ '$custom': { 'userId': userId, 'status': 'all' } }),
       };

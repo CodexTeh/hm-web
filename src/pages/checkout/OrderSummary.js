@@ -82,7 +82,7 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
             const numPrice = Number(item?.price);
             const numDiscount = Number(discountValue);
             const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
-            return discountedValue.toFixed(1);
+            return discountedValue.toFixed(3);
           };
 
           const hasDiscount = discountValue > 0;
@@ -152,7 +152,7 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
           <Typography variant="body2"
             color='textDisabled'
           >
-            {isRTL ? cartDetails.totalPrice.toFixed(1) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(1)}
+            {isRTL ? cartDetails.totalPrice.toFixed(3) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(3)}
           </Typography>
         </Box>
         <Box sx={{ marginTop: 3 }}>

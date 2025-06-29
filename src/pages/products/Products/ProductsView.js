@@ -129,7 +129,7 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
               const numPrice = Number(product?.price);
               const numDiscount = Number(discountValue);
               const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
-              return discountedValue.toFixed(1);
+              return discountedValue.toFixed(3);
             };
 
             const hasDiscount = discountValue > 0;

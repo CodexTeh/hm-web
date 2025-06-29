@@ -139,7 +139,7 @@ const OrderList = () => {
         const numPrice = Number(item?.price);
         const numDiscount = Number(discountValue);
         const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
-        return discountedValue.toFixed(1);
+        return discountedValue.toFixed(3);
       };
 
       const hasDiscount = discountValue > 0;
@@ -229,7 +229,7 @@ const OrderList = () => {
   const infoCards = useMemo(() => ([
     { label: t.orderNumber, value: currentOrder?.orderId || 'N/A' },
     { label: t.date, value: currentOrder?.createdAt ? moment(currentOrder.createdAt).format('MMMM D, YYYY') : 'N/A' },
-    { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice?.toFixed(1) || 0}` },
+    { label: t.total, value: `${isRTL ? 'ر۔ع' : 'OMR'} ${currentOrder?.cart?.totalPrice?.toFixed(3) || 0}` },
     { label: t.paymentMethod, value: t.payOnline },
   ]), [currentOrder, isRTL, t]);
 
@@ -238,14 +238,14 @@ const OrderList = () => {
     { label: t.totalItems, value: `${currentOrder?.cart?.items?.length || 0}` },
     // { label: t.deliveryTime, value: t.expressDelivery },
     { label: t.shippingAddress, value: currentOrder?.cart?.orderDetails?.shipping_address || 'N/A' },
-    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
+    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(3) || 0 },
   ]), [currentOrder, isRTL, t, user]);
 
   const pricing = useMemo(() => ([
-    { label: t.subTotal, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
+    { label: t.subTotal, value: currentOrder?.cart?.totalPrice?.toFixed(3) || 0 },
     // { label: t.shippingCharge, value: '50' },
     // { label: t.discount, value: '0' },
-    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(1) || 0 },
+    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(3) || 0 },
   ]), [currentOrder, t]);
 
   const InputOrderSelectField = useCallback(
@@ -274,14 +274,31 @@ const OrderList = () => {
     [orders, currentOrder, isRTL, orderId]
   );
 
+  const CancelledStep = () => {
+    const labelProps = {};
+    labelProps.error = true;
+    return (
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <Stepper activeStep={1}>
+          <Step>
+            <StepLabel {...labelProps}>Order Cancelled</StepLabel>
+          </Step>
+        </Stepper>
+      </Box>
+    );
+  }
+
   const renderStepper = () => (
     <Box sx={{ mb: 4 }}>
       <Stepper activeStep={statusMapper[currentOrder?.status]} alternativeLabel sx={{ direction: 'ltr' }}>
-        {steps.map((label, index) => (
-          <Step key={index}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
+        {currentOrder?.status === 'cancel' ?
+          <CancelledStep />
+          :
+          steps.map((label, index) => (
+            <Step key={index}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
       </Stepper>
     </Box>
   );

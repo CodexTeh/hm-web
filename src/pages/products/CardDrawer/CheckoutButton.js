@@ -70,7 +70,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
             fontWeight: 'bold',
           }}
         >
-          {isRTL ? cartDetails.totalPrice.toFixed(2) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(2)}
+          {isRTL ? cartDetails.totalPrice.toFixed(3) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(3)}
 
         </Box>
       </Button>

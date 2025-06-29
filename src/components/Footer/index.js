@@ -31,7 +31,7 @@ const Footer = () => {
           </Typography>
           <Box>
           <Typography variant="caption" gutterBottom>
-            {rtl ? "تأسست شركة حسين مقيبل أواني في عام 1998، وهي متخصصة في توفير مستلزمات المطبخ والديكور المنزلي الفاخرة. وبفضل شغفنا بالجودة والتصميم، فإننا نصنع منتجات تعزز جمال ووظائف مساحة المعيشة الخاصة بك." : "Hussain Muqaibal Awani, founded in 1998, is dedicated to providing premium kitchen essentials and home decor. With a passion for quality and design, we create products that enhance the beauty and functionality of your living space."}
+            {rtl ? "تأسست شركة حسين مقيبل أواني في عام 1984 وهي متخصصة في توفير مستلزمات المطبخ والديكور المنزلي الفاخرة. وبفضل شغفنا بالجودة والتصميم، فإننا نصنع منتجات تعزز جمال ووظائف مساحة المعيشة الخاصة بك." : "Hussain Muqaibal Awani, founded in 1984, is dedicated to providing premium kitchen essentials and home decor. With a passion for quality and design, we create products that enhance the beauty and functionality of your living space."}
           </Typography>
           </Box>
         </Grid>

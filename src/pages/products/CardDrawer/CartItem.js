@@ -115,7 +115,7 @@ const Cart = ({ isRTL, cartDetails }) => {
       const numPrice = Number(item?.price);
       const numDiscount = Number(discountValue);
       const discountedValue = Number(numPrice) - (numPrice * numDiscount) / 100;
-      return discountedValue.toFixed(1);
+      return discountedValue.toFixed(3);
     };
 
     const hasDiscount = discountValue > 0;
@@ -168,7 +168,7 @@ const Cart = ({ isRTL, cartDetails }) => {
           </Box>
         </Box>
         <Box sx={{ textAlign: 'right', display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 2 }}>
-          <Typography variant="body2" fontWeight={510}>{currency}{(finalPrice * item.quantity).toFixed(1)}</Typography>
+          <Typography variant="body2" fontWeight={510}>{currency}{(finalPrice * item.quantity).toFixed(3)}</Typography>
           <IconButton onClick={() => handleRemoveItem(item, finalPrice)} sx={{ marginLeft: 2 }}>
             <ClearIcon sx={{
               width: 15, height: 15, '&:hover': {

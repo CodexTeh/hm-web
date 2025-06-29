@@ -92,19 +92,19 @@ export const AppRoutes = [
           {
             path: 'terms',
             key: 'terms',
-            element: <TermsAndConditions />,
+            element: <><Layout /><TermsAndConditions /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'privacy-policy',
             key: 'privacy-policy',
-            element: <PrivacyPolicy />,
+            element:<><Layout /> <PrivacyPolicy /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'return-policy',
             key: 'return-policy',
-            element: <ReturnPolicy />,
+            element: <><Layout /><ReturnPolicy /></>,
             errorElement: <ErrorElement />
           },
           {
