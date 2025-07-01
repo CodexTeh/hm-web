@@ -26,13 +26,13 @@ const AboutUs = () => {
         <Typography paragraph>
           {rtl ? (
             <>
-              تأسست شركة حسين مقعبيل عوني في عام 1998، وأصبحت اسمًا رائدًا في مجال أساسيات المطبخ
+              تأسست شركة حسين مقعبيل عوني في عام 1984، وأصبحت اسمًا رائدًا في مجال أساسيات المطبخ
               وديكور المنزل. على مر السنين، جعل التزامنا بالجودة والحرفية ورضا العملاء منا خيارًا
               موثوقًا به لأصحاب المنازل ومصممي الديكور الداخلي وهواة الطهي على حدٍ سواء.
             </>
           ) : (
             <>
-              Established in 1998, Hussain Muqaibal Awani has become a leading name in the industry
+              Established in 1984, Hussain Muqaibal Awani has become a leading name in the industry
               of kitchen essentials and home décor. Over the years, our commitment to quality,
               craftsmanship, and customer satisfaction has made us a trusted choice for homeowners,
               interior designers, and kitchen enthusiasts alike.

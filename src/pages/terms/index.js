@@ -13,7 +13,7 @@ const TermsAndConditions = () => {
       <Container
         maxWidth="md"
         sx={{
-          mt: 4,
+          mt: 12,
           mb: 4,
           // Add RTL compatibility
           direction: rtl ? "rtl" : "ltr",
@@ -458,7 +458,7 @@ const TermsAndConditions = () => {
               </>
             ) : (
               <>
-                If you have any questions or concerns regarding these Terms and Conditions, please
+                If you have any questions or concerns regarding these terms and conditions, please
                 contact us at:
                 <br />
                 <strong>HM Awani</strong>

@@ -394,7 +394,7 @@ const ReturnPolicy = () => {
               </>
             ) : (
               <>
-                If you have any questions regarding our Return Policy or need assistance with a return
+                If you have any questions regarding our return policy or need assistance with a return
                 or exchange, please contact us at:
                 <br />
                 <strong>HM Awani</strong>

@@ -233,7 +233,7 @@ const PrivacyPolicy = () => {
           <Typography paragraph>
             {rtl
               ? `إذا كانت لديك أي أسئلة أو استفسارات حول سياسة الخصوصية هذه أو كيفية معالجة بياناتك الشخصية، يرجى الاتصال بنا على:`
-              : `If you have any questions or concerns about this Privacy Policy or how
+              : `If you have any questions or concerns about this privacy policy or how
             your personal data is handled, please contact us at:`}
           </Typography>
           <Typography paragraph>

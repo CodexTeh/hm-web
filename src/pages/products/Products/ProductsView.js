@@ -134,7 +134,7 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
 
             const hasDiscount = discountValue > 0;
 
-            const finalPrice = hasDiscount ? getDiscountedPrice() : product?.price;
+            const finalPrice = hasDiscount ? getDiscountedPrice() : product?.price.toFixed(3);
 
             return (
               <Grid
@@ -233,7 +233,7 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
                           color="textDisabled"
                           sx={{ textDecoration: 'line-through' }}
                         >
-                          {isRTL ? `د.إ ${product?.price}` : `OMR ${product?.price}`}
+                          {isRTL ? `ر.ع ${product?.price}` : `OMR ${product?.price}`}
                         </Typography>}
                         {/* Current Price */}
                         <Typography
@@ -243,7 +243,7 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
                             color: colorPalette.theme,
                           }}
                         >
-                          {isRTL ? `د.إ ${finalPrice}` : `OMR ${finalPrice}`}
+                          {isRTL ? `ر.ع ${finalPrice}` : `OMR ${finalPrice}`}
                         </Typography>
                       </Box>
                       {/* Add to Cart Button or Quantity Control */}
