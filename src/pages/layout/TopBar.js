@@ -134,7 +134,7 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
         >
 
           {/* Left side: Hamburger on mobile, logo always */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
               <IconButton
                 edge="start"
@@ -149,8 +149,6 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                marginLeft: 3,
-                marginRight: 3,
                 cursor: 'pointer'
               }}
               onClick={() => routeToPath('/')}
@@ -159,8 +157,8 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                 src={logo}
                 alt="logo"
                 style={{
-                  width: isMobile ? 80 : 180, // Smaller logo for mobile
-                  height: isMobile ? 80 : 90, // Smaller height for mobile
+                  width: isMobile ? 140 : 180, // Smaller logo for mobile
+                  height: isMobile ? 80 : 70, // Smaller height for mobile
                   marginRight: language === "ar" ? 0 : 10,
                   marginLeft: language === "ar" ? 10 : 0,
                   objectFit: "cover"
@@ -223,8 +221,8 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                   border: `1px solid ${colorPalette.theme}`,
                   backgroundColor: language === "en" ? colorPalette.theme : "transparent",
                   color: language === "en" ? "#fff" : colorPalette.theme,
-                  minWidth: 38,
-                  width: { xs: 44, md: "auto" },  // Buttons fill width a bit on mobile
+                  minWidth: 35,
+                  width: { xs: 35, md: "auto" },  // Buttons fill width a bit on mobile
                 }}
               >
                 EN
@@ -238,26 +236,25 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                   border: `1px solid ${colorPalette.theme}`,
                   backgroundColor: language === "ar" ? colorPalette.theme : "transparent",
                   color: language === "ar" ? "#fff" : colorPalette.theme,
-                  minWidth: 38,
-                  width: { xs: 44, md: "auto" },
+                  minWidth: 30,
+                  width: { xs: 35, md: "auto" },
                 }}
               >
                 عربى
               </Button>
             </Box>
 
-
             {/* User Avatar */}
             {user && (
-              <Box ml={isMobile ? 0.5 : 2}>
+              <Box ml={isMobile ? 0 : 2}>
                 <Tooltip title={language === "ar" ? "افتح الإعدادات" : "Open settings"}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
                       sx={{
                         bgcolor: colorPalette.theme,
                         color: "#fff",
-                        width: isMobile ? 36 : 48,
-                        height: isMobile ? 36 : 48,
+                        width: isMobile ? 30 : 48,
+                        height: isMobile ? 30 : 48,
                         fontSize: isMobile ? 15 : 20,
                         fontWeight: "bold",
                       }}
