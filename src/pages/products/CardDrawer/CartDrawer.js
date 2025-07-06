@@ -43,7 +43,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
               justifyContent: { xs: 'center', md: 'space-between' },
               alignItems: 'center',
               marginBottom: 2,
-              ml: { xs: '25%', md: 0 }, // Adjust margin for smaller screens
+              ml: { xs: '25%', md: 0 },
             }}
           >
             <Box
@@ -75,7 +75,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
                 color: colorPalette.nobel
               }}
               onClick={handleDrawerClose}
-              edge="end"
+              edge="start"
             >
               <CloseIcon />
             </IconButton>

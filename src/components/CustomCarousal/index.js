@@ -17,7 +17,7 @@ export const CustomCarousel = ({ selectedIndex, handleImageChange, images, isRTL
         sx={{
           position: 'absolute',
           top: '50%',
-          left: 15,
+          left: 30,
           transform: 'translateY(-50%)',
           zIndex: 2,
           width: 40,
@@ -43,7 +43,7 @@ export const CustomCarousel = ({ selectedIndex, handleImageChange, images, isRTL
         sx={{
           position: 'absolute',
           top: '50%',
-          right: 15,
+          right: 30,
           transform: 'translateY(-50%)',
           zIndex: 2,
           width: 40,

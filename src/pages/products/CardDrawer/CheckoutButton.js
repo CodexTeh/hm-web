@@ -21,7 +21,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
         width: '100%',
         position: 'absolute',
         bottom: 0,
-        ml: { xs: '25%', md: 0 },
+        ml: { xs: isRTL ? '-20%' : '25%', md: 0 },
         background: colorPalette.white
       }}
     >

@@ -237,21 +237,19 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
           {/* FILTER BAR */}
           <Box
             sx={{
-              bgcolor: "#fff",
               borderRadius: 3,
-              boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-              mx: 'auto',
+              mx: isRTL ? 3 : 7,
               mt: 2,
               mb: 2,
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
               gap: { xs: 1, md: 5 },
               alignItems: { xs: 'stretch', md: 'flex-start' },
-              width: { xs: '98vw', sm: '95vw', md: 'auto' },
+              width: { xs: '80vw', sm: '95vw', md: '65vw' },
             }}
           >
             {/* Title with Icon */}
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, md: 0 }, m: { xs: 2, md: 4 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '40%' }}>
               <TuneIcon color="primary" sx={{ mr: 1 }} />
               <Typography
                 variant="h6"
@@ -264,33 +262,35 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
             </Box>
 
             {/* Brand Field */}
-            <Box sx={{ width: { md: 150 }, ml: { xs: 2, md: 4 } }}>
-              <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 500 }}>
-                {isRTL ? 'ماركة' : 'Brand'}
-              </Typography>
-              <InputBrandsSelectField />
-            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', width: '100%', justifyContent: 'start' }}>
+              <Box>
+                <Typography variant="subtitle2" sx={{ mr: 3, fontWeight: 500 }}>
+                  {isRTL ? 'ماركة' : 'Brand'}
+                </Typography>
+                <InputBrandsSelectField />
+              </Box>
 
-            {/* Price Range */}
-            <Box sx={{ width: { md: 190 }, ml: 2, mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 500 }}>
-                {isRTL ? 'نطاق السعر' : 'Price Range'}
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexDirection: { xs: 'column', sm: 'row' } }}>
-                <InputTextField
-                  label={isRTL ? 'من' : 'From'}
-                  type='number'
-                  value={from}
-                  setValue={setFrom}
-                  sx={{ width: { sm: 80 } }}
-                />
-                <InputTextField
-                  label={isRTL ? 'ل' : 'To'}
-                  type='number'
-                  value={to}
-                  setValue={setTo}
-                  sx={{ width: { sm: 80 } }}
-                />
+              {/* Price Range */}
+              <Box>
+                <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                  {isRTL ? 'نطاق السعر' : 'Price Range'}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
+                  <InputTextField
+                    label={isRTL ? 'من' : 'From'}
+                    type='number'
+                    value={from}
+                    setValue={setFrom}
+                    sx={{ width: { sm: 80 } }}
+                  />
+                  <InputTextField
+                    label={isRTL ? 'ل' : 'To'}
+                    type='number'
+                    value={to}
+                    setValue={setTo}
+                    sx={{ width: { sm: 80 } }}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>

@@ -106,7 +106,7 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
   };
 
   return (
-    <Box sx={{ width: '93%', marginRight: 5, marginTop: 3 }}>
+    <Box sx={{ width: '100%', marginTop: 3 }}>
       {products?.length ?
         <Grid
           sx={{ marginLeft: !open ? 0.5 : null, maxWidth: '100%' }}

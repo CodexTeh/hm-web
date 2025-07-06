@@ -130,6 +130,7 @@ const Cart = ({ isRTL, cartDetails }) => {
         justifyContent: 'space-between',
         width: '100%',
         ml: { xs: '25%', md: 0 },
+        mr: { xs: '25%', md: 0 },
       }}>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center'}}>
           <Box sx={{
@@ -187,7 +188,7 @@ const Cart = ({ isRTL, cartDetails }) => {
       {cartDetails.items.map((item, index) => (
         <Box sx={{ marginBottom: 5, marginLeft: -2, marginRight: -2 }}>
           <CartItem key={index} item={item} />
-          <Divider sx={{ marginX: { xs: 0, md: -4 }, marginY: 2, ml: { xs: '50%', md: 0 } }} />
+          <Divider sx={{ marginX: { xs: 0, md: -4 }, marginY: 2, ml: {  md: 0 } }} />
         </Box>
       ))}
     </>

@@ -242,7 +242,7 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                   width: { xs: 44, md: "auto" },
                 }}
               >
-                عربي
+                عربى
               </Button>
             </Box>
 
