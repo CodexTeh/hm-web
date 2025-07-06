@@ -38,11 +38,12 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
         <StyledMainBox>
           <Box
             sx={{
-              width: '100%',
+              width: { xs: '100%', md: '100%' },
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: { xs: 'center', md: 'space-between' },
               alignItems: 'center',
               marginBottom: 2,
+              ml: { xs: '25%', md: 0 }, // Adjust margin for smaller screens
             }}
           >
             <Box
@@ -50,6 +51,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
                 display: 'flex',
                 flexDirection: isRTL ? 'row-reverse' : 'row', // Reverse layout for RTL
                 alignItems: 'center',
+                width: '40%',
               }}
             >
               <LocalMallIcon sx={{ color: colorPalette.theme }} />

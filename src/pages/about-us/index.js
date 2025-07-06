@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Typography, Paper, Box } from "@mui/material";
+import Footer from '@components/Footer';
 import { GetLanguage } from "@redux-state/selectors";
 
 const AboutUs = () => {
@@ -7,10 +8,11 @@ const AboutUs = () => {
   const rtl = language === "ar";
 
   return (
+    <>
     <Container
       maxWidth="md"
       sx={{
-        mt: 4,
+        mt: 12,
         mb: 4,
         direction: rtl ? "rtl" : "ltr",
         textAlign: rtl ? "right" : "left",
@@ -215,6 +217,8 @@ const AboutUs = () => {
         </Typography>
       </Paper>
     </Container>
+          <Footer />
+    </>
   );
 };
 

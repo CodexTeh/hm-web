@@ -24,15 +24,12 @@ export default function CategoryView({ isRTL, setFilter, category, subCategories
       expanded={expanded === 'panel1'}
       onChange={handleChange('panel1')}
       sx={{
-        boxShadow: 'none', // Remove default shadow
-        border: 'none', // Remove border
+        boxShadow: 'none',
+        border: 'none',
         margin: 0,
-        paddingLeft: 4,
-        paddingRight: 4,
-        paddingTop: index === 0 ? 3 : 0,
-        '&:before': {
-          display: 'none', // Remove the default divider line (black line)
-        },
+        px: { xs: 1, sm: 4 },
+        pt: index === 0 ? { xs: 1, sm: 3 } : 0,
+        '&:before': { display: 'none' },
       }}
     >
       <AccordionSummary
@@ -49,7 +46,11 @@ export default function CategoryView({ isRTL, setFilter, category, subCategories
         }}
       >
         <Box sx={{ cursor: 'pointer' }} onClick={() => setFilter(catFilter)}>
-          <Typography color={highlightColor} variant='subtitle2' fontSize={13} fontWeight={510} width={150}>
+          <Typography color={highlightColor}
+            variant='subtitle2'
+            fontSize={{ xs: 12, sm: 13 }}
+            fontWeight={510}
+            width={{ xs: 120, sm: 150 }}>
             {isRTL ? category.ar_category : category.category}
           </Typography>
         </Box>
@@ -62,7 +63,7 @@ export default function CategoryView({ isRTL, setFilter, category, subCategories
               setChild(subCat.id)
               setFilter(subCatFilter)
             }} key={index}>
-              <Typography fontSize={13} sx={{ color: child === subCat.id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={510} width={150} key={index} marginTop={2}>
+              <Typography fontSize={{ xs: 12, sm: 13 }} sx={{ color: child === subCat.id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={510} width={{ xs: 120, sm: 150 }} key={index} marginTop={2}>
                 {isRTL ? subCat.ar_subcategory : subCat.subcategory}
               </Typography>
             </Box>

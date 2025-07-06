@@ -126,11 +126,12 @@ const Cart = ({ isRTL, cartDetails }) => {
       <Box sx={{
         display: 'flex',
         alignItems: 'center',
-        flexDirection: 'row',
+        flexDirection: { xs: 'column', md: 'row' },
         justifyContent: 'space-between',
         width: '100%',
+        ml: { xs: '25%', md: 0 },
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center'}}>
           <Box sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -138,7 +139,7 @@ const Cart = ({ isRTL, cartDetails }) => {
             border: `1px solid ${colorPalette.lightGrey}`,
             borderRadius: 10,
             background: colorPalette.lightGrey,
-            marginRight: 4,
+            marginRight: { xs: 0, md: 4 },
             height: 110,
           }}>
             <IconButton onClick={() => handleIncrease(item, finalPrice)}>
@@ -150,7 +151,7 @@ const Cart = ({ isRTL, cartDetails }) => {
             </IconButton>
           </Box>
           {image &&
-            <Box sx={{ marginLeft: 4, marginRight: 2 }}>
+            <Box sx={{ marginLeft: { xs: 0, md: 4 }, marginTop: { xs: 4, md: 0 }, marginRight: { xs: 0, md: 2 } }}>
               <img
                 src={image.url}
                 alt={image.title}
@@ -186,7 +187,7 @@ const Cart = ({ isRTL, cartDetails }) => {
       {cartDetails.items.map((item, index) => (
         <Box sx={{ marginBottom: 5, marginLeft: -2, marginRight: -2 }}>
           <CartItem key={index} item={item} />
-          <Divider sx={{ marginX: -4, marginY: 2 }} />
+          <Divider sx={{ marginX: { xs: 0, md: -4 }, marginY: 2, ml: { xs: '50%', md: 0 } }} />
         </Box>
       ))}
     </>

@@ -21,6 +21,7 @@ const Layout = () => {
 
 
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [stopScroll, setStopScroll] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
   const [registerModal, setRegisterModal] = useState(false);
 
@@ -36,13 +37,14 @@ const Layout = () => {
         setHasScrolled(false);
       }
     };
+    if (!stopScroll) {
+      window.addEventListener('scroll', handleScroll);
 
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [hasScrolled]);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [hasScrolled, stopScroll]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -75,7 +77,7 @@ const Layout = () => {
 
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>
-      <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} />
+      <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll}/>
       {isFetching && <LinearProgress value={10} />}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

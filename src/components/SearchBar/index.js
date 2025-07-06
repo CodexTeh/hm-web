@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { getProducts } from '@redux-state/common/action';
 
 
-const SearchBar = ({ setHasScrolled, hasScrolled }) => {
+const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
   const language = GetLanguage();
   const dispatch = useDispatch();
 
@@ -37,39 +37,51 @@ const SearchBar = ({ setHasScrolled, hasScrolled }) => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', padding: 1, alignItems: 'end', justifyContent: 'center', width: '60%' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },   // Stack on mobile, row on desktop
+        alignItems: { xs: 'stretch', sm: 'center' },
+        justifyContent: 'center',
+        width: { xs: '98vw', sm: '80vw', md: '60%' }, // Full width on mobile, narrower on desktop
+        maxWidth: 500,
+        mx: 'auto',
+        m: { xs: 5, sm: 0 },
+        mt: { xs: 15, sm: 2 },
+        p: { xs: 0.5, sm: 1 },
+        gap: { xs: 1, sm: 1.5 },
+        position: 'relative',
+        zIndex: 1200
+      }}
+    >
       <OutlinedInput
         sx={{
           borderRadius: '5px',
           fontSize: 13,
-          borderColor: colorPalette.theme, // Makes border outline transparent
-          background: colorPalette.lightShadow, // Sets the background color to white
-          // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)', // Adds shadow on all sides
-          padding: 0,
-          paddingRight: isRTL ? 2 : 0,
-          direction: isRTL ? 'rtl' : 'ltr', // Sets the input direction
+          borderColor: colorPalette.theme,
+          background: colorPalette.lightShadow,
+          direction: isRTL ? 'rtl' : 'ltr',
+          width: '100%',
+          minWidth: 0,
           '& fieldset': {
-            borderColor: colorPalette.theme, // Ensures the fieldset border is transparent
+            borderColor: colorPalette.theme,
           },
-          '&:hover': {
-            // boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', // Slightly stronger shadow on hover
-          },
+          py: { xs: 1, sm: 0 },
+          fontWeight: 400,
         }}
         fullWidth
         onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            searchProducts();
-          }
+          if (e.key === 'Enter') searchProducts();
         }}
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
-        placeholder={placeholderText} // Uses the dynamic placeholder
+        placeholder={placeholderText}
         startAdornment={
           <SearchIcon
             style={{
               color: colorPalette.grey,
-              paddingLeft: 20,
-              paddingRight: 20,
+              paddingLeft: isRTL ? 0 : 16,
+              paddingRight: isRTL ? 16 : 0,
             }}
           />
         }
@@ -77,19 +89,18 @@ const SearchBar = ({ setHasScrolled, hasScrolled }) => {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
-          height: 50,
           justifyContent: 'center',
           alignItems: 'center',
           background: colorPalette.lightShadow,
-          marginLeft: 5,
-          marginRight: 5,
-          width: 55,
+          width: { xs: '100%', sm: 55 },
+          height: { xs: 38, sm: 50 },
           cursor: 'pointer',
           borderRadius: 1,
           borderColor: colorPalette.theme,
           borderWidth: 1,
           borderStyle: 'solid',
+          mt: { xs: 1, sm: 0 },
+          mx: { xs: 0, sm: 0.5 },
         }}
         onClick={() => {
           if (searchText) {
@@ -97,6 +108,7 @@ const SearchBar = ({ setHasScrolled, hasScrolled }) => {
             dispatch(getProducts(pagination, {}));
           }
           setHasScrolled(false);
+          setStopScroll(true);
         }}
       >
         <CloseIcon
@@ -108,6 +120,7 @@ const SearchBar = ({ setHasScrolled, hasScrolled }) => {
         />
       </Box>
     </Box>
+
   );
 };
 

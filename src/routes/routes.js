@@ -110,7 +110,7 @@ export const AppRoutes = [
           {
             path: 'about-us',
             key: 'about-us',
-            element: <AboutUs />,
+            element: <><Layout /><AboutUs /></>,
             errorElement: <ErrorElement />
           },
           {

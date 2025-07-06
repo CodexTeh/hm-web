@@ -16,38 +16,15 @@ import { GetLanguage } from "@redux-state/selectors";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Your location data remains unchanged
+// Locations
 const locations = [
-  {
-    id: 1,
-    name_en: "Taimoor shop saada",
-    name_ar: "متجر تيمور الصدة",
-    lat: 17.046705,
-    lng: 54.169690
-  },
-  {
-    id: 2,
-    name_en: "China village shop",
-    name_ar: "متجر قرية الصين",
-    lat: 17.021632,
-    lng: 54.064655
-  },
-  {
-    id: 3,
-    name_en: "Sharqia shop",
-    name_ar: "متجر الشرقية",
-    lat: 17.014324,
-    lng: 54.103949
-  },
-  {
-    id: 4,
-    name_en: "Gharbia shop near Majid isa",
-    name_ar: "متجر الغربية بالقرب من مسجد عيسى",
-    lat: 17.005715,
-    lng: 54.063577
-  }
+  { id: 1, name_en: "Taimoor shop saada", name_ar: "متجر تيمور الصدة", lat: 17.046705, lng: 54.169690 },
+  { id: 2, name_en: "China village shop", name_ar: "متجر قرية الصين", lat: 17.021632, lng: 54.064655 },
+  { id: 3, name_en: "Sharqia shop", name_ar: "متجر الشرقية", lat: 17.014324, lng: 54.103949 },
+  { id: 4, name_en: "Gharbia shop near Majid isa", name_ar: "متجر الغربية بالقرب من مسجد عيسى", lat: 17.005715, lng: 54.063577 },
 ];
 
+// Custom map icon
 const customIcon = new L.Icon({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   iconSize: [25, 41],
@@ -57,36 +34,33 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
+// Map center updater for selected location
+const MapCenterUpdater = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([lat, lng], map.getZoom());
+  }, [lat, lng, map]);
+  return null;
+};
+
 const ContactPage = () => {
   const [selectedLocation, setSelectedLocation] = useState(locations[0]);
+  const language = GetLanguage();
+  const rtl = language === 'ar';
+
   const handleLocationChange = (event) => {
     const location = locations.find(loc => loc.id === event.target.value);
     setSelectedLocation(location);
   };
 
-  const language = GetLanguage();
-  const rtl = language === 'ar'; // Check if the language is Arabic
-
+  // For embedded form
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "//embed.typeform.com/next/embed.js";
     script.async = true;
     document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
+    return () => { document.body.removeChild(script); };
   }, []);
-
-  // This hook will update the map's center when the selected location changes
-  const MapCenterUpdater = ({ lat, lng }) => {
-    const map = useMap();
-    useEffect(() => {
-      map.setView([lat, lng], map.getZoom());  // Update the center and retain zoom level
-    }, [lat, lng, map]);
-
-    return null;
-  };
 
   return (
     <Box>
@@ -95,24 +69,24 @@ const ContactPage = () => {
         sx={{
           position: 'relative',
           width: '100%',
-          height: 'auto',
+          height: { xs: 150, sm: 220, md: 300 },
           overflow: 'hidden',
-          borderRadius: '8px',
-          marginTop: 20
+          borderRadius: 2,
+          mt: { xs: 12, sm: 8, md: 15 },
+          mb: { xs: 3, sm: 5, md: 7 },
         }}
       >
         <img
           src={ContactImage}
+          alt="Contact"
           style={{
-            borderRadius: '10px',
-            width: '70%',  // Adjust the width as needed
-            height: 250, // Maintain aspect ratio
-            objectFit: 'cover', // Ensure the image covers the area without stretching
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            display: 'block',  // Ensures the image is centered
-            filter: 'blur(1px)', // Apply blur effect (adjust the value as needed)
-            opacity: 0.8, // Make the image slightly transparent
+            borderRadius: 12,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block',
+            filter: 'blur(1px)',
+            opacity: 0.8,
           }}
         />
         <Box
@@ -124,91 +98,112 @@ const ContactPage = () => {
             textAlign: 'center',
             color: 'white',
             zIndex: 10,
-            width: '100%', // Ensure text container covers the full width
+            width: '100%',
+            px: { xs: 2, sm: 0 },
           }}
         >
           <Typography
-            variant="h4"
-            sx={{ fontWeight: 'bold' }}
+            variant="h5"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: { xs: 18, sm: 26, md: 32 },
+              letterSpacing: 1,
+            }}
           >
-            Get in Touch
+            {rtl ? 'تواصل معنا' : 'Get in Touch'}
           </Typography>
           <Typography
-            variant="body1"
-            sx={{ marginTop: 2 }}
+            variant="body2"
+            sx={{ mt: 1, fontSize: { xs: 12, sm: 16 } }}
           >
-            Start the conversation to establish good relationship and business.
+            {rtl
+              ? "ابدأ المحادثة لبناء علاقة وعمل جيد."
+              : "Start the conversation to establish good relationship and business."
+            }
           </Typography>
         </Box>
       </Box>
 
-      <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', marginTop: 10 }}>
-        <Grid container spacing={4}>
+      <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', mb: 4 }}>
+        <Grid container spacing={{ xs: 2, md: 4 }}>
           {/* Contact Info Section */}
           <Grid item xs={12} md={6}>
             <Box sx={{
               backgroundColor: '#f4f4f6',
               borderRadius: 2,
-              p: 4,
+              p: { xs: 2, sm: 4 },
               textAlign: rtl ? 'right' : 'left',
+              height: '100%',
+              minHeight: 220,
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
             }}>
-              <Typography variant="subtitle2" color="green" gutterBottom>
+              <Typography variant="subtitle2" color="green" gutterBottom sx={{ fontSize: { xs: 14, sm: 16 } }}>
                 {rtl ? 'تواصل معنا' : 'GET IN TOUCH'}
               </Typography>
-              <Typography variant="h4" fontWeight="bold" gutterBottom>
+              <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: 20, sm: 27 } }}>
                 {rtl ? 'اتصال سلس،' : 'Seamless Communication,'}
               </Typography>
-              <Typography variant="h4" fontWeight="bold" gutterBottom>
+              <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: 20, sm: 27 } }}>
                 {rtl ? 'أثر عالمي.' : 'Global Impact.'}
               </Typography>
 
-              <Box mt={4}>
-                <Box display="flex" alignItems="center" mb={3}>
-                  <Box
-                    sx={{ backgroundColor: '#6bc065', p: 2, borderRadius: '50%', mr: 2, ml: 2 }}
-                  >
-                    <span role="img" aria-label="office">📍</span>
+              <Box mt={3}>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <Box sx={{
+                    backgroundColor: '#6bc065',
+                    p: { xs: 1.2, sm: 2 },
+                    borderRadius: '50%',
+                    mr: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <span role="img" aria-label="office" style={{ fontSize: 20 }}>📍</span>
                   </Box>
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
                       {rtl ? 'مكتبي' : 'My Office'}
                     </Typography>
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
                       New Industrial workshop area near Ramez hypermarket 211 Salalah
                     </Typography>
                   </Box>
                 </Box>
-
-                <Box display="flex" alignItems="center" mb={3}>
-                  <Box
-                    sx={{ backgroundColor: '#6bc065', p: 2, borderRadius: '50%', mr: 2, ml: 2 }}
-                  >
-                    <span role="img" aria-label="email">📧</span>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <Box sx={{
+                    backgroundColor: '#6bc065',
+                    p: { xs: 1.2, sm: 2 },
+                    borderRadius: '50%',
+                    mr: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <span role="img" aria-label="email" style={{ fontSize: 20 }}>📧</span>
                   </Box>
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
                       {rtl ? 'دعم البريد الإلكتروني' : 'My Email Support'}
                     </Typography>
                     <Box sx={{ cursor: 'pointer' }} onClick={() => window.open(`mailto:${process.env.REACT_APP_EMAIL_ADDRESS}`, '_blank')}>
-                      <Typography variant="body2">{process.env.REACT_APP_EMAIL_ADDRESS}</Typography>
+                      <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
+                        {process.env.REACT_APP_EMAIL_ADDRESS}
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>
-
                 <Box display="flex" alignItems="center">
-                  <Box
-                    sx={{ backgroundColor: '#6bc065', p: 2, borderRadius: '50%', mr: 2, ml: 2 }}
-                  >
-                    <span role="img" aria-label="phone">📞</span>
+                  <Box sx={{
+                    backgroundColor: '#6bc065',
+                    p: { xs: 1.2, sm: 2 },
+                    borderRadius: '50%',
+                    mr: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <span role="img" aria-label="phone" style={{ fontSize: 20 }}>📞</span>
                   </Box>
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
                       {rtl ? 'لنأتحدث' : 'Let Me Talk'}
                     </Typography>
-                    <Typography variant="body2">{process.env.REACT_APP_WHATSAPP_NUMBER}</Typography>
+                    <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
+                      {process.env.REACT_APP_WHATSAPP_NUMBER}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
@@ -219,10 +214,13 @@ const ContactPage = () => {
           <Grid item xs={12} md={6}>
             <Box sx={{
               borderRadius: 2,
+              height: '100%',
+              p: { xs: 2, sm: 4 },
               textAlign: rtl ? 'right' : 'left',
+              minHeight: 220,
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
             }}>
               <div data-tf-live="01JXPNAP0ZKP3BM07AW0MFZHAH"></div>
             </Box>
@@ -230,15 +228,14 @@ const ContactPage = () => {
 
           {/* Location Selector */}
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
-              <Typography sx={{
-                fontSize: '12px ',
-                fontWeight: '700',
-                paddingBottom: '3px',
-                width: '50%',
-                marginTop: 5,
-                textAlign: rtl ? 'right' : 'left'
-              }}>
+            <FormControl fullWidth sx={{ mt: { xs: 2, md: 4 } }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: 13, md: 15 },
+                  fontWeight: 700,
+                  pb: 1,
+                  textAlign: rtl ? 'right' : 'left'
+                }}>
                 {rtl ? 'حدد موقع المتجر' : 'Select a Shop Location'}
               </Typography>
               <Select value={selectedLocation.id} onChange={handleLocationChange}>
@@ -253,11 +250,11 @@ const ContactPage = () => {
 
           {/* Map Section */}
           <Grid item xs={12}>
-            <Box mt={2} mb={4} sx={{ height: { xs: '300px', sm: '400px' }, width: '100%' }}>
+            <Box mt={2} mb={4} sx={{ height: { xs: 230, sm: 320, md: 400 }, width: '100%' }}>
               <MapContainer
                 center={[selectedLocation.lat, selectedLocation.lng]}
                 zoom={15}
-                style={{ height: '100%', width: '100%', borderRadius: '8px' }}
+                style={{ height: '100%', width: '100%', borderRadius: 8 }}
               >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <Marker icon={customIcon} position={[selectedLocation.lat, selectedLocation.lng]}>

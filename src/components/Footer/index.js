@@ -4,7 +4,6 @@ import { GetLanguage } from "@redux-state/selectors";
 import { Facebook, Instagram, KeyboardArrowUp } from "@mui/icons-material";
 
 const Footer = () => {
-
   const language = GetLanguage();
   const rtl = language === 'ar';
 
@@ -17,77 +16,78 @@ const Footer = () => {
       sx={{
         backgroundColor: "#333",
         color: "#fff",
-        padding: "40px 40px 20px 20px",
+        pt: { xs: 4, sm: 5 },
+        pb: { xs: 2, sm: 4 },
+        px: { xs: 2, sm: 6, md: 10 },
         direction: rtl ? "rtl" : "ltr"
       }}
     >
-      {/* <Grid container spacing={4} sx={{ flexWrap: "wrap", overflowX: "hidden", flexDirection: rtl ? "row-reverse" : "row" }}> */}
-      <Grid container spacing={4} sx={{ flexDirection: rtl ? "row-reverse" : "row", maxWidth: "100%" }}>
-
+      <Grid
+        container
+        spacing={{ xs: 2, sm: 3, md: 4 }}
+        sx={{
+          flexDirection: rtl ? "row-reverse" : "row",
+          maxWidth: "100%",
+        }}
+      >
         {/* About Section */}
-        <Grid item xs={3} sm={3} lg={3} md={3}>
-          <Typography variant="body2" fontWeight={510} gutterBottom>
+        <Grid item xs={12} sm={6} md={3}>
+          <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
             {rtl ? "عن HM AWANI" : "ABOUT HM AWANI"}
           </Typography>
-          <Box>
-          <Typography variant="caption" gutterBottom>
-            {rtl ? "تأسست شركة حسين مقيبل أواني في عام 1984 وهي متخصصة في توفير مستلزمات المطبخ والديكور المنزلي الفاخرة. وبفضل شغفنا بالجودة والتصميم، فإننا نصنع منتجات تعزز جمال ووظائف مساحة المعيشة الخاصة بك." : "Hussain Muqaibal Awani, founded in 1984, is dedicated to providing premium kitchen essentials and home decor. With a passion for quality and design, we create products that enhance the beauty and functionality of your living space."}
+          <Typography variant="caption" sx={{ fontSize: { xs: 12, sm: 13 } }}>
+            {rtl
+              ? "تأسست شركة حسين مقيبل أواني في عام 1984 وهي متخصصة في توفير مستلزمات المطبخ والديكور المنزلي الفاخرة. وبفضل شغفنا بالجودة والتصميم، فإننا نصنع منتجات تعزز جمال ووظائف مساحة المعيشة الخاصة بك."
+              : "Hussain Muqaibal Awani, founded in 1984, is dedicated to providing premium kitchen essentials and home decor. With a passion for quality and design, we create products that enhance the beauty and functionality of your living space."
+            }
           </Typography>
-          </Box>
         </Grid>
 
         {/* Policies Section */}
-        <Grid item xs={3} sm={3} lg={3} md={3}>
-          <Typography variant="body2" fontWeight={510} gutterBottom>
+        <Grid item xs={12} sm={6} md={3}>
+          <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
             {rtl ? "سياساتنا" : "OUR POLICIES"}
           </Typography>
           <Box>
-            <Link href="/return-policy" fontSize={12} color="inherit" underline="hover">
+            <Link href="/return-policy" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
               {rtl ? "سياسة الإرجاع" : "Return Policy"}
             </Link>
-            <br />
-            <Link href="/terms" fontSize={12} color="inherit" underline="hover">
+            <Link href="/terms" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
               {rtl ? "الشروط والأحكام" : "Terms & Conditions"}
             </Link>
-            <br />
-            <Link href="/privacy-policy" fontSize={12} color="inherit" underline="hover">
+            <Link href="/privacy-policy" fontSize={13} color="inherit" underline="hover" sx={{ display: "block" }}>
               {rtl ? "سياسة الخصوصية" : "Privacy Policy"}
             </Link>
-            <br />
           </Box>
         </Grid>
 
         {/* Information Section */}
-        <Grid item xs={3} sm={3} lg={3} md={3}>
-          <Typography variant="body2" fontWeight={510} gutterBottom>
+        <Grid item xs={12} sm={6} md={3}>
+          <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
             {rtl ? "المعلومات" : "INFORMATION"}
           </Typography>
           <Box>
-          <Link href="/about-us" fontSize={12} color="inherit" underline="hover">
+            <Link href="/about-us" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
               {rtl ? "معلومات عنا" : "About Us"}
             </Link>
-            <br />
-            <Link href="/contact-us" fontSize={12} color="inherit" underline="hover">
+            <Link href="/contact-us" fontSize={13} color="inherit" underline="hover" sx={{ display: "block" }}>
               {rtl ? "اتصل بنا" : "Contact Us"}
             </Link>
-            <br />
           </Box>
         </Grid>
 
         {/* Need Help Section */}
-        <Grid item xs={3} sm={3} lg={3} md={3}>
-          <Typography variant="body2" fontWeight={510} gutterBottom>
+        <Grid item xs={12} sm={6} md={3}>
+          <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
             {rtl ? "تحتاج إلى مساعدة؟" : "NEED HELP?"}
           </Typography>
           <Box>
-            <Link href="/orders" fontSize={12} color="inherit" underline="hover">
+            <Link href="/orders" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
               {rtl ? "تتبع طلبك" : "Track Your Order"}
             </Link>
-            <br />
-            <Link href="/contact-us" fontSize={12} color="inherit" underline="hover">
+            <Link href="/contact-us" fontSize={13} color="inherit" underline="hover" sx={{ display: "block" }}>
               {rtl ? "طلب الخدمة عبر الإنترنت" : "Online Service Request"}
             </Link>
-            <br />
           </Box>
         </Grid>
       </Grid>
@@ -98,8 +98,8 @@ const Footer = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "16px",
-          mt: 4,
+          gap: { xs: 2, sm: 3 },
+          mt: { xs: 3, sm: 4 },
         }}
       >
         <IconButton
@@ -107,20 +107,24 @@ const Footer = () => {
             border: "1px solid #fff",
             color: "#fff",
             "&:hover": { backgroundColor: "#444" },
+            fontSize: 22
           }}
           onClick={() => window.open(process.env.REACT_APP_HM_FACEBOOK_URL)}
+          size="large"
         >
-          <Facebook />
+          <Facebook fontSize="inherit" />
         </IconButton>
         <IconButton
           sx={{
             border: "1px solid #fff",
             color: "#fff",
             "&:hover": { backgroundColor: "#444" },
+            fontSize: 22
           }}
           onClick={() => window.open(process.env.REACT_APP_HM_INSTAGRAM_URL)}
+          size="large"
         >
-          <Instagram />
+          <Instagram fontSize="inherit" />
         </IconButton>
       </Box>
 
@@ -128,7 +132,7 @@ const Footer = () => {
       <Box
         sx={{
           position: "fixed",
-          bottom: "10px",
+          bottom: "12px",
           [rtl ? "right" : "left"]: "16px",
           zIndex: 1000,
         }}
@@ -147,9 +151,18 @@ const Footer = () => {
         </IconButton>
       </Box>
 
-      <Box sx={{ borderTop: "1px solid #444", mt: 4, pt: 2, textAlign: "center" }}>
-        <Typography variant="body2">
-          {rtl ? "© 2025 HM AWANI Pvt. Ltd جميع الحقوق محفوظة" : "© 2025 HM AWANI Pvt. Ltd"}
+      {/* Copyright */}
+      <Box sx={{
+        borderTop: "1px solid #444",
+        mt: { xs: 3, sm: 4 },
+        pt: 2,
+        textAlign: "center"
+      }}>
+        <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 13 } }}>
+          {rtl
+            ? "© 2025 HM AWANI Pvt. Ltd جميع الحقوق محفوظة"
+            : "© 2025 HM AWANI Pvt. Ltd"
+          }
         </Typography>
       </Box>
     </Box>

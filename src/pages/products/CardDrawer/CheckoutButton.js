@@ -21,6 +21,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
         width: '100%',
         position: 'absolute',
         bottom: 0,
+        ml: { xs: '25%', md: 0 },
         background: colorPalette.white
       }}
     >
@@ -34,7 +35,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          width: '90%',
+          width: {xs:'70%' , md:'90%'},
           marginBottom: 2,
           borderRadius: '50px', // Rounded corners
           backgroundColor: colorPalette.theme, // Green color
@@ -70,7 +71,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
             fontWeight: 'bold',
           }}
         >
-          {isRTL ? cartDetails.totalPrice.toFixed(3) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(3)}
+          {isRTL ? parseFloat(cartDetails?.totalPrice?.toFixed(3)) + " ر۔ع" : 'OMR ' + parseFloat(cartDetails?.totalPrice?.toFixed(3))}
 
         </Box>
       </Button>

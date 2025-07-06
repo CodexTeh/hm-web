@@ -289,8 +289,33 @@ const OrderList = () => {
   }
 
   const renderStepper = () => (
-    <Box sx={{ mb: 4 }}>
-      <Stepper activeStep={statusMapper[currentOrder?.status]} alternativeLabel sx={{ direction: 'ltr' }}>
+    <Box
+      sx={{
+        mb: { xs: 2, sm: 4 },
+        width: '90%',
+        overflowX: { xs: 'auto', sm: 'visible' },
+        px: { xs: 1, sm: 0 }, // add padding for scrollable stepper
+      }}
+    >
+      <Stepper
+        activeStep={statusMapper[currentOrder?.status]}
+        alternativeLabel
+        sx={{
+          direction: 'ltr',
+          minWidth: { xs: 400, sm: 'unset' }, // ensures stepper is scrollable on xs
+          '.MuiStepLabel-label': {
+            fontSize: { xs: 11, sm: 14 },
+            whiteSpace: 'nowrap'
+          },
+          '.MuiStepIcon-root': {
+            fontSize: { xs: 20, sm: 24 }
+          },
+          '.MuiStepConnector-line': {
+            minHeight: { xs: 16, sm: 24 },
+            borderTopWidth: { xs: 2, sm: 3 },
+          },
+        }}
+      >
         {currentOrder?.status === 'cancel' ?
           <CancelledStep />
           :
@@ -302,6 +327,7 @@ const OrderList = () => {
       </Stepper>
     </Box>
   );
+
 
   const renderInfoCards = () => (
     <Grid container spacing={3} sx={{ mb: 4, padding: isMobile ? 2 : 3 }} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -369,6 +395,7 @@ const OrderList = () => {
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 5,
+        mt: { xs: 6, md: 0 },
         justifyContent: 'space-between',
         alignItems: 'flex-end',
       }}>

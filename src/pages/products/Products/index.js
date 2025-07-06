@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import TuneIcon from '@mui/icons-material/Tune'
 import { Box, MenuItem, OutlinedInput, Select, styled, TextField, Typography } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetCategories, GetProductCatalogs } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
@@ -103,7 +104,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
       const handleChange = (e) => {
         let inputValue = e.target.value;
 
-        
+
 
         // If the type is number, ensure it's not negative
         if (type === 'number') {
@@ -224,7 +225,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: { xs: 'column', md: 'row' },
           cursor: 'pointer',
           transition: 'margin 0.3s ease',
           direction: isRTL ? 'rtl' : 'ltr',
@@ -232,35 +233,83 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
       >
 
         <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: 2 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography marginRight={2} variant="h6" fontWeight={600} >
-              {isRTL ? 'التصفية حسب:' : 'Filter by:'}
-            </Typography>
-            <Typography marginRight={1} marginLeft={2} variant="body2" >
-              {isRTL ? 'ماركة:' : 'Brand:'}
-            </Typography>
-            <InputBrandsSelectField />
-            <Typography marginRight={1} marginLeft={2} variant="body2" >
-              {isRTL ? 'نطاق السعر:' : 'Price Range:'}
-            </Typography>
-            <InputTextField
-              label={isRTL ? 'من' : 'From'}
-              type='number'
-              value={from}
-              setValue={setFrom}
-            />
-            <InputTextField
-              label={isRTL ? 'ل' : 'To'}
-              type='number'
-              value={to}
-              setValue={setTo}
-            />
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: 2 }}>
+          {/* FILTER BAR */}
+          <Box
+            sx={{
+              bgcolor: "#fff",
+              borderRadius: 3,
+              boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+              mx: 'auto',
+              mt: 2,
+              mb: 2,
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: { xs: 1, md: 5 },
+              alignItems: { xs: 'stretch', md: 'flex-start' },
+              width: { xs: '98vw', sm: '95vw', md: 'auto' },
+            }}
+          >
+            {/* Title with Icon */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, md: 0 }, m: { xs: 2, md: 4 } }}>
+              <TuneIcon color="primary" sx={{ mr: 1 }} />
+              <Typography
+                variant="h6"
+                fontWeight={700}
+                color="primary.dark"
+                sx={{ letterSpacing: 0.5, fontSize: { xs: 18, sm: 22 } }}
+              >
+                {isRTL ? 'التصفية حسب' : 'Filter by'}
+              </Typography>
+            </Box>
+
+            {/* Brand Field */}
+            <Box sx={{ width: { md: 150 }, ml: { xs: 2, md: 4 } }}>
+              <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 500 }}>
+                {isRTL ? 'ماركة' : 'Brand'}
+              </Typography>
+              <InputBrandsSelectField />
+            </Box>
+
+            {/* Price Range */}
+            <Box sx={{ width: { md: 190 }, ml: 2, mb: 2 }}>
+              <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 500 }}>
+                {isRTL ? 'نطاق السعر' : 'Price Range'}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1, flexDirection: { xs: 'column', sm: 'row' } }}>
+                <InputTextField
+                  label={isRTL ? 'من' : 'From'}
+                  type='number'
+                  value={from}
+                  setValue={setFrom}
+                  sx={{ width: { sm: 80 } }}
+                />
+                <InputTextField
+                  label={isRTL ? 'ل' : 'To'}
+                  type='number'
+                  value={to}
+                  setValue={setTo}
+                  sx={{ width: { sm: 80 } }}
+                />
+              </Box>
+            </Box>
           </Box>
-          <ProductsView filter={filter} products={products} hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+
+
+          {/* PRODUCTS LIST */}
+          <ProductsView
+            filter={filter}
+            products={products}
+            hasMoreItems={hasMoreItems}
+            loadProducts={loadProducts}
+            isFetching={isFetching}
+            isRTL={isRTL}
+            open={open}
+            handleOpen={handleOpen}
+            setOpen={setOpen}
+          />
         </Box>
       </Box>
-
     </Box>
   );
 };

@@ -10,10 +10,11 @@ import {
   Grid,
   Divider,
   Tooltip,
-  CircularProgress
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
@@ -30,6 +31,9 @@ import { GetWishlistLoading } from '@redux-state/common/selectors';
 import { CustomCarousel } from '../CustomCarousal';
 
 export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls, finalPrice, hasDiscount }) => {
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -52,7 +56,6 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
   const user = GetUser();
 
   const handleIncrease = (product, finalPrice) => {
-    // Find the existing product in the cart
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);
 
     if (existingProductIndex !== -1) {
@@ -74,8 +77,6 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
       });
 
       const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
-
-      // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     } else {
       const updatedItems = [
@@ -84,8 +85,6 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
       ];
 
       const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
-
-      // Update the state (or dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
   };
@@ -107,10 +106,9 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
           };
         }
         return item;
-      }).filter(item => item !== null); // Filter out the null values (removed items)
+      }).filter(item => item !== null);
 
       const newTotalPrice = updatedItems.reduce((sum, item) => sum + Number(item.totalPrice), 0);
-
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));
     }
   };
@@ -127,13 +125,9 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     const handleScroll = () => {
       const element = loopRef.current;
       if (!element) return;
-
-      const isBottomReached =
-        element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
-
-
+      const isBottomReached = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
       if (isBottomReached) {
-        setRowsPerPage((prevRows) => prevRows + 10); // Load more items
+        setRowsPerPage((prevRows) => prevRows + 10);
       }
     };
 
@@ -141,7 +135,6 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     if (element) {
       element.addEventListener('scroll', handleScroll);
     }
-
     return () => {
       if (element) {
         element.removeEventListener('scroll', handleScroll);
@@ -171,11 +164,9 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
       if (!acc[language]) {
         acc[language] = {};
       }
-
       if (!acc[language][type]) {
         acc[language][type] = [];
       }
-
       acc[language][type].push(item);
       return acc;
     }, {});
@@ -222,10 +213,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
   const handleImageChange = (index) => {
     setSelectedIndex(index);
   };
-  const gallery = [
-    emptyProductImage
-  ]
-
+  const gallery = [emptyProductImage];
   const images = imageUrls?.length > 0 ? imageUrls : gallery;
 
   const loadProducts = () => {
@@ -238,14 +226,10 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     setWishListItem(isWishlistProduct);
   }
 
-
   useEffect(() => {
     checkWishlistProduct();
+    // eslint-disable-next-line
   }, [wishListLoading]);
-
-
-  useEffect(() => {
-  }, [])
 
   const wishlistTooltipText = () => {
     if (isRTL) {
@@ -258,55 +242,56 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     dispatch(addRemoveToWishlist({ productId: product.id, userId: user.id, type: wishListItem ? 'remove' : 'add' }));
   }
 
-
   return (
     <Dialog
       open={open}
       onClose={() => setOpen(null)}
       maxWidth="lg"
       fullWidth
+      fullScreen={isMobile}
       PaperProps={{
-        style: { borderRadius: 10, padding: 20 },
+        sx: {
+          borderRadius: isMobile ? 0 : 3,
+          p: { xs: 1, sm: 2, md: 3 },
+          width: '100%',
+        }
       }}
     >
-      <DialogActions>
+      <DialogActions sx={{ p: { xs: 1, sm: 2 }, pb: 0 }}>
         <IconButton
           onClick={() => setOpen(null)}
           sx={{
             position: 'absolute',
             right: 8,
             top: 8,
+            zIndex: 100,
+            bgcolor: "#fff",
+            boxShadow: 1,
+            '&:hover': { bgcolor: colorPalette.lightShadow }
           }}
         >
           <CloseIcon />
         </IconButton>
       </DialogActions>
-      <DialogContent ref={loopRef} sx={{
-        overflowY: 'auto', // Ensure the scrollbar appears when needed
-        '&::-webkit-scrollbar': {
-          width: '8px', // Customize scrollbar width
-        },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: colorPalette.theme,
-          borderRadius: '8px',
-          border: '2px solid #fff',
-        },
-        '&::-webkit-scrollbar-thumb:hover': {
-          backgroundColor: colorPalette.theme,
-        },
-        '&::-webkit-scrollbar-track': {
-          backgroundColor: '#f1f1f1',
-        },
-      }}>
+      <DialogContent
+        ref={loopRef}
+        sx={{
+          overflowY: 'auto',
+          p: { xs: 1, sm: 3 },
+        }}
+      >
         <Grid container spacing={2}>
           {/* Left Section: Carousel */}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{ mb: { xs: 2, md: 0 } }}>
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                width: '100%',
+                maxWidth: { xs: '100%', md: 400 },
+                mx: 'auto',
               }}
             >
               <CustomCarousel selectedIndex={selectedIndex} handleImageChange={handleImageChange} images={images} isRTL={isRTL} />
@@ -315,7 +300,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
 
           {/* Right Section: Details */}
           <Grid item xs={12} md={6}>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, sm: 0 } }}>
               <Typography variant="h5" sx={{
                 display: '-webkit-box',
                 overflow: 'hidden',
@@ -324,6 +309,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 WebkitLineClamp: 3,
                 WebkitBoxOrient: 'vertical',
                 fontWeight: 'bold',
+                fontSize: { xs: 19, sm: 24 },
                 marginBottom: 1,
                 direction: isRTL ? 'rtl' : 'ltr',
                 textAlign: isRTL ? 'right' : 'left',
@@ -335,60 +321,55 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                   onClick={addRemoveInWishlist}
                   sx={{
                     color: colorPalette.theme,
-                    padding: 1, // Add some padding for better spacing
-                    border: `1px solid ${wishListItem ? colorPalette.theme : colorPalette.lightGrey}`, // Border color same as theme
-                    borderRadius: '50%', // Makes it fully rounded
-                    width: 40, // Fixed width
-                    height: 40, // Fixed height
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    padding: 1,
+                    border: `1px solid ${wishListItem ? colorPalette.theme : colorPalette.lightGrey}`,
+                    borderRadius: '50%',
+                    width: 40,
+                    height: 40,
                   }}
                 >
                   {wishListLoading ? <CircularProgress size={20} /> : wishListItem ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
                 </IconButton>
               </Tooltip>}
             </Box>
-            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
-              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? "مقاس: " : "Size: "}{isRTL ? size?.ar_title : size?.title}
-            </Typography>
-            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
-              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? "ماركة: " : "Brand: "}{isRTL ? brand?.ar_title : brand?.title}
-            </Typography>
-            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
-              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? "وحدة: " : "Unit: "}{isRTL ? unit?.ar_title : unit?.title}
-            </Typography>
-            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
-              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? "لون: " : "Color: "}{isRTL ? color?.ar_title : color?.title}
-            </Typography>
-            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
-              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? "رمز العنصر: " : "Material: "}{isRTL ? material?.ar_title : material?.title}
-            </Typography>
-            <Typography variant="body2" marginTop={2} color="textSecondary" sx={{
-              marginBottom: 1, direction: isRTL ? 'rtl' : 'ltr',
-              textAlign: isRTL ? 'right' : 'left',
-            }}>
-              {isRTL ? "الباركود: " : "Item Code: "}{product?.barcode}
-            </Typography>
+            {/* Product Attributes */}
+            {[{
+              label: isRTL ? "مقاس: " : "Size: ", value: isRTL ? size?.ar_title : size?.title
+            }, {
+              label: isRTL ? "ماركة: " : "Brand: ", value: isRTL ? brand?.ar_title : brand?.title
+            }, {
+              label: isRTL ? "وحدة: " : "Unit: ", value: isRTL ? unit?.ar_title : unit?.title
+            }, {
+              label: isRTL ? "لون: " : "Color: ", value: isRTL ? color?.ar_title : color?.title
+            }, {
+              label: isRTL ? "رمز العنصر: " : "Material: ", value: isRTL ? material?.ar_title : material?.title
+            }, {
+              label: isRTL ? "الباركود: " : "Item Code: ", value: product?.barcode
+            }].map((attr, idx) =>
+              <Typography
+                key={idx}
+                variant="body2"
+                mt={2}
+                color="textSecondary"
+                sx={{
+                  mb: 1, direction: isRTL ? 'rtl' : 'ltr',
+                  textAlign: isRTL ? 'right' : 'left',
+                  fontSize: { xs: 13, sm: 15 }
+                }}>
+                {attr.label}{attr.value}
+              </Typography>
+            )}
 
+            {/* Price */}
             <Typography
               variant="h4"
-              sx={{ fontWeight: 'bold', marginTop: 2, color: colorPalette.theme, marginBottom: 1 }}
+              sx={{
+                fontWeight: 'bold',
+                mt: 2,
+                color: colorPalette.theme,
+                mb: 1,
+                fontSize: { xs: 22, sm: 28 }
+              }}
             >
               {isRTL ? "ر۔ع  " : "OMR  "}{finalPrice}
               {hasDiscount && <Typography
@@ -397,9 +378,8 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 color='textDisabled'
                 sx={{
                   textDecoration: 'line-through',
-                  marginLeft: 2,
-                  marginRight: 2,
-                  fontSize: '1rem',
+                  mx: 2,
+                  fontSize: { xs: 13, sm: '1rem' },
                   direction: isRTL ? 'rtl' : 'ltr',
                   textAlign: isRTL ? 'right' : 'left',
                 }}
@@ -407,7 +387,15 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 {isRTL ? "ر۔ع" : "OMR"} {product?.price}
               </Typography>}
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 2 }}>
+            {/* Cart/Add controls */}
+            <Box sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'flex-start',
+              alignItems: { xs: 'stretch', sm: 'center' },
+              gap: 1.5,
+              mt: 2
+            }}>
               {qty > 0 && <Button
                 variant="contained"
                 fullWidth
@@ -419,10 +407,11 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 sx={{
                   textTransform: 'capitalize',
                   background: colorPalette.theme,
-                  padding: '12px',
-                  width: '60%',
+                  width: { xs: '100%', sm: '60%' },
+                  fontSize: { xs: 15, sm: 16 },
+                  px: 1.5,
                   display: 'flex',
-                  justifyContent: 'space-between', // Push icons to corners
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                 }}
               >
@@ -431,7 +420,8 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                     e.stopPropagation();
                     handleIncrease(product, finalPrice);
                   }}
-                  sx={{ color: colorPalette.white, padding: 0 }}
+                  sx={{ color: colorPalette.white, p: 0 }}
+                  size="small"
                 >
                   <AddIcon />
                 </IconButton>}
@@ -440,7 +430,8 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                   sx={{
                     color: colorPalette.white,
                     flexGrow: 1,
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    fontWeight: 600,
                   }}
                 >
                   {existingProduct ? existingProduct?.quantity : (isRTL ? "أضف إلى سلة التسوق" : "Add to Shopping Cart")}
@@ -451,80 +442,110 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                     e.stopPropagation();
                     handleDecrease(product, finalPrice);
                   }}
-                  sx={{ color: colorPalette.white, padding: 0 }}
+                  sx={{ color: colorPalette.white, p: 0 }}
+                  size="small"
                 >
                   <RemoveIcon />
                 </IconButton>}
               </Button>}
 
-              <Typography sx={{
-                direction: isRTL ? 'rtl' : 'ltr',
-                textAlign: isRTL ? 'right' : 'left',
-              }} variant="body1" color="textSecondary">
+              <Typography
+                sx={{
+                  direction: isRTL ? 'rtl' : 'ltr',
+                  textAlign: isRTL ? 'right' : 'left',
+                  mt: { xs: 1, sm: 0 },
+                  fontSize: { xs: 13, sm: 14 }
+                }}
+                variant="body1"
+                color="textSecondary"
+              >
                 {qty > 0 ? `${product?.qty_onhand} ${isRTL ? "القطع المتاحة" : "pieces available"}` : `${isRTL ? "إنتهى من المخزن" : "out of stock"}`}
               </Typography>
             </Box>
-
-            <Divider sx={{ marginY: 2 }} />
-            {category && <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 1 }}>
-              <strong dir={isRTL && "rtl"}>{isRTL ? "فئات: " : "Categories:"}</strong>
-              <Button
-                variant="outlined"
-                size='small'
-                sx={{
-                  textTransform: 'lowercase',
-                  color: colorPalette.black,
-                  borderColor: colorPalette.lavenderGray,
-                  marginLeft: 2
-
-                }}
-              >
-                {isRTL ? category?.ar_category : category?.category}
-              </Button>
-              {subCategory && <Button
-                variant="outlined"
-                size='small'
-                sx={{
-                  textTransform: 'lowercase',
-                  color: colorPalette.black,
-                  borderColor: colorPalette.lavenderGray,
-                  marginLeft: 2
-                }}
-              >
-                {isRTL ? subCategory?.ar_subcategory : subCategory?.subcategory}
-              </Button>}
-            </Typography>}
+            <Divider sx={{ my: 2 }} />
+            {/* Category/Subcategory */}
+            {category &&
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                <strong dir={isRTL && "rtl"}>{isRTL ? "فئات: " : "Categories:"}</strong>
+                <Button
+                  variant="outlined"
+                  size='small'
+                  sx={{
+                    textTransform: 'lowercase',
+                    color: colorPalette.black,
+                    borderColor: colorPalette.lavenderGray,
+                    ml: 2
+                  }}
+                >
+                  {isRTL ? category?.ar_category : category?.category}
+                </Button>
+                {subCategory && <Button
+                  variant="outlined"
+                  size='small'
+                  sx={{
+                    textTransform: 'lowercase',
+                    color: colorPalette.black,
+                    borderColor: colorPalette.lavenderGray,
+                    ml: 2
+                  }}
+                >
+                  {isRTL ? subCategory?.ar_subcategory : subCategory?.subcategory}
+                </Button>}
+              </Typography>
+            }
           </Grid>
         </Grid>
-        <Divider sx={{ marginBottom: 10 }} />
-        <Typography sx={{
-          direction: isRTL ? 'rtl' : 'ltr',
-          textAlign: isRTL ? 'right' : 'left',
-        }} variant="h6" marginBottom={1} fontWeight={550}>
+        <Divider sx={{ mb: { xs: 3, sm: 6 } }} />
+        {/* Product Details */}
+        <Typography
+          sx={{
+            direction: isRTL ? 'rtl' : 'ltr',
+            textAlign: isRTL ? 'right' : 'left',
+            fontWeight: 550,
+            mb: 1,
+            fontSize: { xs: 16, sm: 18 }
+          }}
+          variant="h6"
+        >
           {isRTL ? "تفصیلات" : "Details"}
         </Typography>
         <Typography
           variant="body2"
           color="textSecondary"
           dangerouslySetInnerHTML={{
-            __html: isRTL ? product?.arabicDescription : product?.webDescription + ''
+            __html: (isRTL ? product?.arabicDescription : product?.webDescription) + ''
           }}
           sx={{
-            marginBottom: 2, direction: isRTL ? 'rtl' : 'ltr',
+            mb: 2, direction: isRTL ? 'rtl' : 'ltr',
             textAlign: isRTL ? 'right' : 'left',
+            fontSize: { xs: 13, sm: 15 }
           }}
         />
-
-        <Divider sx={{ marginBottom: 10 }} />
-
-        <Typography sx={{
-          direction: isRTL ? 'rtl' : 'ltr',
-          textAlign: isRTL ? 'right' : 'left',
-        }} variant="h6" marginBottom={5} fontWeight={550}>
+        <Divider sx={{ mb: { xs: 3, sm: 6 } }} />
+        {/* Related Products */}
+        <Typography
+          sx={{
+            direction: isRTL ? 'rtl' : 'ltr',
+            textAlign: isRTL ? 'right' : 'left',
+            fontWeight: 550,
+            mb: { xs: 2, sm: 5 },
+            fontSize: { xs: 16, sm: 18 }
+          }}
+          variant="h6"
+        >
           {isRTL ? "المنتجات ذات الصلة" : "Related Products"}
         </Typography>
 
-        <ProductsView hasMoreItems={hasMoreItems} loadProducts={loadProducts} isFetching={isFetching} products={products} isRTL={isRTL} open={open} handleOpen={handleOpen} setOpen={setOpen} />
+        <ProductsView
+          hasMoreItems={hasMoreItems}
+          loadProducts={loadProducts}
+          isFetching={isFetching}
+          products={products}
+          isRTL={isRTL}
+          open={open}
+          handleOpen={handleOpen}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );

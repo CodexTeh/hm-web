@@ -66,7 +66,7 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
             sx={{ color: colorPalette.theme }}
             variant="body2"
           >
-            {language === 'ar' ? cartDetails?.totalPrice?.toFixed(3) + " ر۔ع" : 'OMR ' + cartDetails?.totalPrice?.toFixed(3)}
+            {language === 'ar' ? cartDetails?.totalPrice + " ر۔ع" : 'OMR ' + cartDetails?.totalPrice}
           </Typography>
         </Box>
       </StyledCartContainer>
