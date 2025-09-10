@@ -1,12 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Box, OutlinedInput } from '@mui/material';
+import { Box, OutlinedInput, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { colorPalette } from '@utils/colorPalette';
 import { GetLanguage } from '@redux-state/common/selectors';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from 'react-redux';
 import { getProducts } from '@redux-state/common/action';
-
 
 const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
   const language = GetLanguage();
@@ -26,7 +25,6 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
     [rowsPerPage]
   );
 
-
   // Dynamic placeholder translation
   const placeholderText = isRTL
     ? 'ابحث عن منتجاتك من هنا' // Arabic translation for "Search your products from here"
@@ -40,10 +38,10 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
     <Box
       sx={{
         display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },   // Stack on mobile, row on desktop
+        flexDirection: { xs: 'column', sm: 'row' },
         alignItems: { xs: 'stretch', sm: 'center' },
         justifyContent: 'center',
-        width: { xs: '98vw', sm: '80vw', md: '60%' }, // Full width on mobile, narrower on desktop
+        width: { xs: '98vw', sm: '80vw', md: '60%' },
         maxWidth: 500,
         mx: 'auto',
         m: { xs: 5, sm: 0 },
@@ -54,38 +52,50 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
         zIndex: 1200
       }}
     >
-      <OutlinedInput
-        sx={{
-          borderRadius: '5px',
-          fontSize: 13,
-          borderColor: colorPalette.theme,
-          background: colorPalette.lightShadow,
-          direction: isRTL ? 'rtl' : 'ltr',
-          width: '100%',
-          minWidth: 0,
-          '& fieldset': {
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevent the default form submission behavior
+          searchProducts();
+        }}
+        style={{ width: '100%' }}
+      >
+        <OutlinedInput
+          sx={{
+            borderRadius: '5px',
+            fontSize: 13,
             borderColor: colorPalette.theme,
-          },
-          py: { xs: 1, sm: 0 },
-          fontWeight: 400,
-        }}
-        fullWidth
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') searchProducts();
-        }}
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        placeholder={placeholderText}
-        startAdornment={
-          <SearchIcon
-            style={{
-              color: colorPalette.grey,
-              paddingLeft: isRTL ? 0 : 16,
-              paddingRight: isRTL ? 16 : 0,
-            }}
-          />
-        }
-      />
+            background: colorPalette.lightShadow,
+            direction: isRTL ? 'rtl' : 'ltr',
+            width: '100%',
+            minWidth: 0,
+            '& fieldset': {
+              borderColor: colorPalette.theme,
+            },
+            py: { xs: 1, sm: 0 },
+            fontWeight: 400,
+          }}
+          fullWidth
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder={placeholderText}
+          startAdornment={
+            <SearchIcon
+              style={{
+                color: colorPalette.grey,
+                paddingLeft: isRTL ? 0 : 16,
+                paddingRight: isRTL ? 16 : 0,
+              }}
+            />
+          }
+        />
+        <Button
+          type="submit"
+          sx={{
+            display: 'none', // Hide the submit button (optional)
+          }}
+        />
+      </form>
+
       <Box
         sx={{
           display: 'flex',
@@ -120,7 +130,6 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
         />
       </Box>
     </Box>
-
   );
 };
 

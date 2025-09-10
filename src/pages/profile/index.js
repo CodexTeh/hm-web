@@ -54,7 +54,7 @@ const UserProfile = () => {
       {profile ?
         <>
           <Container sx={{
-            marginTop: { xs: 8, sm: 12, md: 20 },
+            marginTop: { xs: 20, sm: 20, md: 20 },
             direction: isRTL ? 'rtl' : 'ltr'
           }}>
             {profileLoading && <LinearProgress value={10} />}

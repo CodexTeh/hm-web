@@ -123,60 +123,160 @@ const Cart = ({ isRTL, cartDetails }) => {
     const finalPrice = hasDiscount ? getDiscountedPrice() : item?.price;
 
     return (
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: { xs: 'column', md: 'row' },
-        justifyContent: 'space-between',
-        width: '100%',
-        ml: { xs: '25%', md: 0 },
-        mr: { xs: '25%', md: 0 },
-      }}>
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center'}}>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            border: `1px solid ${colorPalette.lightGrey}`,
-            borderRadius: 10,
-            background: colorPalette.lightGrey,
-            marginRight: { xs: 0, md: 4 },
-            height: 110,
-          }}>
-            <IconButton onClick={() => handleIncrease(item, finalPrice)}>
-              <AddIcon sx={{ width: 17, height: 17, color: colorPalette.black }} />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: { xs: "row", md: "row" }, // Keep row layout on mobile for better space usage
+          justifyContent: "space-between",
+          width: "100%",
+          padding: { xs: 1, md: 2 }, // Add padding instead of margins
+          gap: { xs: 1, md: 2 }, // Use gap for consistent spacing
+        }}
+      >
+        {/* Left section: Quantity selector and product info */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 1, md: 2 },
+            flex: 1,
+          }}
+        >
+          {/* Quantity selector */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              border: `1px solid ${colorPalette.lightGrey}`,
+              borderRadius: 10,
+              background: colorPalette.lightGrey,
+              height: 110,
+            }}
+          >
+            <IconButton
+              onClick={() => handleIncrease(item, finalPrice)}
+              size="small"
+              sx={{ padding: { xs: 0.5, md: 1 } }} // Smaller padding on mobile
+            >
+              <AddIcon sx={{ width: { xs: 14, md: 17 }, height: { xs: 14, md: 17 } }} />
             </IconButton>
-            <Typography variant="body1">{item.quantity}</Typography>
-            <IconButton onClick={() => handleDecrease(item, finalPrice)}>
-              <RemoveIcon sx={{ width: 17, height: 17, color: colorPalette.black }} />
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: { xs: "0.875rem", md: "1rem" },
+                fontWeight: 500,
+                my: 0.5,
+              }}
+            >
+              {item.quantity}
+            </Typography>
+            <IconButton
+              onClick={() => handleDecrease(item, finalPrice)}
+              size="small"
+              sx={{ padding: { xs: 0.5, md: 1 } }}
+            >
+              <RemoveIcon sx={{ width: { xs: 14, md: 17 }, height: { xs: 14, md: 17 } }} />
             </IconButton>
           </Box>
-          {image &&
-            <Box sx={{ marginLeft: { xs: 0, md: 4 }, marginTop: { xs: 4, md: 0 }, marginRight: { xs: 0, md: 2 } }}>
+
+          {/* Product image */}
+          {image && (
+            <Box
+              sx={{
+                flexShrink: 0,
+                width: { xs: 40, md: 50 }, // Smaller image on mobile
+                height: { xs: 40, md: 50 },
+              }}
+            >
               <img
-                src={image.url}
+                src={image.url || "/placeholder.svg"}
                 alt={image.title}
                 loading="lazy"
-                width={50}
-                height={50}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "4px",
+                }}
               />
             </Box>
-          }
+          )}
 
-          <Box sx={{ marginLeft: 2, textAlign: 'start' }}>
-            <Typography sx={{ maxWidth: 180 }} variant="subtitle2" fontWeight={510}>{item.website_name}</Typography>
-            <Typography variant="body1" sx={{ color: colorPalette.theme }} fontWeight={510}>{currency}{(finalPrice)}</Typography>
-            <Typography variant="body2" color="textSecondary">{item.quantity} x lb</Typography>
+          {/* Product details */}
+          <Box
+            sx={{
+              flex: 1,
+              minWidth: 0, // Allow text to wrap properly
+              textAlign: "left",
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              fontWeight={500}
+              sx={{
+                fontSize: { xs: "0.75rem", md: "0.875rem" }, // Smaller text on mobile
+                lineHeight: 1.2,
+                mb: 0.5,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+              }}
+            >
+              {item.website_name}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#1976d2",
+                fontWeight: 500,
+                fontSize: { xs: "0.75rem", md: "0.875rem" },
+              }}
+            >
+              {currency}
+              {finalPrice.toFixed(3)}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: "0.625rem", md: "0.75rem" } }}>
+              {item.quantity} x lb
+            </Typography>
           </Box>
         </Box>
-        <Box sx={{ textAlign: 'right', display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: 2 }}>
-          <Typography variant="body2" fontWeight={510}>{currency}{(finalPrice * item.quantity).toFixed(3)}</Typography>
-          <IconButton onClick={() => handleRemoveItem(item, finalPrice)} sx={{ marginLeft: 2 }}>
-            <ClearIcon sx={{
-              width: 15, height: 15, '&:hover': {
-                color: colorPalette.red,  // Apply the green color on hover
+
+        {/* Right section: Total price and remove button */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" }, // Stack vertically on mobile
+            alignItems: "center",
+            gap: { xs: 0.5, md: 1 },
+            flexShrink: 0,
+          }}
+        >
+          <Typography
+            variant="body2"
+            fontWeight={500}
+            sx={{
+              fontSize: { xs: "0.75rem", md: "0.875rem" },
+              textAlign: "center",
+            }}
+          >
+            {currency}
+            {parseFloat((finalPrice * item.quantity).toFixed(3))}
+          </Typography>
+          <IconButton
+            onClick={() => handleRemoveItem(item, finalPrice)}
+            size="small"
+            sx={{
+              padding: { xs: 0.5, md: 1 },
+              "&:hover": {
+                color: "#d32f2f",
               },
-            }} />
+            }}
+          >
+            <ClearIcon sx={{ width: { xs: 12, md: 15 }, height: { xs: 12, md: 15 } }} />
           </IconButton>
         </Box>
       </Box>
@@ -188,7 +288,7 @@ const Cart = ({ isRTL, cartDetails }) => {
       {cartDetails.items.map((item, index) => (
         <Box sx={{ marginBottom: 5, marginLeft: -2, marginRight: -2 }}>
           <CartItem key={index} item={item} />
-          <Divider sx={{ marginX: { xs: 0, md: -4 }, marginY: 2, ml: {  md: 0 } }} />
+          <Divider sx={{ marginX: { xs: 0, md: -4 }, marginY: 2, ml: { md: 0 } }} />
         </Box>
       ))}
     </>

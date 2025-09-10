@@ -49,7 +49,7 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
 
   // State for menu/drawer
   const [anchorElUser, setAnchorElUser] = React.useState(null); // User menu
-  const [drawerOpen, setDrawerOpen] = React.useState(false);    // Mobile nav drawer
+  const [drawerOpen, setDrawerOpen] = React.useState(false); // Mobile nav drawer
 
   // Responsive
   const themeInstance = useTheme();
@@ -106,9 +106,10 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100%",
+          marginTop: 10
         }}
       >
-        <SearchBar setHasScrolled={setHasScrolled} hasScrolled={hasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll}/>
+        <SearchBar setHasScrolled={setHasScrolled} hasScrolled={hasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll} />
       </Box>
     </Box>
   ), [hasScrolled, setHasScrolled, stopScroll]);
@@ -132,7 +133,6 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
             justifyContent: "space-between"
           }}
         >
-
           {/* Left side: Hamburger on mobile, logo always */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
@@ -204,14 +204,12 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
             </IconButton>
 
             {/* Language Switcher */}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "row", md: "row" }, // Column on mobile, row on desktop
-                gap: { xs: 0.5, md: 1 },                   // Smaller gap on mobile
-                alignItems: "center"
-              }}
-            >
+            <Box sx={{
+              display: "flex",
+              flexDirection: { xs: "row", md: "row" },
+              gap: { xs: 0.5, md: 1 },
+              alignItems: "center"
+            }}>
               <Button
                 size="small"
                 onClick={() => handleLanguageChange("en")}
@@ -222,7 +220,7 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                   backgroundColor: language === "en" ? colorPalette.theme : "transparent",
                   color: language === "en" ? "#fff" : colorPalette.theme,
                   minWidth: 35,
-                  width: { xs: 35, md: "auto" },  // Buttons fill width a bit on mobile
+                  width: { xs: 35, md: "auto" },
                 }}
               >
                 EN
@@ -246,17 +244,16 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
 
             {/* User Avatar */}
             {user && (
-              <Box ml={isMobile ? 0 : 2}>
+              <Box ml={isMobile ? 0 : 2} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Tooltip title={language === "ar" ? "افتح الإعدادات" : "Open settings"}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
                       sx={{
                         bgcolor: colorPalette.theme,
                         color: "#fff",
-                        width: isMobile ? 30 : 48,
-                        height: isMobile ? 30 : 48,
-                        fontSize: isMobile ? 15 : 20,
-                        fontWeight: "bold",
+                        width: isMobile ? 40 : 48,
+                        height: isMobile ? 40 : 48,
+                        fontSize: isMobile ? 18 : 20,
                       }}
                     >
                       {userName}
@@ -327,7 +324,7 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                   dispatch(emptyCart());
                   removeToken();
                 } else {
-                  routeToPath(setting.path)
+                  routeToPath(setting.path);
                 }
               }}>
                 <Typography>{setting.title}</Typography>

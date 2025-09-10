@@ -254,6 +254,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
           borderRadius: isMobile ? 0 : 3,
           p: { xs: 1, sm: 2, md: 3 },
           width: '100%',
+          position: 'relative', // Make the paper relative to position the close button correctly
         }
       }}
     >
@@ -262,8 +263,8 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
           onClick={() => setOpen(null)}
           sx={{
             position: 'absolute',
-            right: 8,
-            top: 8,
+            right: { xs: 20, lg: 8 },
+            top: { xs: 20, lg: 8 },
             zIndex: 100,
             bgcolor: "#fff",
             boxShadow: 1,
@@ -278,6 +279,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
         sx={{
           overflowY: 'auto',
           p: { xs: 1, sm: 3 },
+          pt: { xs: 4, sm: 4 },
         }}
       >
         <Grid container spacing={2}>

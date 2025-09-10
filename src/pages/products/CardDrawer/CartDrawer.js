@@ -10,7 +10,7 @@ import { StyledMainBox } from '../styles';
 import CheckoutButton from './CheckoutButton';
 import Cart from './CartItem';
 
-const drawerWidth = 500;
+const drawerWidth = 600;
 
 export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }) {
 
@@ -26,7 +26,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: drawerWidth,
+            width: { xs: 300, md: drawerWidth },
             boxSizing: 'border-box',
             background: colorPalette.emeraldGreen,
           },
@@ -40,10 +40,9 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             sx={{
               width: { xs: '100%', md: '100%' },
               display: 'flex',
-              justifyContent: { xs: 'center', md: 'space-between' },
+              justifyContent: { xs: 'space-between', md: 'space-between' },
               alignItems: 'center',
               marginBottom: 2,
-              ml: { xs: '25%', md: 0 },
             }}
           >
             <Box
@@ -100,6 +99,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             <CheckoutButton isRTL={isRTL} cartDetails={cartDetails} />
           </Box>
         </StyledMainBox>
+
       </Drawer>
     </>
   );
