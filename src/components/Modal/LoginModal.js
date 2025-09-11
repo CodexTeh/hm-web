@@ -18,6 +18,7 @@ import { GetLanguage, GetUserLoginLoader, GetloginModalState } from "@redux-stat
 import { signIn } from '@redux-state/actions';
 import { colorPalette } from '@utils/colorPalette';
 import { openLoginModal } from "@redux-state/common/action";
+import { forgetPassword } from "@redux-state/actions";
 
 const LoginModal = ({ open, handleClose, setRegisterModal }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -87,6 +88,18 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
     register: isRTL ? "تسجيل" : "Register",
   };
 
+  const resetPassword = () => {
+    if (email) {
+      if (!validateEmail(email)) {
+        alert(!isRTL ? "Please enter a valid email" : "الرجاء إدخال بريد إلكتروني صالح");
+        return;
+      }
+      dispatch(forgetPassword({email}));
+    } else{
+      alert(!isRTL ? "Please enter email" : "الرجاء إدخال البريد الإلكتروني");
+    }
+  };
+
   return (
     <Dialog
       open={loginModal}
@@ -150,14 +163,15 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
           />
 
           {/* Forgot Password Link */}
-          {/* <Typography
-            variant="body2"
-            align={isRTL ? "left" : "right"}
-            sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
-          >
-            {text.forgotPassword}
-          </Typography> */}
-
+          <div onClick={resetPassword} style={{ display: 'flex', justifyContent: isRTL ? 'flex-start' : 'flex-end', cursor: 'pointer' }}>
+            <Typography
+              variant="body2"
+              align={isRTL ? "left" : "right"}
+              sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
+            >
+              {text.forgotPassword}
+            </Typography>
+          </div>
           {/* Login Button */}
           <Button
             variant="contained"

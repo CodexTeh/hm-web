@@ -12,3 +12,6 @@ export const GetToken = () =>
 export const GetUser= () =>
   useSelector(
     (state) => state.onboarding.user);
+export const GetResetPasswordLoading = () =>
+  useSelector(
+    (state) => state.onboarding.resetPasswordLoading);

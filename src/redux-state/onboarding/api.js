@@ -71,7 +71,35 @@ export const Api = {
       throw new Error(e.message);
     }
   },
+  forgetPassword: async ({ email }) => {
+    try {
+      let response;
+      const options = {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ email: email.toLowerCase() }),
+      };
+      response = await fetch(`${API_URL}auth/forgetPassword`, options);
 
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          alert('Reset Email has been sent to your mail!');
+          return data;
+        case 401:
+          throw new Error('User does not exists!');
+        case 400:
+          throw new Error('All fields required!');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      alert(e.message);
+      console.log("Error", e);
+    }
+  },
   logout: async () => {
 
   }

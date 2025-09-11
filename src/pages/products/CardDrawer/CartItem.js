@@ -160,7 +160,7 @@ const Cart = ({ isRTL, cartDetails }) => {
               size="small"
               sx={{ padding: { xs: 0.5, md: 1 } }} // Smaller padding on mobile
             >
-              <AddIcon sx={{ width: { xs: 14, md: 17 }, height: { xs: 14, md: 17 } }} />
+              <AddIcon sx={{ width: 20, height: 20 }} />
             </IconButton>
             <Typography
               variant="body2"
@@ -177,7 +177,7 @@ const Cart = ({ isRTL, cartDetails }) => {
               size="small"
               sx={{ padding: { xs: 0.5, md: 1 } }}
             >
-              <RemoveIcon sx={{ width: { xs: 14, md: 17 }, height: { xs: 14, md: 17 } }} />
+              <RemoveIcon sx={{ width: 20, height: 20 }} />
             </IconButton>
           </Box>
 

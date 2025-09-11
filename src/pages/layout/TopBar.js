@@ -106,7 +106,6 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100%",
-          marginTop: 10
         }}
       >
         <SearchBar setHasScrolled={setHasScrolled} hasScrolled={hasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll} />

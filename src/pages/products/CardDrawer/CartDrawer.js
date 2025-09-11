@@ -26,7 +26,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: { xs: 300, md: drawerWidth },
+            width: { xs: 280, md: drawerWidth },
             boxSizing: 'border-box',
             background: colorPalette.emeraldGreen,
           },
@@ -53,12 +53,13 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
                 width: '40%',
               }}
             >
-              <LocalMallIcon sx={{ color: colorPalette.theme }} />
+              <LocalMallIcon sx={{ color: colorPalette.theme, width:{ xs: 20 } }} />
               <Typography
                 sx={{
                   color: colorPalette.theme,
                   fontWeight: 510,
                   variant: 'subtitle1',
+                  fontSize: { xs: '14px', md: '16px' },
                   marginLeft: isRTL ? 0 : 1,
                   marginRight: isRTL ? 1 : 0, // Adjust margin for RTL
                 }}

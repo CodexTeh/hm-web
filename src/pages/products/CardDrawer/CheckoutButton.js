@@ -34,7 +34,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          width: { xs: '70%', md: '90%' },
+          width: { xs: '80%', md: '90%' },
           marginBottom: 2,
           borderRadius: '50px', // Rounded corners
           backgroundColor: colorPalette.theme, // Green color
@@ -52,7 +52,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
             marginLeft: isRTL ? 0 : 2,
             marginRight: isRTL ? 2 : 0,
             fontWeight: 510,
-            variant: 'subtitle1',
+            fontSize: {xs: '14px', md: '16px'},
             textAlign: isRTL ? 'right' : 'left', // Text alignment for RTL
           }}
         >
@@ -68,6 +68,7 @@ const CheckoutButton = ({ isRTL, cartDetails }) => {
             alignItems: 'center',
             color: colorPalette.theme, // Green text for the price
             fontWeight: 'bold',
+            fontSize: {xs: '12px', md: '16px'},
           }}
         >
           {isRTL ? parseFloat(cartDetails?.totalPrice?.toFixed(3)) + " ر۔ع" : 'OMR ' + parseFloat(cartDetails?.totalPrice?.toFixed(3))}

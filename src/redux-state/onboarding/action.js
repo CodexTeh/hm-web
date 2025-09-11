@@ -4,7 +4,19 @@ import {
   SIGN_IN,
   SIGN_IN_SUCCESS,
   LOGOUT,
+  FORGET_PASSWORD,
+  FORGET_PASSWORD_RESPONSE,
 } from './types';
+
+export const forgetPassword = (payload) => ({
+  type: FORGET_PASSWORD,
+  payload,
+});
+
+export const forgetPasswordResponse = (payload) => ({
+  type: FORGET_PASSWORD_RESPONSE,
+  payload,
+});
 
 export const createAccount = (username, email, password, phone, address) => (
   {

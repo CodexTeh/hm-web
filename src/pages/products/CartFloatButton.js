@@ -42,12 +42,14 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
     >
       <StyledCartContainer>
         <StyledCartBoxContainer>
-          <LocalMallIcon style={{ width: 18, height: 18, color: colorPalette.white }} />
+          <LocalMallIcon style={{ width: {xs:10,  md:18}, height: {xs:10,  md:18}, color: colorPalette.white }} />
           <Typography
             sx={{
               color: colorPalette.white,
               marginLeft: language === 'ar' ? 0 : 1,
               marginRight: language === 'ar' ? 1 : 0,
+            fontSize: {xs: '12px', md: '16px'},
+
             }}
             variant="body2"
           >
@@ -63,7 +65,11 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
           }}
         >
           <Typography
-            sx={{ color: colorPalette.theme }}
+            sx={{
+              color: colorPalette.theme,
+              fontSize: { xs: '12px', md: '16px' },
+
+            }}
             variant="body2"
           >
             {language === 'ar' ? cartDetails?.totalPrice + " ر۔ع" : 'OMR ' + cartDetails?.totalPrice}

@@ -32,7 +32,7 @@ const EmptyCart = ({ isRTL }) => {
           marginBottom: 2,
           marginLeft: isRTL ? 2 : 0,
           marginRight: isRTL ? 0 : 2,
-          fontSize: { xs: '1rem', sm: '1.25rem' }, // Adjust font size for mobile
+          fontSize: { xs: '0.rem', sm: '1.25rem' }, // Adjust font size for mobile
           textAlign: isRTL ? 'right' : 'left',
         }}
       >

@@ -38,15 +38,12 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
     <Box
       sx={{
         display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },
+        flexDirection: 'row',
         alignItems: { xs: 'stretch', sm: 'center' },
         justifyContent: 'center',
-        width: { xs: '98vw', sm: '80vw', md: '60%' },
+        width: { xs: '80%', sm: '80vw', md: '60%' },
         maxWidth: 500,
         mx: 'auto',
-        m: { xs: 5, sm: 0 },
-        mt: { xs: 15, sm: 2 },
-        p: { xs: 0.5, sm: 1 },
         gap: { xs: 1, sm: 1.5 },
         position: 'relative',
         zIndex: 1200
@@ -63,6 +60,7 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
           sx={{
             borderRadius: '5px',
             fontSize: 13,
+            height: { xs: 50 },
             borderColor: colorPalette.theme,
             background: colorPalette.lightShadow,
             direction: isRTL ? 'rtl' : 'ltr',
@@ -102,8 +100,8 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
           justifyContent: 'center',
           alignItems: 'center',
           background: colorPalette.lightShadow,
-          width: { xs: '100%', sm: 55 },
-          height: { xs: 38, sm: 50 },
+          width: { xs: 38 },
+          height: { xs: 38},
           cursor: 'pointer',
           borderRadius: 1,
           borderColor: colorPalette.theme,

@@ -3,7 +3,9 @@ import {
   CREATE_ACCOUNT_SUCCESS,
   SIGN_IN,
   SIGN_IN_SUCCESS,
-  LOGOUT
+  LOGOUT,
+  FORGET_PASSWORD_RESPONSE,
+  FORGET_PASSWORD,
 } from './types';
 
 const INITIAL_STATE = {
@@ -12,11 +14,23 @@ const INITIAL_STATE = {
   signInloading: false,
   token: null,
   user: null,
+  resetPasswordLoading: false,
+  resetPasswordStatus: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
+
+    case FORGET_PASSWORD:
+      return { ...state, resetPasswordLoading: true };
+
+    case FORGET_PASSWORD_RESPONSE:
+      return {
+        ...state,
+        resetPasswordLoading: false,
+        resetPasswordStatus: action.payload?.resetPasswordStatus ?? ''
+      };
 
     case LOGOUT:
       return { ...state, token: null, user: null };

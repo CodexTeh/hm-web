@@ -22,8 +22,8 @@ const WhatsAppButton = () => {
       sx={{
         position: "fixed",
         bottom: "16px",
-        right: !rtl ? "16px" : null,
-        left: rtl ? "16px" : null,
+        right: !rtl ? "20px" : null,
+        left: rtl ? "20px" : null,
         zIndex: 1000,
       }}
     >
