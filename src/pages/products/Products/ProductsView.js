@@ -106,10 +106,10 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
   };
 
   return (
-    <Box sx={{ width: '100%', marginTop: 3 }}>
+    <Box sx={{ width: {xs: '100%', md: '98%'}, marginTop: 3 }}>
       {products?.length ?
         <Grid
-          sx={{ marginLeft: !open ? 0.5 : null, maxWidth: '100%' }}
+          sx={{ marginLeft: {md: !open ? 0.5 : null}, maxWidth: '100%' }}
           container spacing={3}>
           {products.map((product, index) => {
             const existingProduct = cartDetails?.items.find(item => item.id === product.id);
@@ -207,7 +207,7 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
                       {`${product?.qty_onhand} ${isRTL ? "القطع المتاحة" : "pieces available"}`}
                     </Typography>
                     {/* Product Weight */}
-                    <Typography marginTop={2} variant="body2" color="textDisabled">
+                    <Typography marginTop={2} variant="body2" fontWeight={900} color="textPrimary">
                       {isRTL ? size?.ar_title : size?.title}
                     </Typography>
                     <Box

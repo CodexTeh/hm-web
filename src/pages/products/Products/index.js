@@ -229,6 +229,8 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
           cursor: 'pointer',
           transition: 'margin 0.3s ease',
           direction: isRTL ? 'rtl' : 'ltr',
+          marginLeft: {xs: 2, md: 0},
+          marginRight: {xs: 2, md: 0}
         }}
       >
 
