@@ -71,7 +71,7 @@ const Layout = () => {
 
   useEffect(() => {
     if (!user) {
-      dispatch(openLoginModal(true));
+      // dispatch(openLoginModal(true));
     }
   }, [dispatch]);
 

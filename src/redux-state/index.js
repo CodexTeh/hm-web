@@ -26,6 +26,12 @@ const migrations = {
       user: null,
     },
   }),
+  2: (state) => ({
+    ...state,
+    common: {
+      loginModal: false,
+    },
+  }),
 };
 
 // Combine your reducers

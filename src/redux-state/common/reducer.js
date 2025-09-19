@@ -45,7 +45,7 @@ const INITIAL_STATE = {
   toggleToast: false,
   toastType: '',
   toastMessage: '',
-  loginModal: '',
+  loginModal: false,
   profile: null,
   getProfileLoading: false,
   cart: {
