@@ -7,13 +7,14 @@ import { colorPalette } from '@utils/colorPalette';
 import { ProductModal } from '@components/Modal/ProductModal';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { GetUser, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
+import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts , isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
+const ProductsView = ({filter, hasMoreItems, isFetching, loadProducts , isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
   const user = GetUser();
   const dispatch = useDispatch();
+  const products = GetProducts();
 
   const cartDetails = GetCartDetails();
   const allProductCatalogs = GetProductCatalogs();
@@ -106,8 +107,8 @@ const ProductsView = ({products, filter, hasMoreItems, isFetching, loadProducts 
   };
 
   return (
-    <Box sx={{ width: {xs: '100%', md: '98%'}, marginTop: 3 }}>
-      {products?.length ?
+    <Box sx={{ width: {xs: '100%', md: '98%'}, marginTop: 3, marginLeft: 1.5, marginRight: 1.5}}>
+      {products?.length > 0 ?
         <Grid
           sx={{ marginLeft: {md: !open ? 0.5 : null}, maxWidth: '100%' }}
           container spacing={3}>

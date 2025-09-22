@@ -6,6 +6,31 @@ const API_URL = process.env.REACT_APP_API_URL;
 const SERVER_URL = process.env.REACT_APP_ODO_API_URL;
 
 export const Api = {
+  getSpecificProduct: async (barcode) => {
+    try {
+      let response;
+      const options = {
+        method: 'GET',
+      };
+
+      response = await fetch(`${SERVER_URL}/get_specific_product?barcode=${barcode}`, options);
+
+      switch (response.status) {
+        case 200:
+          const data = await response.json();
+          return data;
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
   getProducts: async ({ pagination, filter = null }) => {
     try {
       let response;
