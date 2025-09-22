@@ -518,7 +518,16 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                       fontSize: { xs: 13, sm: 15 }
                     }}
                   >
-                    {attr.label}{attr.value}
+                    <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    fontWeight={900}
+                    sx={{
+                      direction: isRTL ? 'rtl' : 'ltr',
+                      textAlign: isRTL ? 'right' : 'left',
+                      fontSize: { xs: 13, sm: 15 },
+                    }}
+                  >{attr.label}</Typography>{attr.value}
                   </Typography>
                 </Grid>
               ))}
