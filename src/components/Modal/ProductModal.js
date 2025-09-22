@@ -385,7 +385,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 isRTL={isRTL}
               />
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', justifyContent: isMobile ? 'space-between' : 'flex-start', alignItems: isMobile ? 'center' : 'flex-start', marginTop: isMobile ? 0 : 5 }}>
 
               {/* Price */}
               <Typography
@@ -417,11 +417,13 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
               {/* Cart/Add controls */}
               <Box sx={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: isMobile ? 'column' : 'row',
                 justifyContent: 'flex-start',
                 alignItems: { xs: 'stretch', sm: 'center' },
                 gap: 1.5,
-                mt: 1
+                width: isMobile ? null : '100%',
+                mt: isMobile ? 1 : 4,
+                mb: isMobile ? 0 : 4,
               }}>
                 {qty > 0 && <Button
                   variant="contained"
@@ -481,6 +483,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                   sx={{
                     direction: isRTL ? 'rtl' : 'ltr',
                     textAlign: 'center',
+                    width: isMobile ? null : '40%',
                     fontSize: { xs: 9, sm: 9, md: 12 }
                   }}
                   variant="body1"
@@ -491,32 +494,35 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
               </Box>
             </Box>
             {/* Product Attributes */}
-            {[{
-              label: isRTL ? "مقاس: " : "Size: ", value: isRTL ? size?.ar_title : size?.title
-            }, {
-              label: isRTL ? "ماركة: " : "Brand: ", value: isRTL ? brand?.ar_title : brand?.title
-            }, {
-              label: isRTL ? "وحدة: " : "Unit: ", value: isRTL ? unit?.ar_title : unit?.title
-            }, {
-              label: isRTL ? "لون: " : "Color: ", value: isRTL ? color?.ar_title : color?.title
-            }, {
-              label: isRTL ? "رمز العنصر: " : "Material: ", value: isRTL ? material?.ar_title : material?.title
-            }, {
-              label: isRTL ? "الباركود: " : "Item Code: ", value: product?.barcode
-            }].map((attr, idx) =>
-              <Typography
-                key={idx}
-                variant="body2"
-                mt={2}
-                color="textSecondary"
-                sx={{
-                  mb: 1, direction: isRTL ? 'rtl' : 'ltr',
-                  textAlign: isRTL ? 'right' : 'left',
-                  fontSize: { xs: 13, sm: 15 }
-                }}>
-                {attr.label}{attr.value}
-              </Typography>
-            )}
+            <Grid container spacing={2} mt={2}>
+              {[{
+                label: isRTL ? "مقاس: " : "Size: ", value: isRTL ? size?.ar_title : size?.title
+              }, {
+                label: isRTL ? "ماركة: " : "Brand: ", value: isRTL ? brand?.ar_title : brand?.title
+              }, {
+                label: isRTL ? "وحدة: " : "Unit: ", value: isRTL ? unit?.ar_title : unit?.title
+              }, {
+                label: isRTL ? "لون: " : "Color: ", value: isRTL ? color?.ar_title : color?.title
+              }, {
+                label: isRTL ? "رمز العنصر: " : "Material: ", value: isRTL ? material?.ar_title : material?.title
+              }, {
+                label: isRTL ? "الباركود: " : "Item Code: ", value: product?.barcode
+              }].map((attr, idx) => (
+                <Grid item xs={6} sm={6} md={4} key={idx}>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{
+                      direction: isRTL ? 'rtl' : 'ltr',
+                      textAlign: isRTL ? 'right' : 'left',
+                      fontSize: { xs: 13, sm: 15 }
+                    }}
+                  >
+                    {attr.label}{attr.value}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
             <Divider sx={{ my: 2 }} />
             {/* Category/Subcategory */}
             {category &&
