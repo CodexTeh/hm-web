@@ -382,7 +382,9 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 open={openShare}
                 onClose={handleCloseShare}
                 productLink={productLink}
+                title={product?.website_name}
                 isRTL={isRTL}
+                productImage={images[0]}
               />
             </Box>
             <Box sx={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', justifyContent: isMobile ? 'space-between' : 'flex-start', alignItems: isMobile ? 'center' : 'flex-start', marginTop: isMobile ? 0 : 5 }}>

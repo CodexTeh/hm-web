@@ -9,15 +9,18 @@ const SharePopover = ({
   open,
   onClose,
   productLink,
-  isRTL
+  productImage,     // public image URL (CORS-enabled if on a different domain)
+  title,
+  isRTL,
 }) => {
-  // Build platform share URLs (these are generic web share endpoints)
-  const encoded = encodeURIComponent(productLink);
-  const waLink = `https://wa.me/?text=${encoded}`;
-  const instaLink = `https://www.instagram.com/?url=${encodeURIComponent(productLink)}`;
-  const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productLink)}`;
+  const caption =
+    `${title} : ${productLink}\n`.trim();
 
-  // Prevent default navigation in case of some platforms
+  const encodedText = encodeURIComponent(`${caption}\n\nImage: ${productImage}`);
+  const waLink = `https://wa.me/?text=${encodedText}`;
+  const instaLink = `https://www.instagram.com/?url=${encodedText}`;
+  const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedText}`;
+
   const openLink = (url) => {
     window.open(url, '_blank', 'noopener,noreferrer');
     onClose();
