@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { 
-  Container, Typography, Grid, Box, LinearProgress, Button 
+import {
+  Container, Typography, Grid, Box, LinearProgress, Button
 } from '@mui/material';
 import { GetProfile, GetProfileLoading } from "@redux-state/selectors";
 import { getProfile } from "@redux-state/actions";
@@ -59,11 +59,22 @@ const UserProfile = () => {
   const handleDeactivate = () => {
     const subject = encodeURIComponent("Request for Account Deletion");
     const body = encodeURIComponent(
-      `Hello Support Team,\n\nI would like to request the deletion of my account associated with this email.\n\nUsername: ${profile?.username || ""}\nEmail: ${profile?.email || ""}\n\nPlease confirm once the deletion has been completed.\n\nThank you.`
+      `Hello Support Team,
+
+I would like to request the deletion of my account associated with this email.
+
+Username: ${profile?.username || ""}
+Email: ${profile?.email || ""}
+
+Please confirm once the deletion has been completed.
+
+Thank you.`
     );
 
-    window.location.href = `https://mail.google.com/mail/?view=cm&fs=1&to=support@hmawani.com&su=${subject}&body=${body}`;
+    // Use %0A for newlines if you prefer strict URL encoding
+    window.location.href = `mailto:support@hmawani.com?subject=${subject}&body=${body}`;
   };
+
 
   return (
     <>
@@ -95,9 +106,9 @@ const UserProfile = () => {
             <Grid container spacing={2}>
               {/* Username */}
               <Grid item xs={12}>
-                <Box 
-                  display="flex" 
-                  justifyContent="space-between" 
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
                   flexDirection={isRTL ? 'row-reverse' : 'row'}
                 >
                   <Typography variant="h6" fontWeight={500}>
@@ -108,9 +119,9 @@ const UserProfile = () => {
               </Grid>
               {/* Email */}
               <Grid item xs={12}>
-                <Box 
-                  display="flex" 
-                  justifyContent="space-between" 
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
                   flexDirection={isRTL ? 'row-reverse' : 'row'}
                 >
                   <Typography variant="h6" fontWeight={500}>
@@ -121,9 +132,9 @@ const UserProfile = () => {
               </Grid>
               {/* Contact */}
               <Grid item xs={12}>
-                <Box 
-                  display="flex" 
-                  justifyContent="space-between" 
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
                   flexDirection={isRTL ? 'row-reverse' : 'row'}
                 >
                   <Typography variant="h6" fontWeight={500}>
@@ -134,9 +145,9 @@ const UserProfile = () => {
               </Grid>
               {/* Address */}
               <Grid item xs={12}>
-                <Box 
-                  display="flex" 
-                  justifyContent="space-between" 
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
                   flexDirection={isRTL ? 'row-reverse' : 'row'}
                 >
                   <Typography variant="h6" fontWeight={500}>
