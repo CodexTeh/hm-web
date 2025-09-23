@@ -17,12 +17,14 @@ const StyledDescriptionFieldText = styled(TextField)({
   maxWidth: 80
 });
 
+const ALL_VALUE = 'all';
+
 const ProductCardView = ({ drawerWidth = 300 }) => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
   const [filter, setFilter] = useState(null);
-  const [brand, setBrand] = useState();
+  const [brand, setBrand] = useState(ALL_VALUE);
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
   const [priceError, setPriceError] = useState('');
@@ -131,33 +133,38 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     []
   );
 
-  const InputBrandsSelectField = useCallback(
-    () => {
-      return (
-        <Box sx={{ mb: 1, ml: 1 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}>
-            {isRTL ? 'ماركة' : 'Brand'}
-          </Typography>
-          <Select
-            sx={{ height: 40, background: colorPalette.white }}
-            size='medium'
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-            input={<OutlinedInput />}
-          >
-            <MenuItem>
-              {isRTL ? 'حدد العلامة التجارية' : 'Select Brand'}
+  const InputBrandsSelectField = useCallback(() => {
+    const bilingualAll = isRTL ? 'الكل' : 'All';
+
+    return (
+      <Box sx={{ mb: 1, ml: 1 }}>
+        <Typography
+          variant="subtitle2"
+          sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}
+        >
+          {isRTL ? 'ماركة' : 'Brand'}
+        </Typography>
+
+        <Select
+          sx={{ height: 40, background: colorPalette.white }}
+          size="medium"
+          value={brand ?? ALL_VALUE}
+          onChange={(e) => setBrand(e.target.value)}
+          input={<OutlinedInput />}
+        >
+          {/* ALL option (default) */}
+          <MenuItem value={ALL_VALUE}>{bilingualAll}</MenuItem>
+
+          {/* Brand options */}
+          {(enBrands ?? []).map((b, idx) => (
+            <MenuItem key={idx} value={b.id}>
+              {isRTL ? b.ar_title : b.title}
             </MenuItem>
-            {enBrands?.map((brand, brandIndex) => (
-              <MenuItem key={brandIndex} value={brand.id}>
-                {isRTL ? brand.ar_title : brand.title}
-              </MenuItem>))}
-          </Select>
-        </Box>
-      );
-    },
-    [isRTL, brand, enBrands]
-  );
+          ))}
+        </Select>
+      </Box>
+    );
+  }, [isRTL, brand, enBrands]);
 
   const loadProducts = () => {
     dispatch(getProducts(pagination, filter));

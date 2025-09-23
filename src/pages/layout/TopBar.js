@@ -136,10 +136,11 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
               <IconButton
-                edge="start"
+                edge="end"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-                sx={{ mr: 1 }}
+                
+                sx={{ mr: 0, ml: language === "ar" ? 3 : -1.5 }}
               >
                 <MenuIcon />
               </IconButton>
