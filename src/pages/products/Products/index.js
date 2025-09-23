@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import TuneIcon from '@mui/icons-material/Tune'
-import { Box, Card, CardContent, Grid, MenuItem, OutlinedInput, Select, styled, TextField, Typography } from '@mui/material';
+import { Box, Card, CardContent, MenuItem, OutlinedInput, Select, Stack, styled, TextField, Typography } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetCategories, GetProductCatalogs } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
@@ -134,7 +134,10 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   const InputBrandsSelectField = useCallback(
     () => {
       return (
-        <Box>
+        <Box sx={{ mb: 1, ml: 1 }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}>
+            {isRTL ? 'ماركة' : 'Brand'}
+          </Typography>
           <Select
             sx={{ height: 40, background: colorPalette.white }}
             size='medium'
@@ -153,7 +156,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
         </Box>
       );
     },
-    [enBrands, brand]
+    [isRTL, brand, enBrands]
   );
 
   const loadProducts = () => {
@@ -186,8 +189,6 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     }
 
   }, [brand, from, to, priceError]);
-
-
 
   const products = GetProducts();
 
@@ -242,7 +243,6 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
               elevation={3}
               sx={{
                 borderRadius: 2.5,
-                width: { xs: '90%', md: '70%', lg: '60%' },
                 border: '1px solid',
                 borderColor: 'divider',
                 bgcolor: 'background.paper',
@@ -275,75 +275,36 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
                 </Box>
 
                 {/* Inputs Grid: 2 columns on md+, 1 column on xs */}
-                <Grid container spacing={2} alignItems="flex-start">
-                  {/* Brand */}
-                  <Grid item xs={12} md={6}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                        {isRTL ? 'ماركة' : 'Brand'}
-                      </Typography>
-                      <InputBrandsSelectField />
-                    </Box>
-                  </Grid>
+                <Box
+                  sx={{ direction: isRTL ? 'rtl' : 'ltr', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}
+                >
 
-                  {/* Price Range */}
-                  <Grid item xs={12} md={6}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary' }}>
-                        {isRTL ? 'نطاق السعر' : 'Price Range'}
-                      </Typography>
+                  <InputBrandsSelectField fullWidth />
 
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          gap: 1,
-                          flexDirection: { xs: 'column', sm: 'row' },
-                          alignItems: 'stretch',
-                        }}
-                      >
-                        <InputTextField
-                          label={isRTL ? 'من' : 'From'}
-                          type="number"
-                          value={from}
-                          setValue={setFrom}
-                          // Ensure inputs look like pills on all sizes
-                          sx={{
-                            flex: 1,
-                            minWidth: 120,
-                            '& .MuiInputBase-root': {
-                              borderRadius: 999, // pill shape
-                              pl: 2,
-                              pr: 2,
-                            },
-                            '& .MuiOutlinedInput-input': {
-                              paddingY: 1.25,
-                              paddingX: 2,
-                            },
-                          }}
-                        />
-                        <InputTextField
-                          label={isRTL ? 'إلى' : 'To'}
-                          type="number"
-                          value={to}
-                          setValue={setTo}
-                          sx={{
-                            flex: 1,
-                            minWidth: 120,
-                            '& .MuiInputBase-root': {
-                              borderRadius: 999,
-                              pl: 2,
-                              pr: 2,
-                            },
-                            '& .MuiOutlinedInput-input': {
-                              paddingY: 1.25,
-                              paddingX: 2,
-                            },
-                          }}
-                        />
-                      </Box>
+                  <Box>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
+                      {isRTL ? 'نطاق السعر' : 'Price Range'}
+                    </Typography>
+
+                    {/* Inputs inline on sm+, Boxed on xs */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                      <InputTextField
+                        label={isRTL ? 'من' : 'From'}
+                        type="number"
+                        value={from}
+                        setValue={setFrom}
+                      />
+
+                      <InputTextField
+                        label={isRTL ? 'إلى' : 'To'}
+                        type="number"
+                        value={to}
+                        setValue={setTo}
+                      />
                     </Box>
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Box>
+
               </CardContent>
             </Card>
           </Box>

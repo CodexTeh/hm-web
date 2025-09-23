@@ -321,7 +321,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
           {/* Right Section: Details */}
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', mt: -2 }}>
-              <Typography variant="h5" sx={{
+              <Typography variant="h1" sx={{
                 display: '-webkit-box',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -329,7 +329,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                 WebkitLineClamp: 3,
                 WebkitBoxOrient: 'vertical',
                 fontWeight: 'bold',
-                fontSize: { xs: 15, sm: 24 },
+                fontSize: { xs: 17, sm: 24 },
                 direction: isRTL ? 'rtl' : 'ltr',
                 textAlign: isRTL ? 'right' : 'left',
               }}>
@@ -396,7 +396,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                   fontWeight: 'bold',
                   color: colorPalette.theme,
                   mb: 1,
-                  fontSize: { xs: 16, sm: 28 }
+                  fontSize: { xs: 14, sm: 28 }
                 }}
               >
                 {isRTL ? "ر۔ع  " : "OMR  "}{finalPrice}

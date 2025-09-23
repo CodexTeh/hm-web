@@ -74,8 +74,8 @@ export const OffersSlider = () => {
       {
         breakpoint: 768, // For mobile devices
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+          slidesToShow: 2,
+          slidesToScroll: 2,
         },
       },
     ],
@@ -104,7 +104,7 @@ export const OffersSlider = () => {
     >
       <Slider {...settings}>
         {images.map((image, index) => (
-          <Box key={index} sx={{ padding: '25px 40px 10px 10px'}}>
+          <Box key={index} sx={{ padding: '25px 40px 10px 10px' }}>
             <img key={index} src={image} alt="Offer" style={offerImageStyle} />
           </Box>
         ))}
