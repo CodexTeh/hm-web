@@ -162,7 +162,7 @@ Thank you.`
               <Button
                 variant="contained"
                 color="error"
-                onClick={handleDeactivate}
+                onClick={() => window.open(`${process.env.REACT_APP_API_URL}/support`)}
                 fullWidth={isRTL ? true : false} // full width on Arabic for better usability
                 sx={{
                   maxWidth: { xs: '100%', sm: '250px' },
