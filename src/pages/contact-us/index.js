@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Container,
   Grid,
@@ -7,12 +7,16 @@ import {
   FormControl,
   MenuItem,
   Select,
+  TextField,
+  Button,
+  Alert,
 } from '@mui/material';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import Footer from '@components/Footer';
 import WhatsAppButton from '@components/WhatsAppButton';
 import ContactImage from '@assets/icons/contact.jpg';
 import { GetLanguage } from "@redux-state/selectors";
+import { colorPalette } from '@utils/colorPalette';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -48,30 +52,122 @@ const ContactPage = () => {
   const language = GetLanguage();
   const rtl = language === 'ar';
 
+  // Form State
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState({ type: '', message: '' });
+
   const handleLocationChange = (event) => {
     const location = locations.find(loc => loc.id === event.target.value);
     setSelectedLocation(location);
   };
 
-  // For embedded form
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "//embed.typeform.com/next/embed.js";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
-  }, []);
+  // Simple validation
+  const validate = useMemo(() => {
+    return () => {
+      const newErrors = {};
+      if (!form.name.trim()) newErrors.name = rtl ? 'الاسم مطلوب' : 'Name is required';
+      if (!form.email.trim()) {
+        newErrors.email = rtl ? 'البريد الإلكتروني مطلوب' : 'Email is required';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+        newErrors.email = rtl ? 'صيغة البريد الإلكتروني غير صحيحة' : 'Invalid email format';
+      }
+      if (form.phone && !/^[\d\s+()\-]{6,}$/.test(form.phone.trim())) {
+        newErrors.phone = rtl ? 'صيغة رقم الهاتف غير صحيحة' : 'Invalid phone format';
+      }
+      if (!form.subject.trim()) newErrors.subject = rtl ? 'الموضوع مطلوب' : 'Subject is required';
+      if (!form.message.trim() || form.message.trim().length < 10) {
+        newErrors.message = rtl ? 'يرجى كتابة رسالة لا تقل عن 10 أحرف' : 'Please enter a message of at least 10 characters';
+      }
+      return newErrors;
+    };
+  }, [form, rtl]);
+
+  const handleChange = (e) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors(prev => ({ ...prev, [e.target.name]: '' }));
+  };
+
+  // Build Gmail compose URL
+  const buildGmailComposeUrl = () => {
+    const to = 'support@hmawani.com';
+    const su = encodeURIComponent(form.subject.trim());
+    // Include useful context in the body
+    const selectedShop = rtl ? selectedLocation?.name_ar : selectedLocation?.name_en;
+    const bodyLines = [
+      rtl ? `الاسم: ${form.name}` : `Name: ${form.name}`,
+      rtl ? `البريد: ${form.email}` : `Email: ${form.email}`,
+      form.phone ? (rtl ? `الهاتف: ${form.phone}` : `Phone: ${form.phone}`) : '',
+      rtl ? `المتجر المختار: ${selectedShop}` : `Selected Shop: ${selectedShop}`,
+      '',
+      rtl ? 'الرسالة:' : 'Message:',
+      form.message,
+    ].filter(Boolean);
+    const body = encodeURIComponent(bodyLines.join('\n'));
+
+    // Gmail web compose
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${su}&body=${body}`;
+  };
+
+  // Optional: mailto fallback if user wants to use default email client instead of Gmail
+  const buildMailtoUrl = () => {
+    const to = 'support@hmawani.com';
+    const su = encodeURIComponent(form.subject.trim());
+    const selectedShop = rtl ? selectedLocation?.name_ar : selectedLocation?.name_en;
+    const bodyLines = [
+      rtl ? `الاسم: ${form.name}` : `Name: ${form.name}`,
+      rtl ? `البريد: ${form.email}` : `Email: ${form.email}`,
+      form.phone ? (rtl ? `الهاتف: ${form.phone}` : `Phone: ${form.phone}`) : '',
+      rtl ? `المتجر المختار: ${selectedShop}` : `Selected Shop: ${selectedShop}`,
+      '',
+      rtl ? 'الرسالة:' : 'Message:',
+      form.message,
+    ].filter(Boolean);
+    const body = encodeURIComponent(bodyLines.join('\n'));
+    return `mailto:${to}?subject=${su}&body=${body}`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setAlert({ type: '', message: '' });
+
+    const v = validate();
+    setErrors(v);
+    if (Object.keys(v).length > 0) return;
+
+    // Try Gmail compose
+    const gmailUrl = buildGmailComposeUrl();
+    const win = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+
+    // If popup blocked or not opened, fallback to mailto
+    if (!win) {
+      window.location.href = buildMailtoUrl();
+    } else {
+      setAlert({
+        type: 'success',
+        message: rtl
+          ? 'تم فتح نافذة البريد لإرسال رسالتك.'
+          : 'Email compose window opened. You can send your message there.',
+      });
+    }
+  };
+
+  // Remove Typeform script effect from original code — not needed anymore.
 
   return (
     <Box>
       {/* Banner Section */}
       <Box
         sx={{
-          position: 'relative',
           width: '100%',
-          height: { xs: 150, sm: 220, md: 300 },
+          height: { xs: 150, sm: 220, md: 550 },
           overflow: 'hidden',
-          borderRadius: 2,
           mt: { xs: 12, sm: 8, md: 15 },
           mb: { xs: 3, sm: 5, md: 7 },
         }}
@@ -80,48 +176,12 @@ const ContactPage = () => {
           src={ContactImage}
           alt="Contact"
           style={{
-            borderRadius: 12,
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'fill',
             display: 'block',
-            filter: 'blur(1px)',
-            opacity: 0.8,
           }}
         />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textAlign: 'center',
-            color: 'white',
-            zIndex: 10,
-            width: '100%',
-            px: { xs: 2, sm: 0 },
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 'bold',
-              fontSize: { xs: 18, sm: 26, md: 32 },
-              letterSpacing: 1,
-            }}
-          >
-            {rtl ? 'تواصل معنا' : 'Get in Touch'}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ mt: 1, fontSize: { xs: 12, sm: 16 } }}
-          >
-            {rtl
-              ? "ابدأ المحادثة لبناء علاقة وعمل جيد."
-              : "Start the conversation to establish good relationship and business."
-            }
-          </Typography>
-        </Box>
       </Box>
 
       <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', mb: 4 }}>
@@ -131,34 +191,18 @@ const ContactPage = () => {
             <Box sx={{
               backgroundColor: '#f4f4f6',
               borderRadius: 2,
-              p: { xs: 2, sm: 4 },
               textAlign: rtl ? 'right' : 'left',
               height: '100%',
               minHeight: 220,
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center',
             }}>
-              <Typography variant="subtitle2" color="green" gutterBottom sx={{ fontSize: { xs: 14, sm: 16 } }}>
-                {rtl ? 'تواصل معنا' : 'GET IN TOUCH'}
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                {rtl ? 'اتصال سلس،' : 'Lets start a conversation'}
               </Typography>
-              <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: 20, sm: 27 } }}>
-                {rtl ? 'اتصال سلس،' : 'Seamless Communication,'}
-              </Typography>
-              <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ fontSize: { xs: 20, sm: 27 } }}>
-                {rtl ? 'أثر عالمي.' : 'Global Impact.'}
-              </Typography>
-
               <Box mt={3}>
-                <Box display="flex" alignItems="center" mb={2}>
-                  <Box sx={{
-                    backgroundColor: '#6bc065',
-                    p: { xs: 1.2, sm: 2 },
-                    borderRadius: '50%',
-                    mr: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    <span role="img" aria-label="office" style={{ fontSize: 20 }}>📍</span>
-                  </Box>
+                <Box display="flex" mb={2}>
+                  <span role="img" aria-label="office" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📍</span>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
                       {rtl ? 'مكتبي' : 'My Office'}
@@ -168,35 +212,21 @@ const ContactPage = () => {
                     </Typography>
                   </Box>
                 </Box>
-                <Box display="flex" alignItems="center" mb={2}>
-                  <Box sx={{
-                    backgroundColor: '#6bc065',
-                    p: { xs: 1.2, sm: 2 },
-                    borderRadius: '50%',
-                    mr: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    <span role="img" aria-label="email" style={{ fontSize: 20 }}>📧</span>
-                  </Box>
+                <Box display="flex" mb={2}>
+                  <span role="img" aria-label="email" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📧</span>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
                       {rtl ? 'دعم البريد الإلكتروني' : 'My Email Support'}
                     </Typography>
-                    <Box sx={{ cursor: 'pointer' }} onClick={() => window.open(`mailto:${process.env.REACT_APP_EMAIL_ADDRESS}`, '_blank')}>
+                    <Box sx={{ cursor: 'pointer' }} onClick={() => window.open(`mailto:support@hmawani.com`, '_blank')}>
                       <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
-                        {process.env.REACT_APP_EMAIL_ADDRESS}
+                        support@hmawani.com
                       </Typography>
                     </Box>
                   </Box>
                 </Box>
-                <Box display="flex" alignItems="center">
-                  <Box sx={{
-                    backgroundColor: '#6bc065',
-                    p: { xs: 1.2, sm: 2 },
-                    borderRadius: '50%',
-                    mr: 2, ml: 2, display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    <span role="img" aria-label="phone" style={{ fontSize: 20 }}>📞</span>
-                  </Box>
+                <Box display="flex">
+                  <span role="img" aria-label="phone" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📞</span>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
                       {rtl ? 'لنأتحدث' : 'Let Me Talk'}
@@ -210,25 +240,109 @@ const ContactPage = () => {
             </Box>
           </Grid>
 
-          {/* Contact Form Section */}
+          {/* Custom Contact Form Section (replaces Typeform) */}
           <Grid item xs={12} md={6}>
             <Box sx={{
               borderRadius: 2,
               height: '100%',
-              p: { xs: 2, sm: 4 },
               textAlign: rtl ? 'right' : 'left',
               minHeight: 220,
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center',
+              backgroundColor: '#ffffff',
+              border: '1px solid #eee',
             }}>
-              <div data-tf-live="01JXPNAP0ZKP3BM07AW0MFZHAH"></div>
+              <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+                {rtl ? 'أرسل لنا رسالة' : 'Send us a Message'}
+              </Typography>
+
+              {alert.message && (
+                <Alert severity={alert.type} sx={{ mb: 2 }}>
+                  {alert.message}
+                </Alert>
+              )}
+
+              <Box component="form" noValidate onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={rtl ? 'الاسم الكامل' : 'Full Name'}
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      error={!!errors.name}
+                      helperText={errors.name}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={rtl ? 'البريد الإلكتروني' : 'Email'}
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      error={!!errors.email}
+                      helperText={errors.email}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={rtl ? 'رقم الهاتف (اختياري)' : 'Phone (optional)'}
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      error={!!errors.phone}
+                      helperText={errors.phone}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={rtl ? 'الموضوع' : 'Subject'}
+                      name="subject"
+                      value={form.subject}
+                      onChange={handleChange}
+                      error={!!errors.subject}
+                      helperText={errors.subject}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label={rtl ? 'الرسالة' : 'Message'}
+                      name="message"
+                      value={form.message}
+                      onChange={handleChange}
+                      error={!!errors.message}
+                      helperText={errors.message}
+                      multiline
+                      minRows={4}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{ mt: 1, px: 3, py: 1.1, fontWeight: 600, borderRadius: 2, fill: colorPalette.theme }}
+                    >
+                      {rtl ? 'أرسل رسالة' : 'Send Message'}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
             </Box>
           </Grid>
 
           {/* Location Selector */}
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth sx={{ mt: { xs: 2, md: 4 } }}>
+            <FormControl fullWidth sx={{ mt: { xs: 2, md: -4 } }}>
               <Typography
                 sx={{
                   fontSize: { xs: 13, md: 15 },
