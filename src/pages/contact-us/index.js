@@ -73,6 +73,7 @@ const ContactPage = () => {
     return () => {
       const newErrors = {};
       if (!form.name.trim()) newErrors.name = rtl ? 'الاسم مطلوب' : 'Name is required';
+      if (!form.phone.trim()) newErrors.phone = rtl ? 'رقم الهاتف مطلوب' : 'phone is required';
       if (!form.email.trim()) {
         newErrors.email = rtl ? 'البريد الإلكتروني مطلوب' : 'Email is required';
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
@@ -292,7 +293,7 @@ const ContactPage = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      label={rtl ? 'رقم الهاتف (اختياري)' : 'Phone (optional)'}
+                      label={rtl ? 'رقم الهاتف' : 'Phone'}
                       name="phone"
                       value={form.phone}
                       onChange={handleChange}
