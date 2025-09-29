@@ -136,6 +136,7 @@ const EditCategory = ({
       setArabicCategory(arabicCategories.filter(cat => cat.category.value === category.value)
         .map((categoryObj) => categoryObj.category)[0])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category])
 
   useEffect(() => {
@@ -144,6 +145,7 @@ const EditCategory = ({
       setCategory(categories.filter(cat => cat.category.value === arabicCategory.value)
         .map((categoryObj) => categoryObj.category)[0])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arabicCategory])
 
   const toggleSubCatStates = (category, subCategory) => {
@@ -164,12 +166,14 @@ const EditCategory = ({
     if (subCategory) {
       toggleSubCatStates(category, subCategory)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subCategory])
 
   useEffect(() => {
     if (arabicSubCategory) {
       toggleSubCatStates(arabicCategory, arabicSubCategory)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arabicSubCategory])
 
 
@@ -191,6 +195,7 @@ const EditCategory = ({
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, arabicCategory]
   );
 
@@ -288,6 +293,7 @@ const EditCategory = ({
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, arabicCategory]
   );
 
@@ -324,6 +330,7 @@ const EditCategory = ({
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, arabicCategory]
   );
 

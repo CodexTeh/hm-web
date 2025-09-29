@@ -74,7 +74,7 @@ const TableView = ({
   totalRows,
   type
 }) => {
-  const highlightedRowRef = React.useRef < HTMLTableRowElement > (null);
+  const highlightedRowRef = React.useRef(null);
   const isMediumScreen = false;
 
   React.useEffect(() => {
@@ -84,6 +84,7 @@ const TableView = ({
         block: 'nearest'
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedRowIndex]);
 
   const getRowsPerPage = (totalRows) => {

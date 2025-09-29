@@ -11,7 +11,6 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
   const language = GetLanguage();
   const dispatch = useDispatch();
 
-  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [searchText, setSearchText] = useState('');
   const isRTL = language === 'ar'; // Checks if the language is Arabic
 
@@ -20,9 +19,9 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
   const pagination = useMemo(
     () => ({
       page: 0,
-      perPage: rowsPerPage,
+      perPage: 20,
     }),
-    [rowsPerPage]
+    []
   );
 
   // Dynamic placeholder translation

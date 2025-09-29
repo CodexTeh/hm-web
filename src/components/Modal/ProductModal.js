@@ -166,6 +166,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     if (itemsCount > 0 && itemsCount <= pagination.perPage) {
       setHasMoreItems(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, pagination, itemsCount, pagination.perPage]);
 
   useEffect(() => {

@@ -11,41 +11,11 @@ import {
 import { GetLanguage } from "@redux-state/selectors";
 import {
   Facebook,
-  Instagram,
   KeyboardArrowUp,
   Apple,
   Android
 } from "@mui/icons-material";
 import { QRCodeCanvas } from "qrcode.react";
-
-
-const TikTokIcon = ({ color = "white" }) => {
-  return (
-    <svg
-      fill={color}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 50 50"
-      width="20"
-      height="20"
-    >
-      <path d="M41,4H9C6.243,4,4,6.243,4,9v32c0,2.757,2.243,5,5,5h32c2.757,0,5-2.243,5-5V9C46,6.243,43.757,4,41,4z M37.006,22.323 c-0.227,0.021-0.457,0.035-0.69,0.035c-2.623,0-4.928-1.349-6.269-3.388c0,5.349,0,11.435,0,11.537c0,4.709-3.818,8.527-8.527,8.527 s-8.527-3.818-8.527-8.527s3.818-8.527,8.527-8.527c0.178,0,0.352,0.016,0.527,0.027v4.202c-0.175-0.021-0.347-0.053-0.527-0.053 c-2.404,0-4.352,1.948-4.352,4.352s1.948,4.352,4.352,4.352s4.527-1.894,4.527-4.298c0-0.095,0.042-19.594,0.042-19.594h4.016 c0.378,3.591,3.277,6.425,6.901,6.685V22.323z" />
-    </svg>
-  );
-};
-
-const FacebookIcon = ({ color = "white" }) => {
-  return (
-    <svg
-      fill={color}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 50 50"
-      width="20"
-      height="20"
-    >
-      <path d="M8 0C3.6 0 0 3.6 0 8c0 4 2.9 7.3 6.8 7.9v-5.6h-2V8h2V6.2c0-2 1.2-3.1 3-3.1.9 0 1.8.2 1.8.2v2h-1c-1 0-1.3.6-1.3 1.3V8h2.2l-.4 2.3H9.2v5.6C13.1 15.3 16 12 16 8c0-4.4-3.6-8-8-8Z" fill="currentColor"></path>
-    </svg>
-  );
-};
 
 const Footer = () => {
   const language = GetLanguage();
@@ -199,13 +169,13 @@ const Footer = () => {
           <Facebook fontSize="inherit" color="primary" />
         </IconButton>
         <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }} onClick={() => window.open(process.env.REACT_APP_HM_INSTAGRAM_URL)} size="large" aria-label="Open Instagram">
-          <img style={{ width: 30, height: 30 }} src="https://img.icons8.com/?size=80&id=ZRiAFreol5mE&format=png" />
+          <img style={{ width: 30, height: 30 }} src="https://img.icons8.com/?size=80&id=ZRiAFreol5mE&format=png" alt=""/>
         </IconButton>
         <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }} onClick={() => window.open(process.env.REACT_APP_HM_TIKTOK_URL)} size="large" aria-label="Open TikTok">
-          <img style={{ width: 30, height: 30 }} src="https://img.icons8.com/?size=48&id=118640&format=png" />
+          <img style={{ width: 30, height: 30 }} src="https://img.icons8.com/?size=48&id=118640&format=png" alt=""/>
         </IconButton>
         <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }} onClick={() => window.open(process.env.REACT_APP_HM_SNAPCHAT_URL)} size="large" aria-label="Open SnapChat">
-          <img style={{ width: 30, height: 30 }} src="https://app.snapchat.com/web/deeplink/snapcode?username=hmawaniwebstore&amp;type=SVG&amp;bitmoji=enable" />
+          <img style={{ width: 30, height: 30 }} src="https://app.snapchat.com/web/deeplink/snapcode?username=hmawaniwebstore&amp;type=SVG&amp;bitmoji=enable" alt=""/>
         </IconButton>
       </Box>
 

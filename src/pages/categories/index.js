@@ -129,6 +129,7 @@ const Categories = () => {
       setArabicCategory(arabicCategories.filter(cat => cat.category.value === category.value)
         .map((categoryObj) => categoryObj.category)[0])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category])
 
   useEffect(() => {
@@ -137,6 +138,7 @@ const Categories = () => {
       setCategory(categories.filter(cat => cat.category.value === arabicCategory.value)
         .map((categoryObj) => categoryObj.category)[0])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arabicCategory])
 
 
@@ -160,6 +162,7 @@ const Categories = () => {
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, arabicCategory]
   );
 
@@ -275,6 +278,7 @@ const Categories = () => {
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, arabicCategory]
   );
 
@@ -311,9 +315,9 @@ const Categories = () => {
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, arabicCategory]
   );
-
 
   return (
     <StyledMainBox>

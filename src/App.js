@@ -13,7 +13,7 @@ import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter(AppRoutes);
 
-export default () => {
+const App = () => {
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
     <React.StrictMode>
@@ -26,4 +26,6 @@ export default () => {
   );
 
   reportWebVitals();
-}
+};
+
+export default App;
