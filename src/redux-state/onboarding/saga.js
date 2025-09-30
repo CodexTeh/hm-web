@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects'
+import { call, put, takeLatest } from 'redux-saga/effects'
 import { createAccountSuccess, forgetPasswordResponse, signInSuccess, toggleToast } from '../actions';
 import { Api } from './api'
 import {

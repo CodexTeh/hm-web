@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
@@ -241,15 +242,9 @@ const OrderList = () => {
     { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(3) || 0 },
   ]), [currentOrder, isRTL, t, user]);
 
-  const pricing = useMemo(() => ([
-    { label: t.subTotal, value: currentOrder?.cart?.totalPrice?.toFixed(3) || 0 },
-    // { label: t.shippingCharge, value: '50' },
-    // { label: t.discount, value: '0' },
-    { label: t.totalAmount, value: currentOrder?.cart?.totalPrice?.toFixed(3) || 0 },
-  ]), [currentOrder, t]);
 
   const InputOrderSelectField = useCallback(
-    ({ }) => {
+    () => {
 
       return (
         <Box sx={{ marginTop: 3 }}>

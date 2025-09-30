@@ -53,28 +53,7 @@ const UserProfile = () => {
     if (userId) {
       dispatch(getProfile(userId))
     }
-  }, [userId]);
-
-  // Handle deactivate click → opens Gmail with pre-filled template
-  const handleDeactivate = () => {
-    const subject = encodeURIComponent("Request for Account Deletion");
-    const body = encodeURIComponent(
-      `Hello Support Team,
-
-I would like to request the deletion of my account associated with this email.
-
-Username: ${profile?.username || ""}
-Email: ${profile?.email || ""}
-
-Please confirm once the deletion has been completed.
-
-Thank you.`
-    );
-
-    // Use %0A for newlines if you prefer strict URL encoding
-    window.location.href = `mailto:support@hmawani.com?subject=${subject}&body=${body}`;
-  };
-
+  }, [dispatch, userId]);
 
   return (
     <>

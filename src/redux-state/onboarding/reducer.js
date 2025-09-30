@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import {
   CREATE_ACCOUNT,
   CREATE_ACCOUNT_SUCCESS,
@@ -19,7 +20,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
 
     case FORGET_PASSWORD:

@@ -7,7 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from 'react-redux';
 import { getProducts } from '@redux-state/common/action';
 
-const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
+const SearchBar = ({ setHasScrolled }) => {
   const language = GetLanguage();
   const dispatch = useDispatch();
 
@@ -100,7 +100,7 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
           alignItems: 'center',
           background: colorPalette.lightShadow,
           width: { xs: 38 },
-          height: { xs: 38},
+          height: { xs: 38 },
           cursor: 'pointer',
           borderRadius: 1,
           borderColor: colorPalette.theme,
@@ -110,12 +110,11 @@ const SearchBar = ({ setHasScrolled, hasScrolled, setStopScroll }) => {
           mx: { xs: 0, sm: 0.5 },
         }}
         onClick={() => {
+          setHasScrolled(false);
           if (searchText) {
             setSearchText('');
-            dispatch(getProducts(pagination, {}));
+            searchProducts()
           }
-          setHasScrolled(false);
-          setStopScroll(true);
         }}
       >
         <CloseIcon

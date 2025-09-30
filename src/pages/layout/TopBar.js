@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -23,7 +23,7 @@ import { GetLanguage, GetUser } from "@redux-state/selectors";
 import { logout, emptyCart, changeLanguage } from "@redux-state/actions";
 import { colorPalette } from "@utils/colorPalette";
 
-const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
+const TopBar = () => {
   const dispatch = useDispatch();
   const language = GetLanguage();
   const user = GetUser();
@@ -48,8 +48,9 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
   };
 
   // State for menu/drawer
-  const [anchorElUser, setAnchorElUser] = React.useState(null); // User menu
-  const [drawerOpen, setDrawerOpen] = React.useState(false); // Mobile nav drawer
+  const [anchorElUser, setAnchorElUser] = useState(null); // User menu
+  const [drawerOpen, setDrawerOpen] = useState(false); // Mobile nav drawer
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   // Responsive
   const themeInstance = useTheme();
@@ -108,10 +109,10 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
           height: "100%",
         }}
       >
-        <SearchBar setHasScrolled={setHasScrolled} hasScrolled={hasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll} />
+        <SearchBar setHasScrolled={setHasScrolled} />
       </Box>
     </Box>
-  ), [hasScrolled, setHasScrolled, stopScroll]);
+  ), []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -139,7 +140,7 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                 edge="end"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-                
+
                 sx={{ mr: 0, ml: language === "ar" ? 3 : -1.5 }}
               >
                 <MenuIcon />
@@ -158,9 +159,10 @@ const TopBar = ({ hasScrolled, setHasScrolled, stopScroll, setStopScroll }) => {
                 alt="logo"
                 style={{
                   width: isMobile ? 140 : 180, // Smaller logo for mobile
-                  height: isMobile ? 80 : 70, // Smaller height for mobile
+                  height: isMobile ? 50 : 70, // Smaller height for mobile
                   marginRight: language === "ar" ? 0 : 10,
                   marginLeft: language === "ar" ? 10 : 0,
+                  marginTop: 3,
                   objectFit: "cover"
                 }}
               />

@@ -2,8 +2,14 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import TuneIcon from '@mui/icons-material/Tune'
-import { Box, Card, CardContent, MenuItem, OutlinedInput, Select, styled, TextField, Typography } from '@mui/material';
-import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetCategories, GetProductCatalogs } from '@redux-state/common/selectors';
+import {
+  Box, Card, CardContent, MenuItem, OutlinedInput, Select, styled,
+  TextField, Typography
+} from '@mui/material';
+import {
+  GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage,
+  GetCategories, GetProductCatalogs
+} from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
@@ -19,6 +25,14 @@ const StyledDescriptionFieldText = styled(TextField)({
 
 const ALL_VALUE = 'all';
 
+// --- NEW SORTING CONSTANTS ---
+const SORT_OPTIONS = {
+  NONE: 'none',
+  PRICE_ASC: 'price_asc',
+  PRICE_DESC: 'price_desc',
+};
+// -----------------------------
+
 const ProductCardView = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [hasMoreItems, setHasMoreItems] = useState(true);
@@ -28,10 +42,13 @@ const ProductCardView = () => {
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
   const [priceError, setPriceError] = useState('');
+  // --- NEW STATE FOR SORTING ---
+  const [sortBy, setSortBy] = useState(SORT_OPTIONS.NONE);
+  // -----------------------------
 
 
-  const language = GetLanguage(); // Get the current language (en or ar)
-  const isRTL = language === 'ar'; // Check if the language is Arabic
+  const language = GetLanguage();
+  const isRTL = language === 'ar';
 
   const pagination = useMemo(
     () => ({
@@ -46,6 +63,8 @@ const ProductCardView = () => {
   const categories = GetCategories();
   const allProductCatalogs = GetProductCatalogs();
 
+  // ... (splitByTypeAndLanguage and enBrands logic remains the same)
+
   const splitByTypeAndLanguage = (array) => {
     return array.reduce((acc, item) => {
       const { type } = item;
@@ -53,11 +72,9 @@ const ProductCardView = () => {
       if (!acc[language]) {
         acc[language] = {};
       }
-
       if (!acc[language][type]) {
         acc[language][type] = [];
       }
-
       acc[language][type].push(item);
       return acc;
     }, {});
@@ -70,9 +87,7 @@ const ProductCardView = () => {
   } = splitByTypeAndLanguage(allProductCatalogs || []);
 
   const dispatch = useDispatch();
-
   const handleOpen = (value) => setOpen(value);
-
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -101,20 +116,15 @@ const ProductCardView = () => {
   }, [dispatch]);
 
   const InputTextField = useCallback(
+    // ... (InputTextField definition remains the same)
     ({ label, value, setValue, multiline, type = 'text' }) => {
       const handleChange = (e) => {
         let inputValue = e.target.value;
-
-
-
-        // If the type is number, ensure it's not negative
         if (type === 'number') {
-          // Ensure the value is a valid number and non-negative
           if (inputValue === '' || (parseFloat(inputValue) >= 0 && !isNaN(inputValue))) {
             setValue(inputValue);
           }
         } else {
-          // For non-number fields, just update the value
           setValue(inputValue);
         }
       };
@@ -132,38 +142,83 @@ const ProductCardView = () => {
     []
   );
 
-  const InputBrandsSelectField = useCallback(() => {
-    const bilingualAll = isRTL ? 'الكل' : 'All';
+  const InputBrandsSelectField = useCallback(
+    // ... (InputBrandsSelectField definition remains the same)
+    () => {
+      const bilingualAll = isRTL ? 'الكل' : 'All';
 
+      return (
+        <Box sx={{ mb: 1, ml: 1 }}>
+          <Typography
+            variant="subtitle2"
+            sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}
+          >
+            {isRTL ? 'ماركة' : 'Brand'}
+          </Typography>
+
+          <Select
+            sx={{ height: 40, background: colorPalette.white }}
+            size="medium"
+            value={brand ?? ALL_VALUE}
+            onChange={(e) => setBrand(e.target.value)}
+            input={<OutlinedInput />}
+          >
+            <MenuItem value={ALL_VALUE}>{bilingualAll}</MenuItem>
+
+            {(enBrands ?? []).map((b, idx) => (
+              <MenuItem key={idx} value={b.id}>
+                {isRTL ? b.ar_title : b.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      );
+    }, [isRTL, brand, enBrands]
+  );
+
+  // --- NEW INPUT COMPONENT FOR SORTING ---
+  const InputSortBySelectField = useCallback(() => {
     return (
       <Box sx={{ mb: 1, ml: 1 }}>
         <Typography
           variant="subtitle2"
           sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}
         >
-          {isRTL ? 'ماركة' : 'Brand'}
+          {isRTL ? 'ترتيب حسب' : 'Sort By'}
         </Typography>
 
         <Select
-          sx={{ height: 40, background: colorPalette.white }}
+          sx={{ height: 40, background: colorPalette.white, minWidth: 150 }}
           size="medium"
-          value={brand ?? ALL_VALUE}
-          onChange={(e) => setBrand(e.target.value)}
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
           input={<OutlinedInput />}
         >
-          {/* ALL option (default) */}
-          <MenuItem value={ALL_VALUE}>{bilingualAll}</MenuItem>
-
-          {/* Brand options */}
-          {(enBrands ?? []).map((b, idx) => (
-            <MenuItem key={idx} value={b.id}>
-              {isRTL ? b.ar_title : b.title}
-            </MenuItem>
-          ))}
+          <MenuItem value={SORT_OPTIONS.NONE}>{isRTL ? 'بدون ترتيب' : 'Default'}</MenuItem>
+          <MenuItem value={SORT_OPTIONS.PRICE_ASC}>{isRTL ? ' من الأقل للأعلى' : 'Low to High'}</MenuItem>
+          <MenuItem value={SORT_OPTIONS.PRICE_DESC}>{isRTL ? ' من الأعلى للأقل' : 'High to Low'}</MenuItem>
         </Select>
       </Box>
     );
-  }, [isRTL, brand, enBrands]);
+  }, [isRTL, sortBy]);
+
+  const RenderProductsView = useCallback(() => {
+    return (
+      <ProductsView
+        filter={filter}
+        hasMoreItems={hasMoreItems}
+        loadProducts={loadProducts}
+        isFetching={isFetching}
+        isRTL={isRTL}
+        open={open}
+        setOpen={setOpen}
+        handleOpen={handleOpen}
+        sortBy={sortBy}
+      />
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter, hasMoreItems, isFetching, isRTL, open, sortBy]);
+  // ---------------------------------------
 
   const loadProducts = () => {
     dispatch(getProducts(pagination, filter));
@@ -178,28 +233,51 @@ const ProductCardView = () => {
 
   useEffect(() => {
     if (priceError) {
-      alert(priceError) // Logging error instead of using alert
-      return; // Skip further logic if there's an error
+      alert(priceError)
+      return;
     }
 
-    const newFilter = {};
+    // --- LOGIC TO UPDATE FILTER BASED ON BRAND, PRICE, AND SORT ---
+    // Make sure we carry over any existing filters (like the one from /flashSale)
+    const newFilter = { ...filter };
 
-    if (brand) {
+    if (brand !== ALL_VALUE) {
       newFilter.brand = brand;
-      setFilter(newFilter);
+    } else {
+      delete newFilter.brand;
     }
 
     if (from && to) {
       newFilter.min_price = from;
       newFilter.max_price = to;
-      setFilter(newFilter);
+    } else {
+      delete newFilter.min_price;
+      delete newFilter.max_price;
     }
 
-  }, [brand, from, to, priceError]);
+    // Add sort to the filter object
+    if (sortBy && sortBy !== SORT_OPTIONS.NONE) {
+      newFilter.min_price = 1;
+      newFilter.max_price = 1000;
+    } else {
+      delete newFilter.min_price;
+      delete newFilter.max_price;
+    }
+
+    // Only update filter state if it has changed to prevent infinite loops
+    setFilter(prevFilter => {
+      if (JSON.stringify(prevFilter) !== JSON.stringify(newFilter)) {
+        return newFilter;
+      }
+      return prevFilter;
+    });
+
+  }, [brand, from, to, priceError, sortBy, filter]); // **Added sortBy as a dependency**
 
   const products = GetProducts();
 
   useEffect(() => {
+    // ... (Scroll logic remains the same)
     const handleScroll = () => {
       if (
         window.innerHeight + document.documentElement.scrollTop + 1 >=
@@ -256,7 +334,7 @@ const ProductCardView = () => {
                 bgcolor: 'background.paper',
                 boxShadow: '0 6px 18px rgba(0,0,0,0.04)',
               }}
-              aria-label={isRTL ? 'تصفية حسب' : 'Filter by'}
+              aria-label={isRTL ? 'تصفية وترتيب حسب' : 'Filter and Sort by'}
             >
               <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 {/* Header */}
@@ -277,40 +355,34 @@ const ProductCardView = () => {
                     color="text.primary"
                     sx={{ letterSpacing: 0.4, fontSize: { xs: 17, sm: 19 } }}
                   >
-                    {isRTL ? 'التصفية حسب' : 'Filter by'}
+                    {isRTL ? 'التصفية والترتيب' : 'Filter & Sort'}
                   </Typography>
                   <Box sx={{ flexGrow: 1 }} />
                 </Box>
 
-                {/* Inputs Grid: 2 columns on md+, 1 column on xs */}
+                {/* Inputs Grid */}
                 <Box
                   sx={{ direction: isRTL ? 'rtl' : 'ltr', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}
                 >
 
+                  {/* BRAND SELECT */}
                   <InputBrandsSelectField fullWidth />
 
+                  {/* PRICE RANGE INPUTS */}
                   <Box>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
                       {isRTL ? 'نطاق السعر' : 'Price Range'}
                     </Typography>
 
-                    {/* Inputs inline on sm+, Boxed on xs */}
                     <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                      <InputTextField
-                        label={isRTL ? 'من' : 'From'}
-                        type="number"
-                        value={from}
-                        setValue={setFrom}
-                      />
-
-                      <InputTextField
-                        label={isRTL ? 'إلى' : 'To'}
-                        type="number"
-                        value={to}
-                        setValue={setTo}
-                      />
+                      <InputTextField label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
+                      <InputTextField label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
                     </Box>
                   </Box>
+
+                  {/* --- NEW SORT BY SELECT --- */}
+                  <InputSortBySelectField />
+                  {/* --------------------------- */}
                 </Box>
 
               </CardContent>
@@ -319,16 +391,7 @@ const ProductCardView = () => {
 
 
           {/* PRODUCTS LIST */}
-          <ProductsView
-            filter={filter}
-            hasMoreItems={hasMoreItems}
-            loadProducts={loadProducts}
-            isFetching={isFetching}
-            isRTL={isRTL}
-            open={open}
-            setOpen={setOpen}
-            handleOpen={handleOpen}
-          />
+          <RenderProductsView />
         </Box>
       </Box>
     </Box>

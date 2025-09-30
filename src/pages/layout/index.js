@@ -17,32 +17,29 @@ const Layout = () => {
   const user = GetUser();
   const token = GetToken();
 
-
-  const [hasScrolled, setHasScrolled] = useState(false);
-  const [stopScroll, setStopScroll] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
   const [registerModal, setRegisterModal] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY; // Current scroll position
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight; // Total scrollable height
-      const scrolledPercentage = (scrollPosition / totalHeight) * 100;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY; // Current scroll position
+  //     const totalHeight = document.documentElement.scrollHeight - window.innerHeight; // Total scrollable height
+  //     const scrolledPercentage = (scrollPosition / totalHeight) * 100;
 
-      if (scrolledPercentage >= 5 && !hasScrolled) {
-        setHasScrolled(true);
-      } else if (scrolledPercentage < 5 && hasScrolled) {
-        setHasScrolled(false);
-      }
-    };
-    if (!stopScroll) {
-      window.addEventListener('scroll', handleScroll);
+  //     if (scrolledPercentage >= 5 && !hasScrolled) {
+  //       setHasScrolled(true);
+  //     } else if (scrolledPercentage < 5 && hasScrolled) {
+  //       setHasScrolled(false);
+  //     }
+  //   };
+  //   if (!stopScroll) {
+  //     window.addEventListener('scroll', handleScroll);
 
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, [hasScrolled, stopScroll]);
+  //     return () => {
+  //       window.removeEventListener('scroll', handleScroll);
+  //     };
+  //   }
+  // }, [hasScrolled, stopScroll]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -69,7 +66,7 @@ const Layout = () => {
 
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>
-      {/* <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll}/> */}
+      <TopBar />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={togleToast}

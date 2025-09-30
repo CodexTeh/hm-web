@@ -11,10 +11,16 @@ import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({filter, hasMoreItems, isFetching, loadProducts , isRTL, open, handleOpen, setOpen, ChildView, loadMore = true }) => {
+const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true, sortBy = null }) => {
   const user = GetUser();
   const dispatch = useDispatch();
-  const products = GetProducts();
+  let products = GetProducts();
+
+  if ((products?.length > 0) && sortBy && sortBy === 'price_desc') {
+    products = [...products].sort((a, b) => b.price - a.price);
+  } else if ((products?.length > 0) && sortBy && sortBy === 'price_asc') {
+    products = [...products].sort((a, b) => a.price - b.price);
+  }
 
   const cartDetails = GetCartDetails();
   const allProductCatalogs = GetProductCatalogs();
@@ -107,10 +113,10 @@ const ProductsView = ({filter, hasMoreItems, isFetching, loadProducts , isRTL, o
   };
 
   return (
-    <Box sx={{ width: {xs: '100%', md: '98%'}, marginTop: 3, marginLeft: 1.5, marginRight: 1.5}}>
+    <Box sx={{ width: { xs: '100%', md: '98%' }, marginTop: 3, marginLeft: 1.5, marginRight: 1.5 }}>
       {products?.length > 0 ?
         <Grid
-          sx={{ marginLeft: {md: !open ? 0.5 : null}, maxWidth: '100%' }}
+          sx={{ marginLeft: { md: !open ? 0.5 : null }, maxWidth: '100%' }}
           container spacing={3}>
           {products.map((product, index) => {
             const existingProduct = cartDetails?.items.find(item => item.id === product.id);

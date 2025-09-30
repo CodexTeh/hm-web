@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, LinearProgress, Typography } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import { GetAllProductsCount, GetLanguage, GetUser } from '@redux-state/selectors';
+import { GetLanguage, GetUser } from '@redux-state/selectors';
 import { colorPalette } from '@utils/colorPalette';
 import Footer from '@components/Footer';
 import { Api } from '@redux-state/common/api';
@@ -11,10 +12,9 @@ import CartFloatButton from '../products/CartFloatButton';
 import CardDrawer from '../products/CardDrawer/CartDrawer';
 
 const WishList = ({ drawerWidth = 300 }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  // eslint-disable-next-line no-unused-vars
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
-  const [filter, setFilter] = useState({});
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [wishListProducts, setWishListProducts] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -23,19 +23,9 @@ const WishList = ({ drawerWidth = 300 }) => {
   const language = GetLanguage(); // Get the current language (en or ar)
   const isRTL = language === 'ar'; // Check if the language is Arabic
 
-  // const pagination = useMemo(
-  //   () => ({
-  //     page: 0,
-  //     perPage: rowsPerPage,
-  //   }),
-  //   [rowsPerPage]
-  // );
-
-  const itemsCount = GetAllProductsCount();
   const dispatch = useDispatch();
 
   const handleOpen = (value) => setOpen(value);
-  const handleClose = () => setOpen(null);
 
   const loadProducts = async () => {
     setLoader(true);
@@ -52,37 +42,7 @@ const WishList = ({ drawerWidth = 300 }) => {
     if (user) {
       loadProducts();
     }
-  }, [dispatch]);
-
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (
-  //       window.innerHeight + document.documentElement.scrollTop + 1 >=
-  //       document.documentElement.scrollHeight
-  //     ) {
-  //       if (products?.length > 0) {
-  //         setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
-  //       }
-  //     }
-  //   };
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, [products]);
-
-  // window.onbeforeunload = function () {
-  //   window.scrollTo(0, 0);
-  // };
-
-  // const fetchFeedData = useCallback(() => {
-  //   if (itemsCount > 0 && itemsCount <= pagination.perPage) {
-  //     setHasMoreItems(false);
-  //   }
-  // }, [dispatch, pagination, itemsCount, pagination.perPage]);
-
-  // useEffect(() => {
-  //   fetchFeedData();
-  // }, [pagination.perPage, fetchFeedData]);
+  }, [dispatch, user]);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);

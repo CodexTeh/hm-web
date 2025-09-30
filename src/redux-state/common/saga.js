@@ -69,7 +69,7 @@ function* getProductsByCategory(action) {
 function* getSearchedProducts(action) {
   try {
     const data = yield call(Api.getSearchedProducts, action.payload);
-    if (data?.status == true) {
+    if (data?.status === true) {
       yield put(Actions.getSearchedProductsSuccess([data]));
     } else {
       yield put(Actions.getSearchedProductsSuccess([]));
@@ -204,7 +204,7 @@ function* addRemoveToWishlist(action) {
     yield call(Api.addRemoveToWishlist, action.payload, token, language);
     yield put(Actions.addRemoveToWishlistSuccess());
   } catch (error) {
-    const { status, message } = JSON.parse(error.message);
+    const { status } = JSON.parse(error.message);
     if (status === 409) {
       alert("You can not add more than 500 products in wishlist");
     }

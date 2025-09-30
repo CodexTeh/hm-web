@@ -1,5 +1,4 @@
 import CloseIcon from '@mui/icons-material/CancelRounded';
-import LoginModal from '@components/Modal/LoginModal';
 import { Box, Divider, IconButton, Typography } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import Drawer from '@mui/material/Drawer';

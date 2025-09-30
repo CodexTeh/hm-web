@@ -170,12 +170,6 @@ export const Api = {
         method: 'GET',
       };
 
-      const { page = 1, perPage = 10 } = pagination || {};
-      const query = {
-        page: JSON.stringify(page + 1),
-        limit: JSON.stringify(perPage)
-      };
-
       response = await fetch(`${SERVER_URL}/get_products_for_categories?category=['${category}']`, options);
 
       switch (response.status) {
@@ -546,6 +540,7 @@ export const Api = {
         case 400:
           throw new Error(response.message);
         case 409:
+          // eslint-disable-next-line no-throw-literal
           throw { status: response.status, message: response.message };
         default:
           throw new Error('Something went wrong!');

@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, TextField, Card, CardContent, useTheme, Button } from '@mui/material';
+import { Box, Typography, Grid, TextField, Card, CardContent } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
-// import HomeIcon from '@mui/icons-material/Home';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
-import { styled, useMediaQuery } from '@mui/system';
+import { styled } from '@mui/system';
 import { GetUser, GetLanguage, GetCartDetails } from '@redux-state/selectors';
 import { useDispatch } from 'react-redux';
 import PhoneTextInput from '@components/PhoneTextInput';
@@ -11,8 +12,7 @@ import { emptyCart, addToCart } from '@redux-state/common/action';
 import pusher from '@helpers/pusherConfig';
 import constants from '@helpers/constants';
 import useRouter from '@helpers/useRouter';
-import { setLatestOrders, toggleToast } from '@redux-state/common/action';
-// import DeliveryCardSelection from './DeliveryCardSelectios';
+import { toggleToast } from '@redux-state/common/action';
 import OrderSummary from './OrderSummary';
 
 const blue = {
@@ -75,9 +75,6 @@ const CheckoutPage = () => {
   const cart = GetCartDetails();
 
   const router = useRouter()
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const isRTL = language === 'ar';
 

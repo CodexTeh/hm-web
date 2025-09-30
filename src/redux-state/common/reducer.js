@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import {
   GET_PRODUCTS,
   GET_PRODUCTS_SUCCESS,

@@ -79,7 +79,7 @@ const ContactPage = () => {
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
         newErrors.email = rtl ? 'صيغة البريد الإلكتروني غير صحيحة' : 'Invalid email format';
       }
-      if (form.phone && !/^[\d\s+()\-]{6,}$/.test(form.phone.trim())) {
+      if (form.phone && !/^[\d\s+()-]{6,}$/.test(form.phone.trim())) {
         newErrors.phone = rtl ? 'صيغة رقم الهاتف غير صحيحة' : 'Invalid phone format';
       }
       if (!form.subject.trim()) newErrors.subject = rtl ? 'الموضوع مطلوب' : 'Subject is required';

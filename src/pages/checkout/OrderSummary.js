@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Box, Typography, Button, Grid, Divider, CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
