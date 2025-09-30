@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import TuneIcon from '@mui/icons-material/Tune'
-import { Box, Card, CardContent, MenuItem, OutlinedInput, Select, Stack, styled, TextField, Typography } from '@mui/material';
+import { Box, Card, CardContent, MenuItem, OutlinedInput, Select, styled, TextField, Typography } from '@mui/material';
 import { GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage, GetCategories, GetProductCatalogs } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
@@ -19,7 +19,7 @@ const StyledDescriptionFieldText = styled(TextField)({
 
 const ALL_VALUE = 'all';
 
-const ProductCardView = ({ drawerWidth = 300 }) => {
+const ProductCardView = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
@@ -72,7 +72,6 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
   const dispatch = useDispatch();
 
   const handleOpen = (value) => setOpen(value);
-  const handleClose = () => setOpen(null);
 
   const { pathname } = useLocation();
 
@@ -174,6 +173,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     if (filter) {
       loadProducts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, filter, pathname]);
 
   useEffect(() => {
@@ -222,6 +222,7 @@ const ProductCardView = ({ drawerWidth = 300 }) => {
     if (itemsCount > 0 && itemsCount <= pagination.perPage) {
       setHasMoreItems(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, pagination, itemsCount, pagination.perPage]);
 
   useEffect(() => {

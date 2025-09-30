@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Typography,
@@ -15,22 +15,34 @@ import {
   Apple,
   Android
 } from "@mui/icons-material";
+// keep qrcode import but don't render it until after mount
 import { QRCodeCanvas } from "qrcode.react";
 
 const Footer = () => {
+  // minimal synchronous work on render
   const language = GetLanguage();
   const rtl = language === "ar";
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const iosLink = "https://apps.apple.com/app/hm-awani/id6752559648";
-  const androidLink =
-    "https://play.google.com/store/apps/details?id=com.workvize.bloomfieldmtn&hl=en";
+  const iosLink = useMemo(() => "https://apps.apple.com/app/hm-awani/id6752559648", []);
+  const androidLink = useMemo(() => "https://play.google.com/store/apps/details?id=com.workvize.bloomfieldmtn&hl=en", []);
 
-  const scrollToTop = () => {
+  // Defer heavy QR rendering until after mount to avoid blocking first paint
+  const [showQR, setShowQR] = useState(false);
+  useEffect(() => {
+    // allow first paint; then render QR codes
+    const id = window.setTimeout(() => setShowQR(true), 100); // small delay
+    return () => window.clearTimeout(id);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, []);
+
+  // small memoized QR size
+  const qrSize = useMemo(() => (isMobile ? 50 : 88), [isMobile]);
 
   return (
     <Box
@@ -47,8 +59,6 @@ const Footer = () => {
       <Grid
         container
         spacing={3}
-        xs={4}
-        md={12}
         sx={{
           flexDirection: rtl ? "row-reverse" : "row",
           maxWidth: "100%",
@@ -128,6 +138,7 @@ const Footer = () => {
             </Link>
           </Box>
         </Grid>
+
         {/* App Download Cards */}
         <Grid item xs={12} sm={6} md={2}>
           <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
@@ -143,20 +154,26 @@ const Footer = () => {
           >
             {/* iOS Card */}
             <Box sx={{ bgcolor: "#2b2b2b", borderRadius: 2, p: 1, display: "flex", alignItems: "center", flexDirection: 'column', textAlign: 'center' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Apple fontSize="small" />
-                <Box component="a" href={iosLink} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", p: 1, mt: 1, bgcolor: "#1f1f1f", borderRadius: 1.5 }}>
-                  <QRCodeCanvas value={iosLink} size={isMobile ? 50 : 88} bgColor="#1f1f1f" fgColor="#ffffff" />
-                </Box>
+              <Apple fontSize="small" />
+              <Box component="a" href={iosLink} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", p: 1, mt: 1, bgcolor: "#1f1f1f", borderRadius: 1.5 }}>
+                {showQR ? (
+                  <QRCodeCanvas value={iosLink} size={qrSize} bgColor="#1f1f1f" fgColor="#ffffff" />
+                ) : (
+                  // light placeholder avoids heavy canvas at first paint
+                  <Box sx={{ width: qrSize, height: qrSize, bgcolor: "#111", borderRadius: 0.5 }} />
+                )}
               </Box>
             </Box>
-            {/* iOS Card */}
+
+            {/* Android Card */}
             <Box sx={{ bgcolor: "#2b2b2b", borderRadius: 2, p: 1, display: "flex", alignItems: "center", flexDirection: 'column', textAlign: 'center' }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Android fontSize="small" />
-                <Box component="a" href={androidLink} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", p: 1, mt: 1, bgcolor: "#1f1f1f", borderRadius: 1.5 }}>
-                  <QRCodeCanvas value={androidLink} size={isMobile ? 50 : 88} bgColor="#1f1f1f" fgColor="#ffffff" />
-                </Box>
+              <Android fontSize="small" />
+              <Box component="a" href={androidLink} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", p: 1, mt: 1, bgcolor: "#1f1f1f", borderRadius: 1.5 }}>
+                {showQR ? (
+                  <QRCodeCanvas value={androidLink} size={qrSize} bgColor="#1f1f1f" fgColor="#ffffff" />
+                ) : (
+                  <Box sx={{ width: qrSize, height: qrSize, bgcolor: "#111", borderRadius: 0.5 }} />
+                )}
               </Box>
             </Box>
           </Box>
@@ -165,17 +182,66 @@ const Footer = () => {
 
       {/* Social Icons */}
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: { xs: 2, sm: 3 }, mt: { xs: 3, sm: 4 } }}>
-        <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" }, fontSize: 30 }} onClick={() => window.open(process.env.REACT_APP_HM_FACEBOOK_URL)} size="large" aria-label="Open Facebook">
-          <Facebook fontSize="inherit" color="primary" />
+        <IconButton
+          component="a"
+          href={process.env.REACT_APP_HM_FACEBOOK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" }, fontSize: 30 }}
+          aria-label="Open Facebook"
+        >
+          <Facebook fontSize="inherit" />
         </IconButton>
-        <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }} onClick={() => window.open(process.env.REACT_APP_HM_INSTAGRAM_URL)} size="large" aria-label="Open Instagram">
-          <img style={{ width: 30, height: 30 }} src="https://img.icons8.com/?size=80&id=ZRiAFreol5mE&format=png" alt=""/>
+
+        <IconButton
+          component="a"
+          href={process.env.REACT_APP_HM_INSTAGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }}
+          aria-label="Open Instagram"
+        >
+          <img
+            style={{ width: 30, height: 30 }}
+            src="https://img.icons8.com/?size=80&id=ZRiAFreol5mE&format=png"
+            alt="instagram"
+            loading="lazy"
+            decoding="async"
+          />
         </IconButton>
-        <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }} onClick={() => window.open(process.env.REACT_APP_HM_TIKTOK_URL)} size="large" aria-label="Open TikTok">
-          <img style={{ width: 30, height: 30 }} src="https://img.icons8.com/?size=48&id=118640&format=png" alt=""/>
+
+        <IconButton
+          component="a"
+          href={process.env.REACT_APP_HM_TIKTOK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }}
+          aria-label="Open TikTok"
+        >
+          <img
+            style={{ width: 30, height: 30 }}
+            src="https://img.icons8.com/?size=48&id=118640&format=png"
+            alt="tiktok"
+            loading="lazy"
+            decoding="async"
+          />
         </IconButton>
-        <IconButton sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }} onClick={() => window.open(process.env.REACT_APP_HM_SNAPCHAT_URL)} size="large" aria-label="Open SnapChat">
-          <img style={{ width: 30, height: 30 }} src="https://app.snapchat.com/web/deeplink/snapcode?username=hmawaniwebstore&amp;type=SVG&amp;bitmoji=enable" alt=""/>
+
+        <IconButton
+          component="a"
+          href={process.env.REACT_APP_HM_SNAPCHAT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" } }}
+          aria-label="Open SnapChat"
+        >
+          <img
+            style={{ width: 30, height: 30 }}
+            src="https://app.snapchat.com/web/deeplink/snapcode?username=hmawaniwebstore&type=SVG&bitmoji=enable"
+            alt="snapchat"
+            loading="lazy"
+            decoding="async"
+          />
         </IconButton>
       </Box>
 
@@ -196,4 +262,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default React.memo(Footer);

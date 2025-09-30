@@ -1,77 +1,65 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import bannerImage from '@assets/icons/banner.jpg';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { GetLanguage, GetBanners } from '@redux-state/common/selectors';
+import bannerImage from '@assets/icons/banner.jpg';
+import { useImagesPreloaded } from '@helpers/usePreloadImages'; // use the hook above
 import { CustomCarousel } from '@components/CustomCarousal';
+import { GetLanguage, GetBanners } from '@redux-state/common/selectors';
 import { getBanners } from '@redux-state/common/action';
 
 const Banner = () => {
-  // State to track the drawer visibility and current banner image
-  const [drawerVisible, setDrawerVisible] = useState(false);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getBanners());
-  }, []);
+  useEffect(() => { dispatch(getBanners()); }, [dispatch]);
 
-  // Language detection
   const language = GetLanguage();
   const banners = GetBanners();
 
   const isRTL = language === 'ar';
+  const bannerUrls = useMemo(() =>
+    (isRTL ? banners?.arBannerUrls : banners?.bannerUrls)?.filter(item => item) || [bannerImage], 
+    [isRTL, banners]
+  );
 
-  const bannerUrls = useMemo(() => (isRTL ? banners?.arBannerUrls : banners?.bannerUrls)?.filter(item => item !== '') || [bannerImage], [isRTL, banners]);
+  // 🚨 Wait until all banners are preloaded
+  const bannersReady = useImagesPreloaded(bannerUrls);
 
-  // Use effect to start the banner rotation every 2 seconds
+  // Auto-rotate logic
   useEffect(() => {
-    if (bannerUrls.length > 0) {
+    if (bannerUrls.length > 1 && bannersReady) {
       const intervalId = setInterval(() => {
-        setCurrentBannerIndex(prevIndex => (prevIndex + 1) % bannerUrls.length); // Loop through banners
-      }, 5000); // Change every 3 seconds
-
-      // Cleanup interval on component unmount
+        setCurrentBannerIndex((prev) => (prev + 1) % bannerUrls.length);
+      }, 5000);
       return () => clearInterval(intervalId);
     }
-  }, [bannerUrls]);
+  }, [bannerUrls, bannersReady]);
 
-  // Ref to the banner section
-  const bannerRef = useRef(null);
+  const handleImageChange = (index) => setCurrentBannerIndex(index);
 
-  // Hook to track scroll position and determine when the bottom of the banner hits the top
-  useEffect(() => {
-    const handleScroll = () => {
-      if (bannerRef.current) {
-        const bannerBottom = bannerRef.current.getBoundingClientRect().bottom;
-
-        // Check if the bottom of the banner reaches the top of the viewport
-        if (bannerBottom <= window.innerHeight) {
-          setDrawerVisible(true); // Open the drawer
-        } else {
-          setDrawerVisible(false); // Close the drawer
-        }
-      }
-    };
-
-    // Attach scroll event listener
-    window.addEventListener('scroll', handleScroll);
-
-    // Cleanup event listener on component unmount
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const handleImageChange = (index) => {
-    setCurrentBannerIndex(index);
-  };
+  // Skeleton or loader until images are ready!
+  if (!bannersReady) {
+    return (
+      <div style={{
+        height: 350,
+        width: '100%',
+        background: '#f4f4f4',
+        borderRadius: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {/* Your fancy loader here if you like */}
+        <span>Loading banners...</span>
+      </div>
+    );
+  }
 
   return (
     <CustomCarousel
       selectedIndex={currentBannerIndex}
       handleImageChange={handleImageChange}
-      images={bannerUrls} isRTL={isRTL}
+      images={bannerUrls}
+      isRTL={isRTL}
       hasChildImages={false}
       showThumbs={false}
       borderRadius={'0px'}

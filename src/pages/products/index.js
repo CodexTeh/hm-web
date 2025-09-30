@@ -1,71 +1,84 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState, useCallback, Suspense } from 'react';
 import { useDispatch } from 'react-redux';
-import Footer from '@components/Footer';
+import { Box, CircularProgress } from '@mui/material';
 import { getCategories } from '@redux-state/common/action';
-import WhatsAppButton from '@components/WhatsAppButton';
-import CardDrawer from './CardDrawer/CartDrawer';
-import CartFloatButton from './CartFloatButton';
-import Banner from './Banner';
-import ProductCardView from './Products';
-import { OffersSlider } from './OffersSlider';
-import { Box } from '@mui/material';
-import { ProductModal } from '@components/Modal/ProductModal';
-import useRouter from '@helpers/useRouter';
 import { Api } from '@redux-state/common/api';
+import useRouter from '@helpers/useRouter';
 import { GetLanguage } from '@redux-state/common/selectors';
+import { OffersSlider } from './OffersSlider';
+
+// Lazy-loaded components (code-splitting)
+const Footer = React.lazy(() => import('@components/Footer'));
+const WhatsAppButton = React.lazy(() => import('@components/WhatsAppButton'));
+const CardDrawer = React.lazy(() => import('./CardDrawer/CartDrawer'));
+const CartFloatButton = React.lazy(() => import('./CartFloatButton'));
+const Banner = React.lazy(() => import('./Banner'));
+const ProductCardView = React.lazy(() => import('./Products'));
+const ProductModal = React.lazy(() => import('@components/Modal/ProductModal').then(m => ({ default: m.ProductModal })));
 
 export default function Products() {
   const router = useRouter();
-  const { barcode } = router.query;
+  const { barcode } = router.query ?? {};
 
-  // Language/RTL
-  const language = GetLanguage(); // 'en' | 'ar'
+  const language = GetLanguage();
   const isRTL = language === 'ar';
+
+  const dispatch = useDispatch();
 
   // Local state
   const [openDrawer, setOpenDrawer] = useState(false);
   const [prodModal, setProdModal] = useState(false);
   const [specificProduct, setSpecificProduct] = useState(null);
-  const dispatch = useDispatch();
 
-  // Fetch categories on mount
+  // Fetch categories on mount (keep lightweight)
   useEffect(() => {
     dispatch(getCategories());
   }, [dispatch]);
 
-  // Fetch single product when barcode changes
+  // Fetch single product with cancellation support
   useEffect(() => {
-    let cancelled = false;
+    if (!barcode) return;
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let mounted = true;
+
     const fetchSingleProduct = async () => {
-      if (!barcode) return;
       try {
-        const product = await Api.getSpecificProduct(barcode);
-        if (product && !cancelled) {
-          setSpecificProduct(product);
-          setProdModal(true);
+        const product = await Api.getSpecificProduct(barcode, { signal }); // if Api supports abort; else ignore second param
+        if (!mounted || !product) return;
+        setSpecificProduct(product);
+        setProdModal(true);
+      } catch (err) {
+        if (err?.name === 'AbortError') {
+          // aborted - ignore
+        } else {
+          // Optional: set error state or console
+          console.warn('Product fetch error', err);
         }
-      } catch {
-        // optional: handle error
       }
     };
-    fetchSingleProduct();
+
+    // small debounce to avoid rapid repeated calls if barcode updates fast
+    const tid = window.setTimeout(fetchSingleProduct, 120);
+
     return () => {
-      cancelled = true;
+      mounted = false;
+      controller.abort();
+      window.clearTimeout(tid);
     };
   }, [barcode]);
 
-  // Derived data with safe defaults
+  // Derived data (kept memoized)
   const imageUrls = useMemo(() => {
     if (!specificProduct?.image_urls) return [];
     try {
-      // image_urls is a stringified JSON array or already an array
       if (typeof specificProduct.image_urls === 'string') {
         const parsed = JSON.parse(specificProduct.image_urls.replace(/'/g, '"'));
         return Array.isArray(parsed) ? parsed : [];
       }
       return Array.isArray(specificProduct.image_urls) ? specificProduct.image_urls : [];
     } catch {
-      // Fallback: if it's a comma-separated string or single URL
       const v = specificProduct.image_urls;
       if (typeof v === 'string' && v.length > 0) return [v];
       return [];
@@ -88,35 +101,59 @@ export default function Products() {
     const discount = Number(discountValue);
     if (!isFinite(price)) return '';
     const discounted = price - (price * discount) / 100;
-    // keep consistent precision
     return discounted.toFixed(3);
   }, [specificProduct?.price, discountValue]);
 
-  // Drawer handlers
+  // Drawer handlers (memoized)
   const handleDrawerOpen = useCallback(() => setOpenDrawer(true), []);
   const handleDrawerClose = useCallback(() => setOpenDrawer(false), []);
 
+  // Lightweight suspense fallback to show while lazy components load
+  const SuspenseFallback = (
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', py: 4 }}>
+      <CircularProgress />
+    </Box>
+  );
 
   return (
     <Box sx={{ paddingTop: 10 }}>
-      <Banner />
-      <OffersSlider />
-      <ProductCardView />
-      <CardDrawer open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
-      <CartFloatButton open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
-      <WhatsAppButton />
-      <Footer />
+      <Suspense fallback={SuspenseFallback}>
+        <Banner />
+      </Suspense>
 
+      {/* <Suspense fallback={<Box sx={{ height: 150 }} />}> */}
+        <OffersSlider />
+      {/* </Suspense> */}
+
+      <Suspense fallback={<Box sx={{ height: 400 }} />}>
+        <ProductCardView />
+      </Suspense>
+
+      {/* These UI components are interactive; lazy-load them but keep them mounted */}
+      <Suspense fallback={null}>
+        <CardDrawer open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
+        <CartFloatButton open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
+        <WhatsAppButton />
+      </Suspense>
+
+      {/* Footer is lazy-loaded to avoid blocking first paint */}
+      <Suspense fallback={<Box sx={{ height: 120 }} />}>
+        <Footer />
+      </Suspense>
+
+      {/* Product modal (lazy) */}
       {barcode && specificProduct?.id && (
-        <ProductModal
-          hasDiscount={hasDiscount}
-          isRTL={isRTL}
-          imageUrls={imageUrls}
-          open={prodModal}
-          setOpen={setProdModal}
-          product={specificProduct}
-          finalPrice={finalPrice}
-        />
+        <Suspense fallback={null}>
+          <ProductModal
+            hasDiscount={hasDiscount}
+            isRTL={isRTL}
+            imageUrls={imageUrls}
+            open={prodModal}
+            setOpen={setProdModal}
+            product={specificProduct}
+            finalPrice={finalPrice}
+          />
+        </Suspense>
       )}
     </Box>
   );
