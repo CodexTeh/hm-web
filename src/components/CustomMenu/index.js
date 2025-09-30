@@ -6,8 +6,8 @@ import React, {
 import {
   styled,
   Box,
-  Menu as Menu,
-  MenuItem as MenuItem,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, LinearProgress } from '@mui/material';
+import { Box } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
-import { GetUser, GetToken, GetToastMessage, GetToastType, GetToggleToast, GetProductsLoading } from '@redux-state/selectors';
-import { toggleToast, openLoginModal } from '@redux-state/actions';
-// import NotificationCard from '@components/NotificationCard';
+import { GetUser, GetToken, GetToastMessage, GetToastType, GetToggleToast } from '@redux-state/selectors';
+import { toggleToast } from '@redux-state/actions';
 import LoginModal from '@components/Modal/LoginModal';
 import RegisterModal from '@components/Modal/RegisterModal';
 import TopBar from './TopBar';
@@ -15,7 +14,6 @@ const Layout = () => {
   const togleToast = GetToggleToast();
   const toastMessage = GetToastMessage();
   const toastType = GetToastType();
-  const isFetching = GetProductsLoading();
   const user = GetUser();
   const token = GetToken();
 
@@ -69,16 +67,9 @@ const Layout = () => {
     }
   }, [token])
 
-  useEffect(() => {
-    if (!user) {
-      // dispatch(openLoginModal(true));
-    }
-  }, [dispatch]);
-
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>
       <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll}/>
-      {isFetching && <LinearProgress value={10} />}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={togleToast}

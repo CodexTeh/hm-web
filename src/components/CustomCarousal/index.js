@@ -1,17 +1,156 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
+  Skeleton, // 👈 New Import
 } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-export const CustomCarousel = ({
+/**
+ * Lightweight LazyImage component
+ * - uses IntersectionObserver to only set `src` when visible
+ * - uses decoding="async"
+ * - exposes onLoad/onError
+ * - accepts optional srcSet (string) and sizes
+ */
+const LazyImage = React.memo(function LazyImage({
+  src,
+  alt,
+  srcSet,    // optional e.g. "img@1x.jpg 1x, img@2x.jpg 2x"
+  sizes,     // optional
+  width,
+  height,
+  style,
+  className,
+  // Removed loadingPlaceholder prop: The MUI Skeleton is the intended loading UI.
+  onLoad,
+  onError,
+}) {
+  const containerRef = useRef(null); // Ref for the container (Intersection Observer target)
+  const imgRef = useRef(null);      // Ref for the actual image element (for cache check)
+  const [inView, setInView] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    if ('IntersectionObserver' in window) {
+      const ob = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setInView(true);
+              ob.disconnect();
+            }
+          });
+        },
+        { rootMargin: '200px' } // preload a bit earlier
+      );
+      ob.observe(containerRef.current);
+      return () => ob.disconnect();
+    } else {
+      // Fallback: immediately load on old browsers
+      setInView(true);
+    }
+  }, []);
+
+  // 🛠️ Optimization: Check if the image is already loaded from browser cache (bypassing skeleton flash)
+  useEffect(() => {
+    // This runs once 'inView' becomes true and the image element is rendered.
+    if (inView && imgRef.current && imgRef.current.complete) {
+      // If the browser reports the image is already complete (cached and loaded), 
+      // instantly set 'loaded' to true to skip the opacity transition and skeleton.
+      setLoaded(true);
+    }
+  }, [inView]);
+
+  const handleLoad = useCallback((e) => {
+    setLoaded(true);
+    if (onLoad) onLoad(e);
+  }, [onLoad]);
+
+  const handleError = useCallback((e) => {
+    if (onError) onError(e);
+  }, [onError]);
+
+  return (
+    <div
+      ref={containerRef} // Use containerRef for IntersectionObserver
+      style={{
+        position: 'relative',
+        width,
+        height,
+        minWidth: width,
+        minHeight: height,
+        display: 'block',
+        // 🛠️ Added default background to the container for robustness when not loaded
+        background: loaded ? 'transparent' : '#f5f5f5', 
+        overflow: 'hidden',
+      }}
+      className={className}
+    >
+      {/* MUI Skeleton as loading indicator: 
+        Rendered when the image is not yet loaded.
+      */}
+      {!loaded && (
+        <Skeleton 
+          variant="rectangular" 
+          animation="wave"
+          sx={{ 
+            width: '100%', 
+            height: '100%', 
+            position: 'absolute', 
+            top: 0, 
+            left: 0,
+            zIndex: 1, // Ensure skeleton is below the carousel controls/text if any
+            // Match the border radius of the final image
+            borderRadius: style?.borderRadius || 0,
+          }} 
+        />
+      )}
+
+      {inView && (
+        <img
+          ref={imgRef} // Use imgRef for cache check
+          src={src}
+          srcSet={srcSet}
+          sizes={sizes}
+          alt={alt}
+          width={undefined} // let CSS control sizing by default
+          height={undefined}
+          // loading="lazy"
+          decoding="async"
+          style={{
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            objectFit: style?.objectFit || 'contain',
+            borderRadius: style?.borderRadius || 0,
+            outline: 'none',
+            ...style,
+            transition: 'opacity 240ms ease-in-out',
+            opacity: loaded ? 1 : 0,
+            zIndex: 2, // Ensure the image is above the skeleton
+          }}
+          onLoad={handleLoad}
+          onError={handleError}
+        />
+      )}
+    </div>
+  );
+});
+
+/**
+ * CustomCarousel (optimized)
+ * - memoized thumbnails
+ * - uses LazyImage for heavy image loading
+ * - memoized arrow renderers
+ */
+export const CustomCarousel = React.memo(function CustomCarousel({
   selectedIndex,
   handleImageChange,
-  images,
+  images = [],
   isRTL,
   showThumbs = true,
   width = '100%',
@@ -19,10 +158,9 @@ export const CustomCarousel = ({
   maxHeight = 350,
   showStatus = true,
   borderRadius = '8px'
-}) => {
+}) {
 
-
-  const renderArrowPrev = (onClickHandler, hasPrev, label) =>
+  const renderArrowPrev = useCallback((onClickHandler, hasPrev, label) =>
     hasPrev && (
       <Box
         onClick={onClickHandler}
@@ -44,11 +182,11 @@ export const CustomCarousel = ({
           cursor: 'pointer',
         }}
       >
-        <ArrowBackIosIcon />
+        <ArrowBackIosIcon fontSize="small" />
       </Box>
-    );
+    ), []);
 
-  const renderArrowNext = (onClickHandler, hasNext, label) =>
+  const renderArrowNext = useCallback((onClickHandler, hasNext, label) =>
     hasNext && (
       <Box
         onClick={onClickHandler}
@@ -70,9 +208,19 @@ export const CustomCarousel = ({
           cursor: 'pointer',
         }}
       >
-        <ArrowForwardIosIcon />
+        <ArrowForwardIosIcon fontSize="small" />
       </Box>
-    );
+    ), []);
+
+  // Provide explicit slide styles (avoid recreating objects)
+  const slideStyle = useMemo(() => ({
+    width,
+    height,
+    maxHeight,
+    objectFit: 'contain',
+    borderRadius,
+    outline: 'none',
+  }), [width, height, maxHeight, borderRadius]);
 
   return (
     <Carousel
@@ -85,51 +233,26 @@ export const CustomCarousel = ({
       onChange={handleImageChange}
       renderArrowPrev={renderArrowPrev}
       renderArrowNext={renderArrowNext}
-      renderThumbs={() => images.map((image, index) => (
-        <div
-          key={index}
-          style={{
-            border: selectedIndex === index ? `2px solid` : null,
-            borderRadius: '8px',
-            boxSizing: 'border-box',
-            width: 74,
-          }}
-        >
-          <img
-            src={image}
-            alt={`Thumbnail-${index}`}
-            style={{
-              width: 70,
-              height: 70,
-              borderRadius: '6px',
-              objectFit: 'fill',
-              outline: 'none'
-            }}
-            loading="eager"
-          />
-        </div>
-      ))}
       style={{
         direction: isRTL ? 'rtl' : 'ltr',
       }}
     >
       {images?.map((image, index) => (
         <div key={index}>
-          <img
+          <LazyImage
             src={image}
             alt={`Gallery-${index}`}
             style={{
               width: width,
-              height: height,
-              maxHeight: maxHeight,
-              objectFit: 'contain',
-              borderRadius: borderRadius,
+              height: slideStyle.height,
+              maxHeight: slideStyle.maxHeight,
+              objectFit: slideStyle.objectFit,
+              borderRadius: slideStyle.borderRadius,
               outline: 'none'
             }}
-            loading="eager"   // <------
           />
         </div>
       ))}
     </Carousel>
   );
-};
+});
