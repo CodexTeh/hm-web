@@ -166,7 +166,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
     if (itemsCount > 0 && itemsCount <= pagination.perPage) {
       setHasMoreItems(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, pagination, itemsCount, pagination.perPage]);
 
   useEffect(() => {
@@ -522,15 +522,15 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                     }}
                   >
                     <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    fontWeight={900}
-                    sx={{
-                      direction: isRTL ? 'rtl' : 'ltr',
-                      textAlign: isRTL ? 'right' : 'left',
-                      fontSize: { xs: 13, sm: 15 },
-                    }}
-                  >{attr.label}</Typography>{attr.value}
+                      variant="body2"
+                      color="textSecondary"
+                      fontWeight={900}
+                      sx={{
+                        direction: isRTL ? 'rtl' : 'ltr',
+                        textAlign: isRTL ? 'right' : 'left',
+                        fontSize: { xs: 13, sm: 15 },
+                      }}
+                    >{attr.label}</Typography>{attr.value}
                   </Typography>
                 </Grid>
               ))}
@@ -538,33 +538,46 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
             <Divider sx={{ my: 2 }} />
             {/* Category/Subcategory */}
             {category &&
-              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 1, display: 'flex', alignItems: 'start' }}>
                 <strong dir={isRTL && "rtl"}>{isRTL ? "فئات: " : "Categories:"}</strong>
+
+                {/* Category button */}
                 <Button
                   variant="outlined"
                   size='small'
                   sx={{
                     textTransform: 'lowercase',
                     color: colorPalette.black,
-                    borderColor: colorPalette.lavenderGray,
-                    ml: 2
+                    borderColor: colorPalette.boxShadowGrey,
+                    ml: 2, // Adds margin to the left for spacing
+                    fontSize: { xs: 10, md: 12 },
+                    borderRadius: 2, // Optional: to make the button's corners rounded
+                    padding: '4px 10px' // Optional: you can adjust the padding for better alignment
                   }}
                 >
                   {isRTL ? category?.ar_category : category?.category}
                 </Button>
-                {subCategory && <Button
-                  variant="outlined"
-                  size='small'
-                  sx={{
-                    textTransform: 'lowercase',
-                    color: colorPalette.black,
-                    borderColor: colorPalette.lavenderGray,
-                    ml: 2
-                  }}
-                >
-                  {isRTL ? subCategory?.ar_subcategory : subCategory?.subcategory}
-                </Button>}
+
+                {/* Subcategory button (optional) */}
+                {subCategory && (
+                  <Button
+                    variant="outlined"
+                    size='small'
+                    sx={{
+                      textTransform: 'lowercase',
+                      color: colorPalette.black,
+                      borderColor: colorPalette.boxShadowGrey,
+                      fontSize: { xs: 10, md: 12 },
+                      ml: 2, // Margin to space it from the first button
+                      borderRadius: 2, // Optional: to round the corners
+                      padding: '4px 10px' // Optional: better padding for alignment
+                    }}
+                  >
+                    {isRTL ? subCategory?.ar_subcategory : subCategory?.subcategory}
+                  </Button>
+                )}
               </Typography>
+
             }
           </Grid>
         </Grid>

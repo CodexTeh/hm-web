@@ -58,8 +58,8 @@ const SearchBar = ({ setHasScrolled }) => {
         <OutlinedInput
           sx={{
             borderRadius: '5px',
-            fontSize: 13,
-            height: { xs: 50 },
+            fontSize:  { xs: 10, md: 13 },
+            height: { xs: 45 },
             borderColor: colorPalette.theme,
             background: colorPalette.lightShadow,
             direction: isRTL ? 'rtl' : 'ltr',
@@ -100,13 +100,12 @@ const SearchBar = ({ setHasScrolled }) => {
           alignItems: 'center',
           background: colorPalette.lightShadow,
           width: { xs: 38 },
-          height: { xs: 38 },
+          height: { xs: 40 },
           cursor: 'pointer',
           borderRadius: 1,
           borderColor: colorPalette.theme,
           borderWidth: 1,
           borderStyle: 'solid',
-          mt: { xs: 1, sm: 0 },
           mx: { xs: 0, sm: 0.5 },
         }}
         onClick={() => {
