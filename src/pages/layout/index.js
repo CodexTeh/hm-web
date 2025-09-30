@@ -69,7 +69,7 @@ const Layout = () => {
 
   return (
     <Box sx={{ position: 'fixed', top: 0, zIndex: 30, width: '100%' }}>
-      <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll}/>
+      {/* <TopBar hasScrolled={hasScrolled} setHasScrolled={setHasScrolled} stopScroll={stopScroll} setStopScroll={setStopScroll}/> */}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={togleToast}
