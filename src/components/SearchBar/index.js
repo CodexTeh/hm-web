@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Box, OutlinedInput, Button } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { colorPalette } from '@utils/colorPalette';
 import { GetLanguage } from '@redux-state/common/selectors';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from 'react-redux';
-import { getProducts } from '@redux-state/common/action';
+import { getProducts, addSearchText } from '@redux-state/common/action';
 
 const SearchBar = ({ setHasScrolled }) => {
   const language = GetLanguage();
@@ -51,15 +51,17 @@ const SearchBar = ({ setHasScrolled }) => {
       <form
         onSubmit={(e) => {
           e.preventDefault(); // Prevent the default form submission behavior
-          searchProducts();
+          if (searchText) {
+            searchProducts();
+          }
         }}
         style={{ width: '100%' }}
       >
-        <OutlinedInput
+        <TextField
           sx={{
             borderRadius: '5px',
-            fontSize:  { xs: 10, md: 13 },
-            height: { xs: 45 },
+            fontSize: { xs: 8, md: 13 },
+            height: { xs: 55 },
             borderColor: colorPalette.theme,
             background: colorPalette.lightShadow,
             direction: isRTL ? 'rtl' : 'ltr',
@@ -68,12 +70,14 @@ const SearchBar = ({ setHasScrolled }) => {
             '& fieldset': {
               borderColor: colorPalette.theme,
             },
-            py: { xs: 1, sm: 0 },
             fontWeight: 400,
           }}
           fullWidth
           value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={(e) => {
+            dispatch(addSearchText(e.target.value));
+            setSearchText(e.target.value)
+          }}
           placeholder={placeholderText}
           startAdornment={
             <SearchIcon
@@ -99,8 +103,8 @@ const SearchBar = ({ setHasScrolled }) => {
           justifyContent: 'center',
           alignItems: 'center',
           background: colorPalette.lightShadow,
-          width: { xs: 38 },
-          height: { xs: 40 },
+          width: { xs: 55 },
+          height: { xs: 55 },
           cursor: 'pointer',
           borderRadius: 1,
           borderColor: colorPalette.theme,
@@ -111,6 +115,7 @@ const SearchBar = ({ setHasScrolled }) => {
         onClick={() => {
           setHasScrolled(false);
           if (searchText) {
+            dispatch(addSearchText(null));
             setSearchText('');
             searchProducts()
           }

@@ -2,13 +2,14 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import TuneIcon from '@mui/icons-material/Tune'
+import Refresh from '@mui/icons-material/Refresh'
 import {
-  Box, Card, CardContent, MenuItem, OutlinedInput, Select, styled,
+  Box, Card, CardContent, IconButton, MenuItem, OutlinedInput, Select, styled,
   TextField, Typography
 } from '@mui/material';
 import {
   GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage,
-  GetCategories, GetProductCatalogs
+  GetCategories, GetProductCatalogs, GetSearchText
 } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
@@ -61,6 +62,7 @@ const ProductCardView = () => {
   const isFetching = GetProductsLoading();
   const itemsCount = GetAllProductsCount();
   const categories = GetCategories();
+  const searchText = GetSearchText();
   const allProductCatalogs = GetProductCatalogs();
 
   // ... (splitByTypeAndLanguage and enBrands logic remains the same)
@@ -95,12 +97,14 @@ const ProductCardView = () => {
       const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
       setFilter({ [filterKey]: filterKey });
     } else {
-      if (categories?.length > 0) {
+      if (categories?.length > 0 && !searchText) {
         const randomIndex = Math.floor(Math.random() * categories.length);
         setFilter({ webCategory: categories[randomIndex]?.id })
+      } else if (searchText) {
+        setFilter({ website_name: searchText }); // Set to empty object if no categories available
       }
     }
-  }, [pathname, categories]);
+  }, [pathname, categories, searchText]);
 
   useEffect(() => {
     if (from && to && parseFloat(from) > parseFloat(to)) {
@@ -127,6 +131,7 @@ const ProductCardView = () => {
         } else {
           setValue(inputValue);
         }
+        setSortBy(SORT_OPTIONS.NONE)
       };
       return (
         <StyledDescriptionFieldText
@@ -160,7 +165,10 @@ const ProductCardView = () => {
             sx={{ height: 40, background: colorPalette.white }}
             size="medium"
             value={brand ?? ALL_VALUE}
-            onChange={(e) => setBrand(e.target.value)}
+            onChange={(e) => {
+              setSortBy(SORT_OPTIONS.NONE);
+              setBrand(e.target.value)
+            }}
             input={<OutlinedInput />}
           >
             <MenuItem value={ALL_VALUE}>{bilingualAll}</MenuItem>
@@ -216,16 +224,18 @@ const ProductCardView = () => {
         sortBy={sortBy}
       />
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, hasMoreItems, isFetching, isRTL, open, sortBy]);
   // ---------------------------------------
 
   const loadProducts = () => {
-    dispatch(getProducts(pagination, filter));
+    if (sortBy === SORT_OPTIONS.NONE) {
+      dispatch(getProducts(pagination, filter));
+    }
   }
 
   useEffect(() => {
-    if (filter) {
+    if (filter && Object.keys(filter).length > 0) {
       loadProducts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,25 +253,19 @@ const ProductCardView = () => {
 
     if (brand !== ALL_VALUE) {
       newFilter.brand = brand;
-    } else {
-      delete newFilter.brand;
     }
-
     if (from && to) {
       newFilter.min_price = from;
       newFilter.max_price = to;
-    } else {
-      delete newFilter.min_price;
-      delete newFilter.max_price;
     }
 
     // Add sort to the filter object
     if (sortBy && sortBy !== SORT_OPTIONS.NONE) {
       newFilter.min_price = 1;
       newFilter.max_price = 1000;
-    } else {
-      delete newFilter.min_price;
-      delete newFilter.max_price;
+    }
+    if (searchText) {
+      newFilter.website_name = searchText;
     }
 
     // Only update filter state if it has changed to prevent infinite loops
@@ -272,7 +276,7 @@ const ProductCardView = () => {
       return prevFilter;
     });
 
-  }, [brand, from, to, priceError, sortBy, filter]); // **Added sortBy as a dependency**
+  }, [brand, from, to, priceError, sortBy, filter, searchText]); // **Added sortBy as a dependency**
 
   const products = GetProducts();
 
@@ -357,6 +361,17 @@ const ProductCardView = () => {
                   >
                     {isRTL ? 'التصفية والترتيب' : 'Filter & Sort'}
                   </Typography>
+                  <IconButton onClick={() => {
+                    const randomIndex = Math.floor(Math.random() * categories.length);
+                    setFrom('');
+                    setTo('');
+                    setBrand(ALL_VALUE);
+                    setSortBy(SORT_OPTIONS.NONE);
+                    setFilter(null);
+                    dispatch(getProducts(pagination, { webCategory: categories[randomIndex]?.id }));
+                  }}>
+                    <Refresh color="primary" />
+                  </IconButton>
                   <Box sx={{ flexGrow: 1 }} />
                 </Box>
 

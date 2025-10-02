@@ -35,7 +35,8 @@ import {
   GET_BANNERS_SUCCESS,
   GET_USER_PROFILE,
   GET_USER_PROFILE_SUCCESS,
-  EMPTY_CART
+  EMPTY_CART,
+  SET_SEARCH_TEXT
 } from './types';
 
 const INITIAL_STATE = {
@@ -49,6 +50,7 @@ const INITIAL_STATE = {
   loginModal: false,
   profile: null,
   getProfileLoading: false,
+  searchText: null,
   cart: {
     items: [],
     user: {},
@@ -186,6 +188,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case EDIT_CATEGORY:
       return { ...state, editCategoryLoading: true };
+
+    case SET_SEARCH_TEXT:
+      return { ...state, searchText: action.payload };
 
     case EDIT_CATEGORY_SUCCESS:
       return { ...state, editCategoryLoading: false };

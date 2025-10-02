@@ -292,12 +292,14 @@ const CheckoutPage = () => {
                 text={currentTranslations.orderNote}
                 buttonText={currentTranslations.add}
               />
-              <Textarea
+              <TextField
+                fullWidth
+                multiline
                 value={orderNote}
-                maxRows={4}
-                minRows={3}
                 onChange={(e) => setOrderNote(e.target.value)}
-                sx={{ marginTop: 1, maxWidth: '100%' }}
+                variant="outlined"
+                rows={4}
+                sx={{ marginTop: 1 }}
               />
             </CardContent>
           </Card>

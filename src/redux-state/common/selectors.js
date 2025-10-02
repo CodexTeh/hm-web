@@ -87,3 +87,6 @@ export const GetProfileLoading = () =>
 export const GetProfile = () =>
   useSelector(
     (state) => state.common.profile);
+export const GetSearchText = () =>
+  useSelector(
+    (state) => state.common.searchText);

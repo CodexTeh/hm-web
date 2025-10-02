@@ -15,7 +15,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
   const user = GetUser();
   const dispatch = useDispatch();
   let products = GetProducts();
-
+  
   if ((products?.length > 0) && sortBy && sortBy === 'price_desc') {
     products = [...products].sort((a, b) => b.price - a.price);
   } else if ((products?.length > 0) && sortBy && sortBy === 'price_asc') {
@@ -113,7 +113,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
   };
 
   return (
-    <Box sx={{ width: { xs: '100%', md: '98%' }, marginTop: 3, marginLeft: 1.5, marginRight: 1.5 }}>
+    <Box sx={{ marginTop: 3, display: 'flex', flexDirection: 'column', alignContent:'center', alignItems:'center' }}>
       {products?.length > 0 ?
         <Grid
           sx={{ marginLeft: { md: !open ? 0.5 : null }, maxWidth: '100%' }}

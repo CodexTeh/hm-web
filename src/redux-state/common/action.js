@@ -34,7 +34,8 @@ import {
   GET_BANNERS_SUCCESS,
   GET_USER_PROFILE,
   GET_USER_PROFILE_SUCCESS,
-  EMPTY_CART
+  EMPTY_CART,
+  SET_SEARCH_TEXT
 } from './types';
 
 export const addToCart = (cart) => (
@@ -46,6 +47,13 @@ export const addToCart = (cart) => (
 export const emptyCart = () => (
   {
     type: EMPTY_CART
+  }
+);
+
+export const addSearchText = (text) => (
+  {
+    type: SET_SEARCH_TEXT,
+    payload: text
   }
 );
 

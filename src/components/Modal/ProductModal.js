@@ -271,7 +271,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
         sx: {
           borderRadius: isMobile ? 0 : 3,
           p: { xs: 1, sm: 2, md: 3 },
-          width: '100%',
+          width: '85%',
           position: 'relative', // Make the paper relative to position the close button correctly
         }
       }}
@@ -279,6 +279,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
       <DialogActions sx={{ p: { xs: 1, sm: 2 }, pb: 0 }}>
         <IconButton
           onClick={() => setOpen(null)}
+          size='small'
           sx={{
             position: 'absolute',
             right: { xs: 20, lg: 8 },
