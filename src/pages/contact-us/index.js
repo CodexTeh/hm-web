@@ -22,10 +22,10 @@ import 'leaflet/dist/leaflet.css';
 
 // Locations
 const locations = [
-  { id: 1, name_en: "Taimoor shop saada", name_ar: "متجر تيمور الصدة", lat: 17.046705, lng: 54.169690 },
-  { id: 2, name_en: "China village shop", name_ar: "متجر قرية الصين", lat: 17.021632, lng: 54.064655 },
-  { id: 3, name_en: "Sharqia shop", name_ar: "متجر الشرقية", lat: 17.014324, lng: 54.103949 },
-  { id: 4, name_en: "Gharbia shop near Majid isa", name_ar: "متجر الغربية بالقرب من مسجد عيسى", lat: 17.005715, lng: 54.063577 },
+  { id: 1, name_en: "Taimoor Road Shop - Saada", name_ar: "محل طريق تيمور - صعدة", lat: 17.046705, lng: 54.169690 },
+  { id: 2, name_en: "Chinese Village Shop - Salalah", name_ar: "متجر القرية الصينية - صلالة", lat: 17.021632, lng: 54.064655 },
+  { id: 3, name_en: "Al Salam Street Shop - Salalah", name_ar: "محل شارع السلام - صلالة", lat: 17.014324, lng: 54.103949 },
+  { id: 4, name_en: "Al Salam Street Shop - Salalah Gharbia", name_ar: "محل شارع السلام - صلالة الغربية", lat: 17.005715, lng: 54.063577 },
 ];
 
 // Custom map icon
@@ -193,9 +193,8 @@ const ContactPage = () => {
               backgroundColor: '#f4f4f6',
               borderRadius: 2,
               textAlign: rtl ? 'right' : 'left',
-              height: '100%',
-              minHeight: 220,
               display: 'flex',
+              p: 2,
               flexDirection: 'column',
             }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
@@ -206,23 +205,17 @@ const ContactPage = () => {
                   <span role="img" aria-label="office" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📍</span>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
-                      {rtl ? 'مكتبي' : 'My Office'}
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
-                      New Industrial workshop area near Ramez hypermarket 211 Salalah
+                      {rtl ? 'مكتبي --> منطقة الورش الصناعية الجديدة بالقرب من هايبر ماركت رامز 211 صلالة' : 'My Office -->  New Industrial workshop area near Ramez hypermarket 211 Salalah'}
                     </Typography>
                   </Box>
                 </Box>
                 <Box display="flex" mb={2}>
                   <span role="img" aria-label="email" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📧</span>
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
-                      {rtl ? 'دعم البريد الإلكتروني' : 'My Email Support'}
-                    </Typography>
                     <Box sx={{ cursor: 'pointer' }} onClick={() => window.open(`mailto:support@hmawani.com`, '_blank')}>
-                      <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
-                        support@hmawani.com
-                      </Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
+                      {rtl ? 'دعم البريد الإلكتروني الخاص بي ---> support@hmawani.com' : 'My Email Support ---> support@hmawani.com'}
+                    </Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -230,10 +223,7 @@ const ContactPage = () => {
                   <span role="img" aria-label="phone" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📞</span>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
-                      {rtl ? 'لنأتحدث' : 'Let Me Talk'}
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 14 } }}>
-                      {process.env.REACT_APP_WHATSAPP_NUMBER}
+                      {rtl ? 'لنأتحدث' : 'Let Me Talk'} --> {process.env.REACT_APP_WHATSAPP_NUMBER}
                     </Typography>
                   </Box>
                 </Box>
@@ -250,6 +240,7 @@ const ContactPage = () => {
               minHeight: 220,
               display: 'flex',
               flexDirection: 'column',
+              p: 2,
               backgroundColor: '#ffffff',
               border: '1px solid #eee',
             }}>
