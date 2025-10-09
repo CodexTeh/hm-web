@@ -97,7 +97,7 @@ const ProductCardView = () => {
       const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
       setFilter({ [filterKey]: filterKey });
     } else {
-      if (categories?.length > 0 && !searchText) {
+      if (categories?.length > 0) {
         const randomIndex = Math.floor(Math.random() * categories.length);
         setFilter({ webCategory: categories[randomIndex]?.id })
       } else if (searchText) {
@@ -227,6 +227,7 @@ const ProductCardView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, hasMoreItems, isFetching, isRTL, open, sortBy]);
   // ---------------------------------------
+      console.log('yoyo', filter);
 
   const loadProducts = () => {
     if (sortBy === SORT_OPTIONS.NONE) {
@@ -249,7 +250,7 @@ const ProductCardView = () => {
 
     // --- LOGIC TO UPDATE FILTER BASED ON BRAND, PRICE, AND SORT ---
     // Make sure we carry over any existing filters (like the one from /flashSale)
-    const newFilter = { ...filter };
+    const newFilter = { };
 
     if (brand !== ALL_VALUE) {
       newFilter.brand = brand;
@@ -269,14 +270,9 @@ const ProductCardView = () => {
     }
 
     // Only update filter state if it has changed to prevent infinite loops
-    setFilter(prevFilter => {
-      if (JSON.stringify(prevFilter) !== JSON.stringify(newFilter)) {
-        return newFilter;
-      }
-      return prevFilter;
-    });
+    setFilter(newFilter);
 
-  }, [brand, from, to, priceError, sortBy, filter, searchText]); // **Added sortBy as a dependency**
+  }, [brand, from, to, priceError, sortBy, searchText]); // **Added sortBy as a dependency**
 
   const products = GetProducts();
 
