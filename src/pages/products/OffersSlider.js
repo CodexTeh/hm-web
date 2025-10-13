@@ -1,6 +1,9 @@
 import React, { useMemo } from "react";
 import Slider from "react-slick";
 import { Box } from "@mui/material";
+// Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
+
 import expressDeliveryImage from '@assets/icons/express.png';
 import couponImage from '@assets/icons/coupon.png';
 import flashsaleImage from '@assets/icons/flashsale.png';
@@ -10,7 +13,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export const OffersSlider = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const language = GetLanguage?.() || 'en'; // fallback for SSR/undefined
+  const rtl = language === 'ar';
+
+  // --- NextArrow and PrevArrow components (no changes needed here) ---
   function NextArrow(props) {
     const { className, onClick } = props;
     return (
@@ -54,6 +61,7 @@ export const OffersSlider = () => {
       />
     );
   }
+  // -------------------------------------------------------------------
 
   const settings = useMemo(() => ({
     infinite: true,
@@ -67,7 +75,7 @@ export const OffersSlider = () => {
     prevArrow: <PrevArrow />,
     arrows: true,
     rtl: language === 'ar',
-    lazyLoad: false, // Ensure not using slick lazy loading
+    lazyLoad: false,
     responsive: [
       {
         breakpoint: 1024,
@@ -84,10 +92,16 @@ export const OffersSlider = () => {
         },
       },
     ],
-  }), [language]); // Only changes direction if language changes
+  }), [language]);
 
-  const images = useMemo(
-    () => [flashsaleImage, couponImage, freeDeliveryImage, expressDeliveryImage],
+  // Modify `images` to be an array of objects, each with src and route
+  const offersData = useMemo(
+    () => [
+      { src: flashsaleImage, route: '/flashSale' },
+      { src: couponImage, route: '/offers' },
+      { src: freeDeliveryImage }, // Changed '/test' to match your request
+      { src: expressDeliveryImage }, // Changed '/test1' to match your request
+    ],
     []
   );
 
@@ -97,8 +111,23 @@ export const OffersSlider = () => {
     borderRadius: "6px",
     objectFit: "contain",
     outline: "none",
-    cursor: "pointer",
+    // cursor: "pointer", // Cursor will be handled by the parent Box's sx prop for clickability
   }), []);
+
+  // Function to handle image click
+  const handleOfferClick = (route, idx) => {
+    if (route) {
+      navigate(route);
+    } else {
+      const message = rtl
+        ? "مرحبًا، لدي بعض الأسئلة حول منتجاتك وسأكون ممتنًا لمساعدتك."
+        : "Hello, I have a few questions about your products and would appreciate your assistance.";
+      const phoneE164 = (process.env.REACT_APP_WHATSAPP_NUMBER || '').trim();
+      const phoneForWaMe = phoneE164.replace(/^\+/, '');
+      const url = `https://wa.me/${phoneForWaMe}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <Box
@@ -112,9 +141,22 @@ export const OffersSlider = () => {
       }}
     >
       <Slider {...settings}>
-        {images.map((image, idx) => (
-          <Box key={idx} sx={{ padding: '25px 40px 10px 10px' }}>
-            <img src={image} alt={`Offer ${idx + 1}`} style={offerImageStyle} loading="eager" />
+        {offersData.map((offer, idx) => (
+          // Add onClick to the Box component
+          <Box
+            key={idx}
+            sx={{
+              padding: '25px 40px 10px 10px',
+              cursor: 'pointer', // Make the entire clickable area indicate interactivity
+            }}
+            onClick={() => handleOfferClick(offer.route, idx)}
+          >
+            <img
+              src={offer.src}
+              alt={`Offer ${idx + 1}`}
+              style={offerImageStyle}
+              loading="eager"
+            />
           </Box>
         ))}
       </Slider>

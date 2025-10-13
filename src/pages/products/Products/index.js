@@ -5,10 +5,12 @@ import TuneIcon from '@mui/icons-material/Tune'
 import Refresh from '@mui/icons-material/Refresh'
 import {
   Box, Card, CardContent, IconButton, MenuItem, OutlinedInput, Select, styled,
-  TextField, Typography
+  TextField, Typography,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import {
-  GetAllProductsCount, GetProducts, GetProductsLoading, GetLanguage,
+  GetAllProductsCount, GetProductsLoading, GetLanguage,
   GetCategories, GetProductCatalogs, GetSearchText
 } from '@redux-state/common/selectors';
 import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
@@ -47,6 +49,8 @@ const ProductCardView = () => {
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NONE);
   // -----------------------------
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const language = GetLanguage();
   const isRTL = language === 'ar';
@@ -155,8 +159,8 @@ const ProductCardView = () => {
       return (
         <Box sx={{ mb: 1, ml: 1 }}>
           <Typography
-            variant="subtitle2"
-            sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}
+            variant="subtitle1"
+            sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', minWidth: 70, mb: 1 }}
           >
             {isRTL ? 'ماركة' : 'Brand'}
           </Typography>
@@ -190,7 +194,7 @@ const ProductCardView = () => {
       <Box sx={{ mb: 1, ml: 1 }}>
         <Typography
           variant="subtitle2"
-          sx={{ fontWeight: 600, color: 'text.secondary', minWidth: 70, mb: 1 }}
+          sx={{ fontWeight: 600, color: 'text.secondary', fontSize: 12, minWidth: 70, mb: 1 }}
         >
           {isRTL ? 'ترتيب حسب' : 'Sort By'}
         </Typography>
@@ -227,9 +231,14 @@ const ProductCardView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, hasMoreItems, isFetching, isRTL, open, sortBy]);
   // ---------------------------------------
-      console.log('yoyo', filter);
 
   const loadProducts = () => {
+    setRowsPerPage((prev) => prev + 10);
+    if(pathname === '/flashSale' || pathname === '/offers') {
+      const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
+      dispatch(getProducts(pagination, { [filterKey]: filterKey }));
+      return; // Prevent loading products again if already on flashSale or offers page
+    }
     if (sortBy === SORT_OPTIONS.NONE) {
       dispatch(getProducts(pagination, filter));
     }
@@ -250,7 +259,7 @@ const ProductCardView = () => {
 
     // --- LOGIC TO UPDATE FILTER BASED ON BRAND, PRICE, AND SORT ---
     // Make sure we carry over any existing filters (like the one from /flashSale)
-    const newFilter = { };
+    const newFilter = {};
 
     if (brand !== ALL_VALUE) {
       newFilter.brand = brand;
@@ -274,27 +283,27 @@ const ProductCardView = () => {
 
   }, [brand, from, to, priceError, sortBy, searchText]); // **Added sortBy as a dependency**
 
-  const products = GetProducts();
+  // const products = GetProducts();
 
-  useEffect(() => {
-    // ... (Scroll logic remains the same)
-    const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop + 1 >=
-        document.documentElement.scrollHeight
-      ) {
-        if (products?.length > 0) {
-          setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [products]);
+  // useEffect(() => {
+  //   // ... (Scroll logic remains the same)
+  //   const handleScroll = () => {
+  //     if (
+  //       window.innerHeight + document.documentElement.scrollTop + 1 >=
+  //       document.documentElement.scrollHeight
+  //     ) {
+  //       if (products?.length > 0) {
+  //         setRowsPerPage((rowsPerPage) => rowsPerPage + 10);
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, [products]);
 
-  window.onbeforeunload = function () {
-    window.scrollTo(0, 0);
-  };
+  // window.onbeforeunload = function () {
+  //   window.scrollTo(0, 0);
+  // };
 
   const fetchFeedData = useCallback(() => {
     if (itemsCount > 0 && itemsCount <= pagination.perPage) {
@@ -324,13 +333,14 @@ const ProductCardView = () => {
         <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: 2 }}>
           {/* FILTER BAR */}
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: { xs: 'center', md: 'start' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
             <Card
               elevation={3}
               sx={{
                 borderRadius: 2.5,
                 border: '1px solid',
                 borderColor: 'divider',
+                width: { md: '95%' },
                 bgcolor: 'background.paper',
                 boxShadow: '0 6px 18px rgba(0,0,0,0.04)',
               }}
@@ -341,7 +351,7 @@ const ProductCardView = () => {
                 <Box
                   sx={{
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: { xs: 'center', md: 'start' },
                     gap: 1.25,
                     mb: 2,
                     direction: isRTL ? 'rtl' : 'ltr',
@@ -368,11 +378,34 @@ const ProductCardView = () => {
                   }}>
                     <Refresh color="primary" />
                   </IconButton>
+                  {/* Inputs Grid */}
+                  {!isMobile && < Box
+                    sx={{ direction: isRTL ? 'rtl' : 'ltr', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}
+                  >
+
+                    {/* BRAND SELECT */}
+                    <InputBrandsSelectField fullWidth />
+
+                    {/* PRICE RANGE INPUTS */}
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
+                        {isRTL ? 'نطاق السعر' : 'Price Range'}
+                      </Typography>
+
+                      <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        <InputTextField label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
+                        <InputTextField label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
+                      </Box>
+                    </Box>
+
+                    {/* --- NEW SORT BY SELECT --- */}
+                    <InputSortBySelectField />
+                    {/* --------------------------- */}
+                  </Box>}
                   <Box sx={{ flexGrow: 1 }} />
                 </Box>
 
-                {/* Inputs Grid */}
-                <Box
+                {isMobile && < Box
                   sx={{ direction: isRTL ? 'rtl' : 'ltr', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}
                 >
 
@@ -381,31 +414,28 @@ const ProductCardView = () => {
 
                   {/* PRICE RANGE INPUTS */}
                   <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
+                    <Typography variant="subtitle2"  sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
                       {isRTL ? 'نطاق السعر' : 'Price Range'}
                     </Typography>
 
                     <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                      <InputTextField label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
-                      <InputTextField label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
+                      <InputTextField variant="subtitle2" label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
+                      <InputTextField variant="subtitle2" label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
                     </Box>
                   </Box>
 
                   {/* --- NEW SORT BY SELECT --- */}
                   <InputSortBySelectField />
                   {/* --------------------------- */}
-                </Box>
-
+                </Box>}
               </CardContent>
             </Card>
           </Box>
-
-
           {/* PRODUCTS LIST */}
           <RenderProductsView />
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
 

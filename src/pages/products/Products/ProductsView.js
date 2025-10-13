@@ -116,7 +116,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
     <Box sx={{ marginTop: 3, display: 'flex', flexDirection: 'column', alignContent:'center', alignItems:'center' }}>
       {products?.length > 0 ?
         <Grid
-          sx={{ marginLeft: { md: !open ? 0.5 : null }, maxWidth: '100%' }}
+          sx={{ marginLeft: { md: !open ? 0.5 : null }, maxWidth: '98%' }}
           container spacing={3}>
           {products.map((product, index) => {
             const existingProduct = cartDetails?.items.find(item => item.id === product.id);
@@ -150,6 +150,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                 sm={6}
                 md={4}
                 lg={3}
+                xl={2}
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
               >
@@ -173,10 +174,11 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                       position: 'absolute',
                       top: 10,
                       [isRTL ? 'left' : 'right']: 10, // Adjust position for RTL
-                      backgroundColor: colorPalette.yellowGolden,
+                      backgroundColor: colorPalette.theme,
                       padding: '3px 8px',
                       borderRadius: 10,
                       color: colorPalette.white,
+                      fontWeight: 'bold',
                       fontSize: 12,
                     }}
                   >
@@ -279,7 +281,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                           </Box>
                         ) : (
                           <Button
-                            variant="contained"
+                            variant="outlined"
                             startIcon={
                               !isRTL && <LocalMallIcon style={{ width: 16, height: 16, marginLeft: 10 }} />
                             }
@@ -296,6 +298,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                               background: colorPalette.white,
                               color: colorPalette.theme,
                               width: 100,
+                              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
                             }}
                             onClick={(e) => {
                               e.stopPropagation();
