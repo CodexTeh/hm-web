@@ -12,10 +12,6 @@ body {
   contain: layout style;
 }
 
-a:-webkit-any-link {
-  /* text-decoration: none; */
-  color: #632DDD;
-}
 
 .product-card {
   will-change: transform;

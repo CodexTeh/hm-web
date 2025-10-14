@@ -251,17 +251,9 @@ const ContactPage = () => {
                     <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
                       {rtl ? 'دعم البريد الإلكتروني' : 'Email support'}
                     </Typography>
-                    <Link
-                      href={`mailto:${emailAddress}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      underline="always" // Always show underline as per design
-                      sx={{
-                        fontSize: { xs: 14, sm: 16 },
-                      }}
-                    >
+                    <Box component="a" href={`mailto:${emailAddress}`} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", color: colorPalette.theme }}>
                       {emailAddress}
-                    </Link>
+                    </Box>
                   </Box>
                 </StyledContactItem>
 
@@ -272,16 +264,9 @@ const ContactPage = () => {
                     <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
                       {rtl ? 'هاتف' : 'Phone'}
                     </Typography>
-                    <Link
-                      href={`tel:${whatsappNumber}`}
-                      underline="always" // Always show underline as per design
-                      sx={{
-                        color: 'text.secondary',
-                        fontSize: { xs: 14, sm: 16 },
-                      }}
-                    >
+                    <Box component="a" href={`tel:${whatsappNumber}`} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", color: colorPalette.theme }}>
                       {whatsappNumber}
-                    </Link>
+                    </Box>
                   </Box>
                 </StyledContactItem>
               </Box>
@@ -420,7 +405,7 @@ const ContactPage = () => {
                     <Button
                       type="submit"
                       variant="contained"
-                      sx={{ mt: 1, px: 3, py: 1.1, fontWeight: 600, borderRadius: 2, fill: colorPalette.theme }}
+                      sx={{ mt: 1, px: 3, py: 1.1, fontWeight: 600, borderRadius: 2, background: colorPalette.theme }}
                     >
                       {rtl ? 'أرسل رسالة' : 'Send Message'}
                     </Button>
