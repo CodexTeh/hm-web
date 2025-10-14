@@ -257,7 +257,6 @@ const ContactPage = () => {
                       rel="noopener noreferrer"
                       underline="always" // Always show underline as per design
                       sx={{
-                        color: 'text.secondary',
                         fontSize: { xs: 14, sm: 16 },
                       }}
                     >
