@@ -151,6 +151,10 @@ const ContactPage = () => {
     return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${su}&body=${body}`;
   };
 
+  const message = rtl
+    ? "مرحبًا، لدي بعض الأسئلة حول منتجاتك وسأكون ممتنًا لمساعدتك."
+    : "Hello, I have a few questions about your products and would appreciate your assistance.";
+
   // Optional: mailto fallback if user wants to use default email client instead of Gmail
   const buildMailtoUrl = () => {
     const to = 'support@hmawani.com';
@@ -264,7 +268,7 @@ const ContactPage = () => {
                     <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
                       {rtl ? 'هاتف' : 'Phone'}
                     </Typography>
-                    <Box component="a" href={`tel:${whatsappNumber}`} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", color: colorPalette.theme }}>
+                    <Box component="a" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", color: colorPalette.theme }}>
                       {whatsappNumber}
                     </Box>
                   </Box>
