@@ -430,7 +430,7 @@ const ContactPage = () => {
                   pt: 1,
                   textAlign: rtl ? 'right' : 'left'
                 }}>
-                {rtl ? 'تحديد المحلات التجارية' : 'Locate Shops:'}
+                {rtl ? 'موقع المحلات التجارية' : 'Shops Location:'}
               </Typography>
               <Select value={selectedLocation.id} onChange={handleLocationChange}>
                 {locations.map(location => (
