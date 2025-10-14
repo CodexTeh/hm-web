@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
   Alert,
+  styled,
 } from '@mui/material';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import Footer from '@components/Footer';
@@ -19,6 +20,40 @@ import { GetLanguage } from "@redux-state/selectors";
 import { colorPalette } from '@utils/colorPalette';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Link } from 'react-router-dom';
+import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import Material-UI icons
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+
+// Custom styled component for the outer container
+const StyledContactCard = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper, // White background
+  borderRadius: theme.shape.borderRadius * 2, // More rounded corners
+  padding: theme.spacing(3),
+  boxShadow: '0 2px 8px rgba(0,0,0,0.1)', // Subtle shadow
+  border: '1px solid #eee', // Light border
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+// Custom styled component for each contact item (icon + text)
+const StyledContactItem = styled(Box)(({ theme, rtl }) => ({
+  display: 'flex',
+  alignItems: 'center', // Align icon and text vertically centered
+  marginBottom: theme.spacing(2),
+  flexDirection: rtl ? 'row-reverse' : 'row', // IMPORTANT: Reverses order for RTL
+
+  '&:last-of-type': { // Target the last contact detail, not the buttons row
+    marginBottom: 0,
+  },
+
+  // Apply margin to the icon based on RTL
+  '& .MuiSvgIcon-root': {
+    marginRight: rtl ? 0 : theme.spacing(1.5), // Margin after icon for LTR
+    marginLeft: rtl ? theme.spacing(1.5) : 0,  // Margin after icon for RTL
+  },
+}));
+
 
 // Locations
 const locations = [
@@ -159,6 +194,10 @@ const ContactPage = () => {
     }
   };
 
+  const whatsappNumber = process.env.REACT_APP_WHATSAPP_NUMBER || '+96898890195';
+  const emailAddress = 'support@hmawani.com';
+  const officeLocation = rtl ? 'منطقة الورش الصناعية الجديدة بالقرب من هايبر ماركت رامز 211 صلالة' : 'New Industrial workshop area near Ramez hypermarket 211 Salalah';
+
   // Remove Typeform script effect from original code — not needed anymore.
 
   return (
@@ -189,46 +228,105 @@ const ContactPage = () => {
         <Grid container spacing={{ xs: 2, md: 4 }}>
           {/* Contact Info Section */}
           <Grid item xs={12} md={6}>
-            <Box sx={{
-              backgroundColor: '#f4f4f6',
-              borderRadius: 2,
-              textAlign: rtl ? 'right' : 'left',
-              display: 'flex',
-              p: 2,
-              flexDirection: 'column',
-            }}>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                {rtl ? 'اتصال سلس،' : 'Lets start a conversation'}
+            <StyledContactCard sx={{ textAlign: rtl ? 'right' : 'left' }}>
+              <Typography variant="h5" component="h2" fontWeight="bold" gutterBottom
+                sx={{ color: 'text.primary', pb: 2 }}
+              >
+                {rtl ? 'لنبدأ محادثة' : 'Let\'s start a conversation'}
               </Typography>
-              <Box mt={3}>
-                <Box display="flex" mb={2}>
-                  <span role="img" aria-label="office" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📍</span>
+
+              <Box sx={{ mt: 2 }}>
+                {/* Office Address */}
+                <StyledContactItem sx={{ flexDirection: rtl ? 'row-reverse' : 'row' }}>
+                  <LocationOnIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+                  <Typography variant="body1" sx={{ fontSize: { xs: 14, sm: 16 }, color: 'text.primary' }}>
+                    {officeLocation}
+                  </Typography>
+                </StyledContactItem>
+
+                {/* Email Support */}
+                <StyledContactItem sx={{ flexDirection: rtl ? 'row-reverse' : 'row' }}>
+                  <MailOutlineIcon fontSize="small" sx={{ color: 'text.secondary' }} />
                   <Box>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
-                      {rtl ? 'مكتبي --> منطقة الورش الصناعية الجديدة بالقرب من هايبر ماركت رامز 211 صلالة' : 'My Office -->  New Industrial workshop area near Ramez hypermarket 211 Salalah'}
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+                      {rtl ? 'دعم البريد الإلكتروني' : 'Email support'}
                     </Typography>
+                    <Link
+                      href={`mailto:${emailAddress}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="always" // Always show underline as per design
+                      sx={{
+                        color: 'text.secondary',
+                        fontSize: { xs: 14, sm: 16 },
+                      }}
+                    >
+                      {emailAddress}
+                    </Link>
                   </Box>
-                </Box>
-                <Box display="flex" mb={2}>
-                  <span role="img" aria-label="email" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📧</span>
+                </StyledContactItem>
+
+                {/* Phone Number */}
+                <StyledContactItem sx={{ flexDirection: rtl ? 'row-reverse' : 'row' }}>
+                  <PhoneOutlinedIcon fontSize="small" sx={{ color: 'text.secondary' }} />
                   <Box>
-                    <Box sx={{ cursor: 'pointer' }} onClick={() => window.open(`mailto:support@hmawani.com`, '_blank')}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
-                      {rtl ? 'دعم البريد الإلكتروني الخاص بي ---> support@hmawani.com' : 'My Email Support ---> support@hmawani.com'}
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+                      {rtl ? 'هاتف' : 'Phone'}
                     </Typography>
-                    </Box>
+                    <Link
+                      href={`tel:${whatsappNumber}`}
+                      underline="always" // Always show underline as per design
+                      sx={{
+                        color: 'text.secondary',
+                        fontSize: { xs: 14, sm: 16 },
+                      }}
+                    >
+                      {whatsappNumber}
+                    </Link>
                   </Box>
-                </Box>
-                <Box display="flex">
-                  <span role="img" aria-label="phone" style={{ fontSize: 20, marginRight: rtl ? 0 : 10, marginLeft: rtl ? 10 : 0 }}>📞</span>
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: { xs: 13, sm: 15 } }}>
-                      {rtl ? 'لنأتحدث' : 'Let Me Talk'} --> {process.env.REACT_APP_WHATSAPP_NUMBER}
-                    </Typography>
-                  </Box>
-                </Box>
+                </StyledContactItem>
               </Box>
-            </Box>
+
+              {/* Action Buttons */}
+              {/* <Box sx={{ mt: 3, display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
+          <Button
+            variant="contained"
+            color="primary" // Or 'black' if your theme has it, otherwise use 'dark'
+            sx={{
+              textTransform: 'none', // Prevent uppercase
+              fontWeight: 'bold',
+              minWidth: 100, // Ensure consistent button width
+              bgcolor: 'text.primary', // Black button background
+              color: 'background.paper', // White text
+              '&:hover': {
+                bgcolor: 'grey.800', // Darker grey on hover
+              },
+            }}
+            onClick={() => window.open(`mailto:${emailAddress}`, '_blank')}
+          >
+            {rtl ? 'بريد إلكتروني' : 'Email'}
+          </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            startIcon={<WhatsAppIcon fontSize="small" />} // WhatsApp icon
+            sx={{
+              textTransform: 'none',
+              fontWeight: 'bold',
+              minWidth: 100,
+              borderColor: 'text.primary',
+              color: 'text.primary',
+              '&:hover': {
+                borderColor: 'grey.800',
+                color: 'grey.800',
+              },
+            }}
+            onClick={() => window.open(`https://wa.me/${cleanWhatsAppNumber}`, '_blank')}
+          >
+            WhatsApp
+          </Button>
+        </Box> */}
+            </StyledContactCard>
           </Grid>
 
           {/* Custom Contact Form Section (replaces Typeform) */}
@@ -243,6 +341,7 @@ const ContactPage = () => {
               p: 2,
               backgroundColor: '#ffffff',
               border: '1px solid #eee',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
             }}>
               <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
                 {rtl ? 'أرسل لنا رسالة' : 'Send us a Message'}
@@ -340,9 +439,10 @@ const ContactPage = () => {
                   fontSize: { xs: 13, md: 15 },
                   fontWeight: 700,
                   pb: 1,
+                  pt: 1,
                   textAlign: rtl ? 'right' : 'left'
                 }}>
-                {rtl ? 'حدد موقع المتجر' : 'Select a Shop Location'}
+                {rtl ? 'تحديد المحلات التجارية' : 'Locate Shops:'}
               </Typography>
               <Select value={selectedLocation.id} onChange={handleLocationChange}>
                 {locations.map(location => (

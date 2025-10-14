@@ -27,7 +27,8 @@ const Footer = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const iosLink = useMemo(() => "https://apps.apple.com/app/hm-awani/id6752559648", []);
-  const androidLink = useMemo(() => "https://play.google.com/store/apps/details?id=com.workvize.bloomfieldmtn&hl=en", []);
+  const androidLink = useMemo(() => "https://hmawani.com/contact-us", []);
+  // const androidLink = useMemo(() => "https://play.google.com/store/apps/details?id=com.workvize.bloomfieldmtn&hl=en", []);
 
   // Defer heavy QR rendering until after mount to avoid blocking first paint
   const [showQR, setShowQR] = useState(false);
