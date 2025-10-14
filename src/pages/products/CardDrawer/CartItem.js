@@ -237,7 +237,7 @@ const Cart = ({ isRTL, cartDetails }) => {
               }}
             >
               {currency}
-              {finalPrice.toFixed(3)}
+              {parseFloat(finalPrice)?.toFixed(3)}
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: "0.625rem", md: "0.75rem" } }}>
               {item.quantity} x lb

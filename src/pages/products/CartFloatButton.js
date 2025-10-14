@@ -42,14 +42,13 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
     >
       <StyledCartContainer>
         <StyledCartBoxContainer>
-          <LocalMallIcon style={{ width: {xs:10,  md:18}, height: {xs:10,  md:18}, color: colorPalette.white }} />
+          <LocalMallIcon sx={{ width: { xs: 10, md: 18 }, height: { xs: 10, md: 18 }, color: colorPalette.white }} />
           <Typography
             sx={{
               color: colorPalette.white,
               marginLeft: language === 'ar' ? 0 : 1,
               marginRight: language === 'ar' ? 1 : 0,
-            fontSize: {xs: '12px', md: '16px'},
-
+              fontSize: { xs: '10px', md: '16px' },
             }}
             variant="body2"
           >
@@ -59,20 +58,19 @@ export default function CartFloatButton({ open, handleDrawerOpen, handleDrawerCl
         <Box
           sx={{
             background: colorPalette.white,
-            padding: 1,
-            marginTop: 2,
+            padding: {xs: 0.5, md: 1},
+            marginTop: {xs: 1, md: 2},
             borderRadius: 1,
           }}
         >
           <Typography
             sx={{
               color: colorPalette.theme,
-              fontSize: { xs: '12px', md: '16px' },
-
+              fontSize: { xs: '8px', md: '16px' },
             }}
             variant="body2"
           >
-            {language === 'ar' ? cartDetails?.totalPrice + " ر۔ع" : 'OMR ' + cartDetails?.totalPrice}
+            {language === 'ar' ? parseFloat(cartDetails?.totalPrice).toFixed(3) + " ر۔ع" : 'OMR ' + parseFloat(cartDetails?.totalPrice).toFixed(3)}
           </Typography>
         </Box>
       </StyledCartContainer>

@@ -174,12 +174,12 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                       position: 'absolute',
                       top: 10,
                       [isRTL ? 'left' : 'right']: 10, // Adjust position for RTL
-                      backgroundColor: colorPalette.theme,
+                      backgroundColor: colorPalette.yellowGolden,
                       padding: '3px 8px',
                       borderRadius: 10,
                       color: colorPalette.white,
                       fontWeight: 'bold',
-                      fontSize: 12,
+                      fontSize: 14,
                     }}
                   >
                     {isRTL ? `٪${discountValue}` : `${discountValue}%`}

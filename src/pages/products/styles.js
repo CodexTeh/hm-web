@@ -115,6 +115,9 @@ export const StyledCartContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: 10,
+  [theme.breakpoints.down('sm')]: { 
+    padding: 6,
+  },
 }));
 
 export const StyledCartBoxContainer = styled(Box)(({ theme }) => ({
