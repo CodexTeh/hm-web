@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import TuneIcon from '@mui/icons-material/Tune'
 import Refresh from '@mui/icons-material/Refresh'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
-  Box, Card, CardContent, IconButton, MenuItem, OutlinedInput, Select, styled,
+  Box, Card, CardContent, Collapse, IconButton, MenuItem, OutlinedInput, Select, styled,
   TextField, Typography,
   useMediaQuery,
   useTheme
@@ -26,6 +27,16 @@ const StyledDescriptionFieldText = styled(TextField)({
   maxWidth: 80
 });
 
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 const ALL_VALUE = 'all';
 
 // --- NEW SORTING CONSTANTS ---
@@ -45,9 +56,11 @@ const ProductCardView = () => {
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
   const [priceError, setPriceError] = useState('');
+  const [expanded, setExpanded] = useState(true);
   // --- NEW STATE FOR SORTING ---
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NONE);
   // -----------------------------
+  const toggle = () => setExpanded((s) => !s);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -234,7 +247,7 @@ const ProductCardView = () => {
 
   const loadProducts = () => {
     setRowsPerPage((prev) => prev + 10);
-    if(pathname === '/flashSale' || pathname === '/offers') {
+    if (pathname === '/flashSale' || pathname === '/offers') {
       const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
       dispatch(getProducts(pagination, { [filterKey]: filterKey }));
       return; // Prevent loading products again if already on flashSale or offers page
@@ -321,7 +334,7 @@ const ProductCardView = () => {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
+          flexDirection: { xs: expanded ? 'column' : 'row', md: 'row' },
           cursor: 'pointer',
           transition: 'margin 0.3s ease',
           direction: isRTL ? 'rtl' : 'ltr',
@@ -331,110 +344,142 @@ const ProductCardView = () => {
       >
 
         <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
           {/* FILTER BAR */}
           <Box sx={{ width: '100%', display: 'flex', justifyContent: { xs: 'center', md: 'start' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
-            <Card
-              elevation={3}
-              sx={{
-                borderRadius: 2.5,
-                border: '1px solid',
-                borderColor: 'divider',
-                width: { md: '95%' },
-                bgcolor: 'background.paper',
-                boxShadow: '0 6px 18px rgba(0,0,0,0.04)',
-              }}
-              aria-label={isRTL ? 'تصفية وترتيب حسب' : 'Filter and Sort by'}
-            >
-              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                {/* Header */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: { xs: 'center', md: 'start' },
-                    gap: 1.25,
-                    mb: 2,
-                    direction: isRTL ? 'rtl' : 'ltr',
-                  }}
-                >
-                  <TuneIcon color="primary" />
-                  <Typography
-                    variant="h6"
-                    component="div"
-                    fontWeight={700}
-                    color="text.primary"
-                    sx={{ letterSpacing: 0.4, fontSize: { xs: 17, sm: 19 } }}
+            <Card>
+              {/* Header row with filter button */}
+              <CardContent sx={{ height: isMobile ? 6 : 10 }}>
+                <Box sx={{ display: 'flex' }}>
+                  {/* Toggle button / accessible text button */}
+                  <Box
+                    onClick={toggle}
+                    sx={{ ml: 1, fontSize: isMobile ? 12 : 14, fontWeight: 600 }}
+                    aria-expanded={expanded}
+                    aria-controls="filter-collapse"
                   >
-                    {isRTL ? 'التصفية والترتيب' : 'Filter & Sort'}
-                  </Typography>
-                  <IconButton onClick={() => {
-                    const randomIndex = Math.floor(Math.random() * categories.length);
-                    setFrom('');
-                    setTo('');
-                    setBrand(ALL_VALUE);
-                    setSortBy(SORT_OPTIONS.NONE);
-                    setFilter(null);
-                    dispatch(getProducts(pagination, { webCategory: categories[randomIndex]?.id }));
-                  }}>
-                    <Refresh color="primary" />
-                  </IconButton>
-                  {/* Inputs Grid */}
-                  {!isMobile && < Box
-                    sx={{ direction: isRTL ? 'rtl' : 'ltr', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}
-                  >
-
-                    {/* BRAND SELECT */}
-                    <InputBrandsSelectField fullWidth />
-
-                    {/* PRICE RANGE INPUTS */}
-                    <Box>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
-                        {isRTL ? 'نطاق السعر' : 'Price Range'}
-                      </Typography>
-
-                      <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                        <InputTextField label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
-                        <InputTextField label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
-                      </Box>
-                    </Box>
-
-                    {/* --- NEW SORT BY SELECT --- */}
-                    <InputSortBySelectField />
-                    {/* --------------------------- */}
-                  </Box>}
-                  <Box sx={{ flexGrow: 1 }} />
-                </Box>
-
-                {isMobile && < Box
-                  sx={{ direction: isRTL ? 'rtl' : 'ltr', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}
-                >
-
-                  {/* BRAND SELECT */}
-                  <InputBrandsSelectField fullWidth />
-
-                  {/* PRICE RANGE INPUTS */}
-                  <Box>
-                    <Typography variant="subtitle2"  sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
-                      {isRTL ? 'نطاق السعر' : 'Price Range'}
-                    </Typography>
-
-                    <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                      <InputTextField variant="subtitle2" label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
-                      <InputTextField variant="subtitle2" label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
-                    </Box>
+                    {expanded ? (isRTL ? 'إخفاء' : 'Hide') : (isRTL ? 'عرض' : 'Show')} {isRTL ? '' : 'Filters'}
                   </Box>
 
-                  {/* --- NEW SORT BY SELECT --- */}
-                  <InputSortBySelectField />
-                  {/* --------------------------- */}
-                </Box>}
+                  {/* Rotating icon button */}
+                  <ExpandMore
+                    expand={expanded}
+                    onClick={toggle}
+                    aria-expanded={expanded}
+                    aria-label={expanded ? 'collapse filters' : 'expand filters'}
+                    sx={{ ml: 0.5, p: 0, mt: isMobile ? -0.5 : -0.2 }}
+                  >
+                    <ExpandMoreIcon sx={{ color: colorPalette.black }} />
+                  </ExpandMore>
+                </Box>
               </CardContent>
+
+              {/* Collapsible panel that contains your existing CardContent */}
+              <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <CardContent id="filter-collapse" sx={{ p: { xs: 2, sm: 3 } }}>
+                  {/* --- paste your existing CardContent body here --- */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: { xs: 'center', md: 'start' },
+                      gap: 1.25,
+                      mb: 2,
+                      direction: isRTL ? 'rtl' : 'ltr',
+                    }}
+                  >
+                    <TuneIcon color="primary" />
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      fontWeight={700}
+                      color="text.primary"
+                      sx={{ letterSpacing: 0.4, fontSize: { xs: 17, sm: 19 } }}
+                    >
+                      {isRTL ? 'التصفية والترتيب' : 'Filter & Sort'}
+                    </Typography>
+
+                    <IconButton
+                      onClick={() => {
+                        const randomIndex = Math.floor(Math.random() * categories.length);
+                        setFrom('');
+                        setTo('');
+                        setBrand(ALL_VALUE);
+                        setSortBy(SORT_OPTIONS.NONE);
+                        dispatch(getProducts(pagination, { webCategory: categories[randomIndex]?.id }));
+                      }}
+                    >
+                      <Refresh color="primary" />
+                    </IconButton>
+
+                    {!isMobile && (
+                      <Box
+                        sx={{
+                          direction: isRTL ? 'rtl' : 'ltr',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'flex-start',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        {/* BRAND SELECT */}
+                        <InputBrandsSelectField fullWidth />
+
+                        {/* PRICE RANGE INPUTS */}
+                        <Box>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
+                            {isRTL ? 'نطاق السعر' : 'Price Range'}
+                          </Typography>
+
+                          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                            <InputTextField label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
+                            <InputTextField label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
+                          </Box>
+                        </Box>
+
+                        {/* --- NEW SORT BY SELECT --- */}
+                        <InputSortBySelectField />
+                      </Box>
+                    )}
+
+                    <Box sx={{ flexGrow: 1 }} />
+                  </Box>
+
+                  {isMobile && (
+                    <Box
+                      sx={{
+                        direction: isRTL ? 'rtl' : 'ltr',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <InputBrandsSelectField fullWidth />
+
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
+                          {isRTL ? 'نطاق السعر' : 'Price Range'}
+                        </Typography>
+
+                        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                          <InputTextField variant="subtitle2" label={isRTL ? 'من' : 'From'} type="number" value={from} setValue={setFrom} />
+                          <InputTextField variant="subtitle2" label={isRTL ? 'إلى' : 'To'} type="number" value={to} setValue={setTo} />
+                        </Box>
+                      </Box>
+
+                      <InputSortBySelectField />
+                    </Box>
+                  )}
+                </CardContent>
+              </Collapse>
             </Card>
+
           </Box>
           {/* PRODUCTS LIST */}
-          <RenderProductsView />
+          {!isMobile && <RenderProductsView />}
         </Box>
       </Box>
+      {isMobile && <RenderProductsView />}
     </Box >
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton, CircularProgress } from '@mui/material';
+import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton, CircularProgress, useTheme, useMediaQuery } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import emptyProductImage from '@assets/icons/empty-product.jpg';
@@ -15,7 +15,9 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
   const user = GetUser();
   const dispatch = useDispatch();
   let products = GetProducts();
-  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   if ((products?.length > 0) && sortBy && sortBy === 'price_desc') {
     products = [...products].sort((a, b) => b.price - a.price);
   } else if ((products?.length > 0) && sortBy && sortBy === 'price_asc') {
@@ -113,7 +115,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
   };
 
   return (
-    <Box sx={{ marginTop: 3, display: 'flex', flexDirection: 'column', alignContent:'center', alignItems:'center' }}>
+    <Box sx={{ marginTop: 3, display: 'flex', flexDirection: 'column', alignContent: 'center', alignItems: 'center' }}>
       {products?.length > 0 ?
         <Grid
           sx={{ marginLeft: { md: !open ? 0.5 : null }, maxWidth: '98%' }}
@@ -146,7 +148,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
             return (
               <Grid
                 item
-                xs={12}
+                xs={6}
                 sm={6}
                 md={4}
                 lg={3}
@@ -158,7 +160,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
 
                 <Card
                   sx={{
-                    maxWidth: 300,
+                    maxWidth: isMobile ? 150 : 300,
                     margin: 'auto',
                     position: 'relative',
                     textAlign: isRTL ? 'right' : 'left', // Align text based on language
@@ -172,14 +174,14 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                   {hasDiscount && <Box
                     sx={{
                       position: 'absolute',
-                      top: 10,
+                      top: isMobile ? 6 : 10,
                       [isRTL ? 'left' : 'right']: 10, // Adjust position for RTL
                       backgroundColor: colorPalette.yellowGolden,
                       padding: '3px 8px',
                       borderRadius: 10,
                       color: colorPalette.white,
                       fontWeight: 'bold',
-                      fontSize: 14,
+                      fontSize: isMobile ? 10 : 14,
                     }}
                   >
                     {isRTL ? `٪${discountValue}` : `${discountValue}%`}
@@ -187,7 +189,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                   {/* Product Image */}
                   <CardMedia
                     component="img"
-                    height="300"
+                    height={isMobile ? "100" : "300"}
                     image={
                       imageUrls?.length > 0 ? imageUrls[0] :
                         emptyProductImage
@@ -205,8 +207,8 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                       fontWeight: '510',
                       WebkitLineClamp: 2, // Limit to two lines
                       WebkitBoxOrient: 'vertical',
-                      marginBottom: 2
-                    }} variant="body1" component="div">
+                      marginBottom: isMobile ? 1 : 2
+                    }} variant={isMobile ? "body2" : "body1"} component="div">
                       {isRTL ? product?.arabicName || product?.website_name : product?.website_name}
                     </Typography>
                     <Typography sx={{
@@ -216,15 +218,15 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                       {`${product?.qty_onhand} ${isRTL ? "القطع المتاحة" : "pieces available"}`}
                     </Typography>
                     {/* Product Weight */}
-                    <Typography marginTop={2} variant="body2" fontWeight={900} color="textPrimary">
+                    <Typography marginTop={isMobile ? 1 : 2} variant="body2" fontWeight={900} color="textPrimary">
                       {isRTL ? size?.ar_title : size?.title}
                     </Typography>
                     <Box
                       sx={{
                         display: 'flex',
-                        flexDirection: isRTL ? 'row-reverse' : 'row', // Reverse for RTL
+                        flexDirection: isRTL && !isMobile ? 'row-reverse' : isMobile ? 'column' : 'row', // Reverse for RTL
                         justifyContent: 'space-between',
-                        alignItems: 'center',
+                        alignItems: isMobile ? 'start' : 'center',
                       }}
                     >
                       {/* Pricing */}
@@ -246,7 +248,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                         </Typography>}
                         {/* Current Price */}
                         <Typography
-                          variant="subtitle1"
+                          variant={isMobile ? "caption" : "subtitle1"}
                           sx={{
                             fontWeight: 'bold',
                             color: colorPalette.theme,
@@ -268,13 +270,14 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                             background: colorPalette.theme,
                             width: 100,
                             height: 40,
-                            marginTop: 4,
-                            marginBottom: 4,
+                            alignSelf: 'center',
+                            marginTop: isMobile ? 1 : 4,
+                            marginBottom: isMobile ? 0 : 4,
                           }} onClick={(e) => e.stopPropagation()}>
                             <IconButton onClick={() => handleIncrease(product, finalPrice)}>
                               <AddIcon sx={{ color: colorPalette.white }} />
                             </IconButton>
-                            <Typography variant="body1" sx={{ color: colorPalette.white }} fontWeight={510}>{existingProduct.quantity}</Typography>
+                            <Typography variant={isMobile ? "body2" : "body1"} sx={{ color: colorPalette.white }} fontWeight={510}>{existingProduct.quantity}</Typography>
                             <IconButton onClick={() => handleDecrease(product, finalPrice)}>
                               <RemoveIcon sx={{ color: colorPalette.white }} />
                             </IconButton>
@@ -290,8 +293,9 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                             }
                             sx={{
                               fontWeight: 'bold',
-                              marginTop: 4,
-                              marginBottom: 4,
+                              marginTop: isMobile ? 1 : 4,
+                            marginBottom: isMobile ? 0 : 4,
+                              alignSelf: 'center',
                               height: 40,
                               textTransform: 'capitalize',
                               borderRadius: 10,

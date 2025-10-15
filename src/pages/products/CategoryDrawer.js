@@ -30,7 +30,6 @@ const CategoryDrawer = ({ setFilter, height }) => {
     direction: isRTL ? 'rtl' : 'ltr',
     p: { xs: 0, md: 2 },
     boxShadow: { xs: 'none', md: '0px 2px 8px rgba(0,0,0,0.08)' },
-    borderRadius: { xs: 0, md: 2 },
   };
 
   return (

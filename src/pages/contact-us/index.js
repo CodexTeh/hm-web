@@ -20,7 +20,6 @@ import { GetLanguage } from "@redux-state/selectors";
 import { colorPalette } from '@utils/colorPalette';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Link } from 'react-router-dom';
 import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import Material-UI icons
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
