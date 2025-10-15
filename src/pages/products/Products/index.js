@@ -56,7 +56,7 @@ const ProductCardView = () => {
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
   const [priceError, setPriceError] = useState('');
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   // --- NEW STATE FOR SORTING ---
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NONE);
   // -----------------------------

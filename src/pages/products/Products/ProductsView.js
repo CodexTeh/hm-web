@@ -160,7 +160,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
 
                 <Card
                   sx={{
-                    maxWidth: isMobile ? 150 : 300,
+                    maxWidth: isMobile ? 200 : 300,
                     margin: 'auto',
                     position: 'relative',
                     textAlign: isRTL ? 'right' : 'left', // Align text based on language
