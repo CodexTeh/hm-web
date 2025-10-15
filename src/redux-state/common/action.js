@@ -35,7 +35,9 @@ import {
   GET_USER_PROFILE,
   GET_USER_PROFILE_SUCCESS,
   EMPTY_CART,
-  SET_SEARCH_TEXT
+  SET_SEARCH_TEXT,
+  GET_SALE_TIMER,
+  GET_SALE_TIMER_SUCCESS
 } from './types';
 
 export const addToCart = (cart) => (
@@ -47,6 +49,19 @@ export const addToCart = (cart) => (
 export const emptyCart = () => (
   {
     type: EMPTY_CART
+  }
+);
+
+export const getSaleTimers = () => (
+  {
+    type: GET_SALE_TIMER
+  }
+);
+
+export const getSaleTimersSuccess = (sales) => (
+  {
+    type: GET_SALE_TIMER_SUCCESS,
+    payload: sales
   }
 );
 

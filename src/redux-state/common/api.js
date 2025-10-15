@@ -305,6 +305,37 @@ export const Api = {
       console.log("Error", e);
     }
   },
+  getSaleTimers: async () => {
+    try {
+      const options = {
+        method: 'GET',
+      };
+      const response = await fetch(`${API_URL}timer`, options);
+      switch (response.status) {
+        case 200:
+          const timers = await response.json();
+
+          switch (response.status) {
+            case 200:
+              return timers;
+            case 400:
+              throw new Error('All fields are required');
+            case 409:
+              throw new Error('User already exists!');
+            default:
+              throw new Error('Something went wrong!');
+          }
+        case 400:
+          throw new Error('All fields are required');
+        case 409:
+          throw new Error('User already exists!');
+        default:
+          throw new Error('Something went wrong!');
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+  },
   editProductCatalog: async (data, token) => {
     try {
 

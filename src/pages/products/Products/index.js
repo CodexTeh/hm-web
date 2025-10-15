@@ -12,12 +12,13 @@ import {
 } from '@mui/material';
 import {
   GetAllProductsCount, GetProductsLoading, GetLanguage,
-  GetCategories, GetProductCatalogs, GetSearchText
+  GetCategories, GetProductCatalogs, GetSearchText, GetSaleTimers
 } from '@redux-state/common/selectors';
-import { getProducts, getProductCatalog, getCategories } from '@redux-state/common/action';
+import { getProducts, getProductCatalog, getCategories, getSaleTimers, getProductsSuccess } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
 import CategoryDrawer from '../CategoryDrawer';
+import moment from 'moment/moment';
 
 const StyledDescriptionFieldText = styled(TextField)({
   borderRadius: '8px',
@@ -66,6 +67,8 @@ const ProductCardView = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const language = GetLanguage();
+  const timers = GetSaleTimers();
+
   const isRTL = language === 'ar';
 
   const pagination = useMemo(
@@ -110,9 +113,21 @@ const ProductCardView = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname === '/flashSale' || pathname === '/offers') {
-      const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
-      setFilter({ [filterKey]: filterKey });
+    if ((pathname === '/flashSale' || pathname === '/offers') && timers?.length > 0) {
+      const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
+      const saleTimer = timers.find(timer => timer.saleType === saleType);
+      if (saleTimer) {
+        const currentTime = moment();  // Current local time
+        // Parse the sale times
+        const endSaleTime = moment(saleTimer.endSale);
+
+        if (endSaleTime.isAfter(currentTime)) {
+          const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
+          setFilter({ [filterKey]: filterKey });
+        } else {
+          dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+        }
+      }
     } else {
       if (categories?.length > 0) {
         const randomIndex = Math.floor(Math.random() * categories.length);
@@ -121,7 +136,13 @@ const ProductCardView = () => {
         setFilter({ website_name: searchText }); // Set to empty object if no categories available
       }
     }
-  }, [pathname, categories, searchText]);
+  }, [pathname, categories, searchText, timers, dispatch]);
+
+  useEffect(() => {
+    if (pathname === '/flashSale' || pathname === '/offers') {
+      dispatch(getSaleTimers())
+    }
+  }, [pathname, dispatch]);
 
   useEffect(() => {
     if (from && to && parseFloat(from) > parseFloat(to)) {
@@ -247,9 +268,21 @@ const ProductCardView = () => {
 
   const loadProducts = () => {
     setRowsPerPage((prev) => prev + 10);
-    if (pathname === '/flashSale' || pathname === '/offers') {
-      const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
-      dispatch(getProducts(pagination, { [filterKey]: filterKey }));
+    if ((pathname === '/flashSale' || pathname === '/offers') && timers?.length > 0) {
+      const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
+      const saleTimer = timers.find(timer => timer.saleType === saleType);
+      if (saleTimer) {
+        const currentTime = moment();  // Current local time
+        // Parse the sale times
+        const endSaleTime = moment(saleTimer.endSale);
+
+        if (endSaleTime.isAfter(currentTime)) {
+          const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
+          dispatch(getProducts(pagination, { [filterKey]: filterKey }));
+        } else {
+          dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+        }
+      }
       return; // Prevent loading products again if already on flashSale or offers page
     }
     if (sortBy === SORT_OPTIONS.NONE) {

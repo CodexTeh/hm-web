@@ -17,6 +17,7 @@ import {
   GET_SEARCHED_PRODUCTS,
   PLACE_ORDER,
   GET_USER_PROFILE,
+  GET_SALE_TIMER,
 } from './types'
 
 const getToken = state => state.onboarding.token;
@@ -213,6 +214,20 @@ function* addRemoveToWishlist(action) {
   }
 }
 
+function* getSaleTimers(action) {
+  try {
+    const data = yield call(Api.getSaleTimers, action.payload);
+    if (data) {
+      yield put(Actions.getSaleTimersSuccess(data));
+    } else {
+      yield put(Actions.getSaleTimersSuccess([]));
+    }
+  } catch (error) {
+    yield put(Actions.getSaleTimersSuccess([]));
+    console.log("error", error);
+  }
+}
+
 function* commonSaga() {
   yield takeLatest(GET_SEARCHED_PRODUCTS, getSearchedProducts);
   yield takeLatest(GET_PRODUCTS, getProducts);
@@ -229,6 +244,8 @@ function* commonSaga() {
   yield takeLatest(PLACE_ORDER, placeOrder);
   yield takeLatest(ADD_REMOVE_TO_WISHLIST, addRemoveToWishlist);
   yield takeLatest(GET_USER_PROFILE, getProfile);
+  yield takeLatest(GET_SALE_TIMER, getSaleTimers);
+
 }
 
 export default commonSaga;

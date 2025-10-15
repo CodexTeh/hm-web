@@ -24,6 +24,8 @@ import {
   ADD_TO_CART,
   PLACE_ORDER,
   PLACE_ORDER_SUCCESS,
+  GET_SALE_TIMER,
+  GET_SALE_TIMER_SUCCESS,
   GET_ORDERS,
   GET_ORDERS_SUCCESS,
   SET_LATEST_ORDER,
@@ -70,6 +72,8 @@ const INITIAL_STATE = {
   getCategoriesLoading: false,
   createCategoryLoading: false,
   editCategoryLoading: false,
+  getSaleTimerLoading: false,
+  saleTimers: [],
   editProductCatalogLoading: false,
   productCatalogs: [],
   addProductCatalogLodaing: false,
@@ -85,6 +89,11 @@ export default (state = INITIAL_STATE, action) => {
 
     case CHANGE_LANGUAGE:
       return { ...state, language: payload };
+    
+    case GET_SALE_TIMER:
+      return { ...state, getSaleTimerLoading: true };
+    case GET_SALE_TIMER_SUCCESS:
+      return { ...state, saleTimers: payload, getSaleTimerLoading: false };
 
     case EMPTY_CART:
       return {

@@ -90,3 +90,9 @@ export const GetProfile = () =>
 export const GetSearchText = () =>
   useSelector(
     (state) => state.common.searchText);
+export const GetSaleTimerLoading = () =>
+  useSelector(
+    (state) => state.common.getSaleTimerLoading);
+export const GetSaleTimers = () =>
+  useSelector(
+    (state) => state.common.saleTimers);
