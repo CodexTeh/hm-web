@@ -178,7 +178,7 @@ const TopBar = () => {
                   onClick={() => onClickPage(page)}
                   sx={{
                     color: colorPalette.black,
-                    fontWeight: 500,
+                    fontWeight: 600,
                     fontSize: 14,
                     mx: 0.5,
                     '&:hover': { background: colorPalette.lightGrey }
