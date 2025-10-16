@@ -35,23 +35,22 @@ const StyledContactCard = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-// Custom styled component for each contact item (icon + text)
-const StyledContactItem = styled(Box)(({ theme, rtl }) => ({
-  display: 'flex',
-  alignItems: 'center', // Align icon and text vertically centered
-  marginBottom: theme.spacing(2),
-  flexDirection: rtl ? 'row-reverse' : 'row', // IMPORTANT: Reverses order for RTL
+const StyledContactItem = styled(Box)(({ theme }) => {
+  const isRtl = theme.direction === 'rtl';
+  return {
+    display: 'flex',
+    flexDirection: isRtl ? 'row-reverse' : 'row',
+    justifyContent: isRtl ? 'flex-end' : 'flex-start',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+    '&:last-of-type': { marginBottom: 0 },
 
-  '&:last-of-type': { // Target the last contact detail, not the buttons row
-    marginBottom: 0,
-  },
-
-  // Apply margin to the icon based on RTL
-  '& .MuiSvgIcon-root': {
-    marginRight: rtl ? 0 : theme.spacing(1.5), // Margin after icon for LTR
-    marginLeft: rtl ? theme.spacing(1.5) : 0,  // Margin after icon for RTL
-  },
-}));
+    '& .MuiSvgIcon-root': {
+      marginRight: isRtl ? 0 : theme.spacing(1.5),
+      marginLeft: isRtl ? theme.spacing(1.5) : 0,
+    },
+  };
+});
 
 
 // Locations
@@ -240,17 +239,17 @@ const ContactPage = () => {
 
               <Box sx={{ mt: 2 }}>
                 {/* Office Address */}
-                <StyledContactItem sx={{ flexDirection: rtl ? 'row-reverse' : 'row' }}>
+                <StyledContactItem>
                   <LocationOnIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-                  <Typography variant="body1" sx={{ fontSize: { xs: 14, sm: 16 }, color: 'text.primary' }}>
+                  <Typography variant="body1" sx={{ fontSize: { xs: 14, sm: 16 }, color: 'text.primary', mr: rtl ? 2 : null }}>
                     {officeLocation}
                   </Typography>
                 </StyledContactItem>
 
                 {/* Email Support */}
-                <StyledContactItem sx={{ flexDirection: rtl ? 'row-reverse' : 'row' }}>
+                <StyledContactItem>
                   <MailOutlineIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-                  <Box>
+                  <Box sx={{ mr: rtl ? 2 : null }}>
                     <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
                       {rtl ? 'دعم البريد الإلكتروني' : 'Email support'}
                     </Typography>
@@ -261,10 +260,10 @@ const ContactPage = () => {
                 </StyledContactItem>
 
                 {/* Phone Number */}
-                <StyledContactItem sx={{ flexDirection: rtl ? 'row-reverse' : 'row' }}>
+                <StyledContactItem>
                   <PhoneOutlinedIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-                  <Box>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+                  <Box sx={{ mr: rtl ? 2 : null }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'text.primary', mr: rtl ? 2 : null }}>
                       {rtl ? 'هاتف' : 'Phone'}
                     </Typography>
                     <Box component="a" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", color: colorPalette.theme }}>
@@ -275,53 +274,54 @@ const ContactPage = () => {
               </Box>
 
               {/* Action Buttons */}
-              {/* <Box sx={{ mt: 3, display: 'flex', gap: 1, justifyContent: 'flex-start' }}>
-          <Button
-            variant="contained"
-            color="primary" // Or 'black' if your theme has it, otherwise use 'dark'
-            sx={{
-              textTransform: 'none', // Prevent uppercase
-              fontWeight: 'bold',
-              minWidth: 100, // Ensure consistent button width
-              bgcolor: 'text.primary', // Black button background
-              color: 'background.paper', // White text
-              '&:hover': {
-                bgcolor: 'grey.800', // Darker grey on hover
-              },
-            }}
-            onClick={() => window.open(`mailto:${emailAddress}`, '_blank')}
-          >
-            {rtl ? 'بريد إلكتروني' : 'Email'}
-          </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<WhatsAppIcon fontSize="small" />} // WhatsApp icon
-            sx={{
-              textTransform: 'none',
-              fontWeight: 'bold',
-              minWidth: 100,
-              borderColor: 'text.primary',
-              color: 'text.primary',
-              '&:hover': {
-                borderColor: 'grey.800',
-                color: 'grey.800',
-              },
-            }}
-            onClick={() => window.open(`https://wa.me/${cleanWhatsAppNumber}`, '_blank')}
-          >
-            WhatsApp
-          </Button>
-        </Box> */}
+              {/* Uncomment the buttons if needed */}
+              {/* <Box sx={{ mt: 3, display: 'flex', gap: 1, justifyContent: rtl ? 'flex-start' : 'flex-end' }}>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          textTransform: 'none',
+          fontWeight: 'bold',
+          minWidth: 100,
+          bgcolor: 'text.primary',
+          color: 'background.paper',
+          '&:hover': {
+            bgcolor: 'grey.800',
+          },
+        }}
+        onClick={() => window.open(`mailto:${emailAddress}`, '_blank')}
+      >
+        {rtl ? 'بريد إلكتروني' : 'Email'}
+      </Button>
+      <Button
+        variant="outlined"
+        color="inherit"
+        startIcon={<WhatsAppIcon fontSize="small" />}
+        sx={{
+          textTransform: 'none',
+          fontWeight: 'bold',
+          minWidth: 100,
+          borderColor: 'text.primary',
+          color: 'text.primary',
+          '&:hover': {
+            borderColor: 'grey.800',
+            color: 'grey.800',
+          },
+        }}
+        onClick={() => window.open(`https://wa.me/${cleanWhatsAppNumber}`, '_blank')}
+      >
+        {rtl ? 'واتساب' : 'WhatsApp'}
+      </Button>
+    </Box> */}
             </StyledContactCard>
           </Grid>
+
 
           {/* Custom Contact Form Section (replaces Typeform) */}
           <Grid item xs={12} md={6}>
             <Box sx={{
               borderRadius: 2,
               height: '100%',
-              textAlign: rtl ? 'right' : 'left',
               minHeight: 220,
               display: 'flex',
               flexDirection: 'column',
@@ -329,6 +329,7 @@ const ContactPage = () => {
               backgroundColor: '#ffffff',
               border: '1px solid #eee',
               boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              textAlign: rtl ? 'right' : 'left', // Ensure text alignment for RTL
             }}>
               <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
                 {rtl ? 'أرسل لنا رسالة' : 'Send us a Message'}
@@ -341,7 +342,7 @@ const ContactPage = () => {
               )}
 
               <Box component="form" noValidate onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} direction={rtl ? 'row-reverse' : 'row'}>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
@@ -352,6 +353,9 @@ const ContactPage = () => {
                       error={!!errors.name}
                       helperText={errors.name}
                       size="small"
+                      InputProps={{
+                        style: { textAlign: rtl ? 'right' : 'left' },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -365,6 +369,9 @@ const ContactPage = () => {
                       error={!!errors.email}
                       helperText={errors.email}
                       size="small"
+                      InputProps={{
+                        style: { textAlign: rtl ? 'right' : 'left' },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -377,6 +384,9 @@ const ContactPage = () => {
                       error={!!errors.phone}
                       helperText={errors.phone}
                       size="small"
+                      InputProps={{
+                        style: { textAlign: rtl ? 'right' : 'left' },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -389,6 +399,9 @@ const ContactPage = () => {
                       error={!!errors.subject}
                       helperText={errors.subject}
                       size="small"
+                      InputProps={{
+                        style: { textAlign: rtl ? 'right' : 'left' },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -402,13 +415,24 @@ const ContactPage = () => {
                       helperText={errors.message}
                       multiline
                       minRows={4}
+                      InputProps={{
+                        style: { textAlign: rtl ? 'right' : 'left' },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <Button
                       type="submit"
                       variant="contained"
-                      sx={{ mt: 1, px: 3, py: 1.1, fontWeight: 600, borderRadius: 2, background: colorPalette.theme }}
+                      sx={{
+                        mt: 1,
+                        px: 3,
+                        py: 1.1,
+                        fontWeight: 600,
+                        borderRadius: 2,
+                        background: colorPalette.theme,
+                        textAlign: rtl ? 'right' : 'left',  // Ensure button text aligns for RTL
+                      }}
                     >
                       {rtl ? 'أرسل رسالة' : 'Send Message'}
                     </Button>
@@ -417,6 +441,7 @@ const ContactPage = () => {
               </Box>
             </Box>
           </Grid>
+
 
           {/* Location Selector */}
           <Grid item xs={12} md={4}>
