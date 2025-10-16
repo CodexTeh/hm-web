@@ -380,7 +380,7 @@ const ProductCardView = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
           {/* FILTER BAR */}
           <Box sx={{ width: '100%', display: 'flex', justifyContent: { xs: 'center', md: 'start' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
-            <Card>
+            <Card sx={{ width: expanded ? '96%' : null}}>
               {/* Header row with filter button */}
               <CardContent sx={{ height: isMobile ? 6 : 10 }}>
                 <Box sx={{ display: 'flex' }}>
@@ -409,7 +409,7 @@ const ProductCardView = () => {
 
               {/* Collapsible panel that contains your existing CardContent */}
               <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent id="filter-collapse" sx={{ p: { xs: 2, sm: 3 } }}>
+                <CardContent id="filter-collapse" sx={{ p: { xs: 2, sm: 3 }, }}>
                   {/* --- paste your existing CardContent body here --- */}
                   <Box
                     sx={{

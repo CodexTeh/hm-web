@@ -25,7 +25,6 @@ import { colorPalette } from '@utils/colorPalette';
 import emptyProductImage from '@assets/icons/empty-product.jpg';
 import { GetProductCatalogs, GetSubCategories, GetCategories, GetProducts, GetAllProductsCount, GetProductsLoading, GetCartDetails, GetUser } from "@redux-state/selectors";
 import ProductsView from '@pages/products/Products/ProductsView';
-import CartFloatButton from '@pages/products/CartFloatButton';
 import { getProducts, addToCart } from '@redux-state/common/action';
 import { Api } from '@redux-state/common/api';
 import { addRemoveToWishlist } from '@redux-state/common/action';
@@ -301,7 +300,6 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
           pt: { xs: 4, sm: 4 },
         }}
       >
-        {isMobile && <CartFloatButton />}
         <Grid container spacing={2}>
           {/* Left Section: Carousel */}
           <Grid item xs={12} md={6} >
