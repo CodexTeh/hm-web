@@ -6,7 +6,19 @@ import { GetLanguage } from "@redux-state/selectors";
 const ReturnPolicy = () => {
   const language = GetLanguage();
   const rtl = language === "ar";
-  const currentDate = new Date().toLocaleDateString();
+  const currentDate = new Date();
+  const arabicDate = new Intl.DateTimeFormat("ar-EG", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(currentDate);
+
+  // Format the date for English (default)
+  const englishDate = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(currentDate);
 
   return (
     <>
@@ -28,8 +40,8 @@ const ReturnPolicy = () => {
           {/* Effective Date */}
           <Typography variant="subtitle1" gutterBottom>
             {rtl
-              ? `تاريخ السريان: ${currentDate}`
-              : `Effective Date: ${currentDate}`}
+              ? `تاريخ السريان: ${arabicDate}`
+              : `Effective Date: ${englishDate}`}
           </Typography>
 
           {/* Intro Paragraph */}
@@ -59,13 +71,13 @@ const ReturnPolicy = () => {
             <li>
               {rtl ? (
                 <>
-                  <strong>مدة الإرجاع:</strong> يمكنك إعادة المنتجات خلال [أدخل عدد الأيام] يومًا من
+                  <strong>مدة الإرجاع:</strong> يمكنك إعادة المنتجات خلال خمسة يومًا من
                   تاريخ التسليم. إذا تم تقديم طلب الإرجاع بعد الفترة المحددة، للأسف لن نتمكن من قبول
                   الإرجاع.
                 </>
               ) : (
                 <>
-                  <strong>Return Timeframe:</strong> You may return products within [insert number]
+                  <strong>Return Timeframe:</strong> You may return products within five
                   days from the date of delivery. If the return request is made after the specified
                   period, unfortunately, we will not be able to accept the return.
                 </>
@@ -96,13 +108,12 @@ const ReturnPolicy = () => {
             <li>
               {rtl ? (
                 <>
-                  إذا استلمت منتجًا تالفًا أو معيبًا، يُرجى الاتصال بنا خلال [أدخل عدد الأيام] يومًا
+                  إذا استلمت منتجًا تالفًا أو معيبًا، يُرجى الاتصال بنا خلال اثنين يومًا
                   من استلام طلبك. سنقدم لك استردادًا كاملاً أو استبدالًا وفقًا لتفضيلك.
                 </>
               ) : (
                 <>
-                  If you receive a damaged or defective product, please contact us within [insert
-                  number] days of receiving your order. We will offer you a full refund or replacement
+                  If you receive a damaged or defective product, please contact us within two days of receiving your order. We will offer you a full refund or replacement
                   as per your preference.
                 </>
               )}
@@ -169,13 +180,11 @@ const ReturnPolicy = () => {
             <li>
               {rtl ? (
                 <>
-                  <strong>تواصل معنا:</strong> اتصل بفريق دعم العملاء لدينا على [أدخل عنوان البريد
-                  الإلكتروني] أو [أدخل رقم الهاتف] مع تفاصيل طلبك وسبب الإرجاع.
+                  <strong>تواصل معنا:</strong> تواصل مع فريق دعم العملاء لدينا على {process.env.REACT_APP_EMAIL_ADDRESS} أو {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER} مع تفاصيل طلبك وسبب الإرجاع.
                 </>
               ) : (
                 <>
-                  <strong>Contact Us:</strong> Reach out to our customer support team at [Insert Email
-                  Address] or [Insert Phone Number] with your order details and reason for return.
+                  <strong>Contact Us:</strong> Reach out to our customer support team at {process.env.REACT_APP_EMAIL_ADDRESS} or {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER} with your order details and reason for return.
                 </>
               )}
             </li>
@@ -228,7 +237,7 @@ const ReturnPolicy = () => {
               ) : (
                 <>
                   <strong>Refund/Replacement:</strong> If your return is approved, we will process
-                  your refund to the original payment method within [insert number] days.
+                  your refund to the original payment method within working days.
                   Alternatively, we can send you a replacement if requested.
                 </>
               )}
@@ -341,13 +350,12 @@ const ReturnPolicy = () => {
             <li>
               {rtl ? (
                 <>
-                  إذا كنت ترغب في إلغاء طلبك قبل شحنه، يُرجى الاتصال بنا فورًا على [أدخل عنوان البريد
-                  الإلكتروني] أو [أدخل رقم الهاتف]. لا يمكن إلغاء الطلبات التي تم شحنها بالفعل.
+                  إذا كنت ترغب في إلغاء طلبك قبل شحنه، يُرجى الاتصال بنا فورًا على {process.env.REACT_APP_EMAIL_ADDRESS}  أو {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}. لا يمكن إلغاء الطلبات التي تم شحنها بالفعل.
                 </>
               ) : (
                 <>
                   If you wish to cancel your order before it has been shipped, please contact us
-                  immediately at [Insert Email Address] or [Insert Phone Number]. Orders that have
+                  immediately at {process.env.REACT_APP_EMAIL_ADDRESS} or {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}. Orders that have
                   already been shipped cannot be canceled.
                 </>
               )}
@@ -388,7 +396,7 @@ const ReturnPolicy = () => {
                 <br />
                 عُمان، صلالة
                 <br />
-                {process.env.REACT_APP_WHATSAPP_NUMBER}
+                {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>
@@ -401,7 +409,7 @@ const ReturnPolicy = () => {
                 <br />
                 Oman, Salalah
                 <br />
-                {process.env.REACT_APP_WHATSAPP_NUMBER}
+                {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>

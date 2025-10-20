@@ -129,7 +129,7 @@ const ProductCardView = () => {
         }
       }
     } else {
-      if (categories?.length > 0) {
+      if (categories?.length > 0 && (pathname !== '/flashSale' || pathname !== '/offers')) {
         const randomIndex = Math.floor(Math.random() * categories.length);
         setFilter({ webCategory: categories[randomIndex]?.id })
       } else if (searchText) {
@@ -268,24 +268,27 @@ const ProductCardView = () => {
 
   const loadProducts = () => {
     setRowsPerPage((prev) => prev + 10);
-    if ((pathname === '/flashSale' || pathname === '/offers') && timers?.length > 0) {
-      const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
-      const saleTimer = timers.find(timer => timer.saleType === saleType);
-      if (saleTimer) {
-        const currentTime = moment();  // Current local time
-        // Parse the sale times
-        const endSaleTime = moment(saleTimer.endSale);
+    if ((pathname === '/flashSale' || pathname === '/offers')) {
+      if (timers?.length > 0) {
+        const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
+        const saleTimer = timers.find(timer => timer.saleType === saleType);
+        if (saleTimer) {
+          const currentTime = moment();  // Current local time
+          // Parse the sale times
+          const endSaleTime = moment(saleTimer.endSale);
 
-        if (endSaleTime.isAfter(currentTime)) {
-          const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
-          dispatch(getProducts(pagination, { [filterKey]: filterKey }));
-        } else {
-          dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+          if (endSaleTime.isAfter(currentTime)) {
+            const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
+            dispatch(getProducts(pagination, { [filterKey]: filterKey }));
+          }
         }
+        return; // Prevent loading products again if already on flashSale or offers page
       }
-      return; // Prevent loading products again if already on flashSale or offers page
+      else {
+        dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+      }
     }
-    if (sortBy === SORT_OPTIONS.NONE) {
+    else if (!(pathname === '/flashSale' || pathname === '/offers') && sortBy === SORT_OPTIONS.NONE) {
       dispatch(getProducts(pagination, filter));
     }
   }
@@ -380,7 +383,7 @@ const ProductCardView = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
           {/* FILTER BAR */}
           <Box sx={{ width: '100%', display: 'flex', justifyContent: { xs: 'center', md: 'start' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
-            <Card sx={{ width: expanded ? '96%' : null}}>
+            <Card sx={{ width: expanded ? '96%' : null }}>
               {/* Header row with filter button */}
               <CardContent sx={{ height: isMobile ? 6 : 10 }}>
                 <Box sx={{ display: 'flex' }}>
@@ -455,7 +458,7 @@ const ProductCardView = () => {
                         }}
                       >
                         {/* BRAND SELECT */}
-                        <InputBrandsSelectField fullWidth />
+                        {/* <InputBrandsSelectField fullWidth /> */}
 
                         {/* PRICE RANGE INPUTS */}
                         <Box>

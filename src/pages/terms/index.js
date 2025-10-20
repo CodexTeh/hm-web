@@ -6,7 +6,19 @@ import { GetLanguage } from "@redux-state/selectors";
 const TermsAndConditions = () => {
   const language = GetLanguage();
   const rtl = language === "ar";
-  const currentDateTime = new Date();
+  const currentDate = new Date();
+  const arabicDate = new Intl.DateTimeFormat("ar-EG", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(currentDate);
+
+  // Format the date for English (default)
+  const englishDate = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(currentDate);
 
   return (
     <>
@@ -28,7 +40,7 @@ const TermsAndConditions = () => {
 
           {/* Effective Date */}
           <Typography variant="subtitle1" gutterBottom>
-            {rtl ? `تاريخ السريان: ${currentDateTime.toLocaleDateString()}` : `Effective Date: ${currentDateTime.toLocaleDateString()}`}
+            {rtl ? `تاريخ السريان: ${arabicDate}` : `Effective Date: ${englishDate}`}
           </Typography>
 
           {/* Intro Paragraph */}
@@ -148,11 +160,11 @@ const TermsAndConditions = () => {
             <li>
               {rtl ? (
                 <>
-                  جميع الأسعار معروضة بعملة [العملة] وتشمل الضرائب المطبقة ما لم يُذكر خلاف ذلك.
+                  جميع الأسعار معروضة بعملة الريال العماني (OMR) وتشمل الضرائب المطبقة ما لم يُذكر خلاف ذلك.
                 </>
               ) : (
                 <>
-                  All prices are listed in [Currency] and are inclusive of applicable taxes unless
+                  All prices are listed in Omani Riyal (OMR) and are inclusive of applicable taxes unless
                   otherwise stated.
                 </>
               )}
@@ -204,13 +216,12 @@ const TermsAndConditions = () => {
             <li>
               {rtl ? (
                 <>
-                  تعتمد أوقات التسليم على توفر المنتجات وموقع الشحن. نسعى لتسليم الطلبات خلال [أدخل
-                  الوقت المقدر]، لكننا لا نضمن مواعيد تسليم محددة.
+                  تعتمد أوقات التسليم على توفر المنتجات وموقع الشحن. نسعى لتسليم الطلبات خلال (صلالة في نفس اليوم ويومين آخرين)، لكننا لا نضمن مواعيد تسليم محددة.
                 </>
               ) : (
                 <>
                   Delivery times depend on the availability of the products and shipping location. We
-                  strive to deliver orders within [insert estimated time], but we cannot guarantee
+                  strive to deliver orders within (Salalah same day & other two days), but we cannot guarantee
                   exact delivery dates.
                 </>
               )}
@@ -238,12 +249,12 @@ const TermsAndConditions = () => {
             <li>
               {rtl ? (
                 <>
-                  نقدم إمكانية إرجاع المنتجات خلال [أدخل العدد] أيام من استلامها، بشرط أن يكون المنتج
+                  نقدم إمكانية إرجاع المنتجات خلال خمسة أيام من استلامها، بشرط أن يكون المنتج
                   غير مستخدم وفي حالته الأصلية.
                 </>
               ) : (
                 <>
-                  We offer returns on items within [insert number] days of receipt if the product is
+                  We offer returns on items within five days of receipt if the product is
                   unused and in its original condition.
                 </>
               )}
@@ -251,12 +262,12 @@ const TermsAndConditions = () => {
             <li>
               {rtl ? (
                 <>
-                  يمكن إرجاع أو استبدال المنتجات التالفة أو المعيبة خلال [أدخل العدد] أيام من استلامها.
+                  يمكن إرجاع أو استبدال المنتجات التالفة أو المعيبة خلال اثنين أيام من استلامها.
                   يُرجى الاتصال بنا فورًا إذا استلمت منتجًا تالفًا.
                 </>
               ) : (
                 <>
-                  Damaged or defective items can be returned or exchanged within [insert number] days
+                  Damaged or defective items can be returned or exchanged within two days
                   of receipt. Please contact us immediately if you receive a damaged product.
                 </>
               )}
@@ -285,13 +296,13 @@ const TermsAndConditions = () => {
               {rtl ? (
                 <>
                   جميع المحتويات على الموقع، بما في ذلك النصوص والصور والشعارات وتصاميم المنتجات، هي
-                  ملك لـ [اسم شركتك] أو الجهات المرخصة لها، وهي محمية بموجب قوانين حقوق النشر
+                  ملك لـ HM Awani (حسين مقيل عواني) أو الجهات المرخصة لها، وهي محمية بموجب قوانين حقوق النشر
                   والعلامات التجارية والملكية الفكرية الأخرى.
                 </>
               ) : (
                 <>
                   All content on the Website, including text, images, logos, and product designs, are
-                  the property of [Your Company Name] or its licensors and are protected by copyright,
+                  the property of HM Awani  (Hussain Muqaibal Awani) or its licensors and are protected by copyright,
                   trademark, and other intellectual property laws.
                 </>
               )}
@@ -319,12 +330,12 @@ const TermsAndConditions = () => {
             <li>
               {rtl ? (
                 <>
-                  بالقدر الذي يسمح به القانون، لا تتحمل [اسم شركتك] أية مسؤولية عن أية أضرار مباشرة
+                  بالقدر الذي يسمح به القانون، لا تتحمل HM Awani (حسين مقيل عواني) أية مسؤولية عن أية أضرار مباشرة
                   أو غير مباشرة أو عرضية أو تبعية تنشأ عن استخدام الموقع أو المنتجات المباعة.
                 </>
               ) : (
                 <>
-                  To the fullest extent permitted by law, [Your Company Name] will not be liable for
+                  To the fullest extent permitted by law, HM Awani (Hussain Muqaibal Awani) will not be liable for
                   any direct, indirect, incidental, or consequential damages arising from the use of
                   the Website or the products sold.
                 </>
@@ -452,7 +463,7 @@ const TermsAndConditions = () => {
                 <br />
                 <strong>HM Awani</strong>
                 <br /> Oman, Salalah
-                <br /> {process.env.REACT_APP_WHATSAPP_NUMBER}
+                <br /> {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>
@@ -463,7 +474,7 @@ const TermsAndConditions = () => {
                 <br />
                 <strong>HM Awani</strong>
                 <br /> Oman, Salalah
-                <br /> {process.env.REACT_APP_WHATSAPP_NUMBER}
+                <br /> {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>
