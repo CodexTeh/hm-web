@@ -256,7 +256,7 @@ const Footer = () => {
       {/* Footer Bottom Bar */}
       <Box sx={{ borderTop: "1px solid #444", mt: { xs: 3, sm: 4 }, pt: 2, textAlign: "center" }}>
         <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 13 } }}>
-          {rtl ? "© 2025 HM AWANI Pvt. Ltd جميع الحقوق محفوظة" : "© 2025 HM AWANI Pvt. Ltd"}
+          {rtl ? "© 2025 HM AWANI مؤسسة حسين بن علوي مقيبل للتجارة" : "© 2025 HUSSAIN BIN ALAWI MOQAIBAL TRAD. EST."}
         </Typography>
       </Box>
     </Box>

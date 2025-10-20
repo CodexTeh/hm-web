@@ -198,7 +198,7 @@ const ContactPage = () => {
 
   const whatsappNumber = process.env.REACT_APP_WHATSAPP_NUMBER || '+96898890195';
   const emailAddress = 'support@hmawani.com';
-  const officeLocation = rtl ? 'منطقة الورش الصناعية الجديدة بالقرب من هايبر ماركت رامز 211 صلالة' : 'New Industrial workshop area near Ramez hypermarket 211 Salalah';
+  const officeLocation = rtl ? 'المنطقة الصناعية الجديدة بالقرب من مستودع شركة بيبسي صلالة - سلطنة عمان' : 'New Industrial Area Near Pepsi Co. Warehouse Salalah -Sultanate of Oman';
 
   // Remove Typeform script effect from original code — not needed anymore.
 

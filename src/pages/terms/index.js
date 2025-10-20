@@ -463,7 +463,7 @@ const TermsAndConditions = () => {
                 <br />
                 <strong>HM Awani</strong>
                 <br /> Oman, Salalah
-                <br /> {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
+                <br /> {process.env.REACT_APP_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>
@@ -474,7 +474,7 @@ const TermsAndConditions = () => {
                 <br />
                 <strong>HM Awani</strong>
                 <br /> Oman, Salalah
-                <br /> {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
+                <br /> {process.env.REACT_APP_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>

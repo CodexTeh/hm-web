@@ -180,11 +180,11 @@ const ReturnPolicy = () => {
             <li>
               {rtl ? (
                 <>
-                  <strong>تواصل معنا:</strong> تواصل مع فريق دعم العملاء لدينا على {process.env.REACT_APP_EMAIL_ADDRESS} أو {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER} مع تفاصيل طلبك وسبب الإرجاع.
+                  <strong>تواصل معنا:</strong> تواصل مع فريق دعم العملاء لدينا على {process.env.REACT_APP_EMAIL_ADDRESS} أو {process.env.REACT_APP_WHATSAPP_NUMBER} مع تفاصيل طلبك وسبب الإرجاع.
                 </>
               ) : (
                 <>
-                  <strong>Contact Us:</strong> Reach out to our customer support team at {process.env.REACT_APP_EMAIL_ADDRESS} or {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER} with your order details and reason for return.
+                  <strong>Contact Us:</strong> Reach out to our customer support team at {process.env.REACT_APP_EMAIL_ADDRESS} or {process.env.REACT_APP_WHATSAPP_NUMBER} with your order details and reason for return.
                 </>
               )}
             </li>
@@ -350,12 +350,12 @@ const ReturnPolicy = () => {
             <li>
               {rtl ? (
                 <>
-                  إذا كنت ترغب في إلغاء طلبك قبل شحنه، يُرجى الاتصال بنا فورًا على {process.env.REACT_APP_EMAIL_ADDRESS}  أو {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}. لا يمكن إلغاء الطلبات التي تم شحنها بالفعل.
+                  إذا كنت ترغب في إلغاء طلبك قبل شحنه، يُرجى الاتصال بنا فورًا على {process.env.REACT_APP_EMAIL_ADDRESS}  أو {process.env.REACT_APP_WHATSAPP_NUMBER}. لا يمكن إلغاء الطلبات التي تم شحنها بالفعل.
                 </>
               ) : (
                 <>
                   If you wish to cancel your order before it has been shipped, please contact us
-                  immediately at {process.env.REACT_APP_EMAIL_ADDRESS} or {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}. Orders that have
+                  immediately at {process.env.REACT_APP_EMAIL_ADDRESS} or {process.env.REACT_APP_WHATSAPP_NUMBER}. Orders that have
                   already been shipped cannot be canceled.
                 </>
               )}
@@ -396,7 +396,7 @@ const ReturnPolicy = () => {
                 <br />
                 عُمان، صلالة
                 <br />
-                {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
+                {process.env.REACT_APP_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>
@@ -409,7 +409,7 @@ const ReturnPolicy = () => {
                 <br />
                 Oman, Salalah
                 <br />
-                {process.env.REACT_APP_ARABIC_WHATSAPP_NUMBER}
+                {process.env.REACT_APP_WHATSAPP_NUMBER}
                 <br />
                 {process.env.REACT_APP_EMAIL_ADDRESS}
               </>
