@@ -127,7 +127,9 @@ const ProductCardView = () => {
         } else {
           dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
         }
-      }
+      } else {
+          dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+        }
     } else {
       if (categories?.length > 0 && (pathname !== '/flashSale' || pathname !== '/offers')) {
         const randomIndex = Math.floor(Math.random() * categories.length);
