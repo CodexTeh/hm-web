@@ -128,17 +128,17 @@ const ProductCardView = () => {
           dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
         }
       } else {
-          dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
-        }
+        dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+      }
     } else {
       if (categories?.length > 0 && (pathname !== '/flashSale' || pathname !== '/offers')) {
         const randomIndex = Math.floor(Math.random() * categories.length);
         setFilter({ webCategory: categories[randomIndex]?.id })
       } else if (searchText) {
-        setFilter({ website_name: searchText }); // Set to empty object if no categories available
+        setFilter({ [isRTL ? "arabicName" : "website_name"]: searchText });
       }
-    }
-  }, [pathname, categories, searchText, timers, dispatch]);
+    };
+  }, [pathname, categories, searchText, timers, dispatch, isRTL]);
 
   useEffect(() => {
     if (pathname === '/flashSale' || pathname === '/offers') {
@@ -326,13 +326,17 @@ const ProductCardView = () => {
       newFilter.max_price = 1000;
     }
     if (searchText) {
-      newFilter.website_name = searchText;
+      if (isRTL) {
+        newFilter.arabicName = searchText;
+      } else {
+        newFilter.website_name = searchText;
+      }
     }
 
     // Only update filter state if it has changed to prevent infinite loops
     setFilter(newFilter);
 
-  }, [brand, from, to, priceError, sortBy, searchText]); // **Added sortBy as a dependency**
+  }, [brand, from, to, priceError, sortBy, searchText, isRTL]); // **Added sortBy as a dependency**
 
   // const products = GetProducts();
 
