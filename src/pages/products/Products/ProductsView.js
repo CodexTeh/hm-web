@@ -11,7 +11,7 @@ import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true, sortBy = null }) => {
+const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true, sortBy = null}) => {
   const user = GetUser();
   const dispatch = useDispatch();
   let products = GetProducts();

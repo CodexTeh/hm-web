@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, LinearProgress, Typography } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import { GetLanguage, GetUser } from '@redux-state/selectors';
+import { GetLanguage, GetUser, GetWishlistLoading } from '@redux-state/selectors';
 import { colorPalette } from '@utils/colorPalette';
 import Footer from '@components/Footer';
 import { Api } from '@redux-state/common/api';
+import { getProductsSuccess } from '@redux-state/common/action';
 import ProductsView from '../products/Products/ProductsView';
 import CartFloatButton from '../products/CartFloatButton';
 import CardDrawer from '../products/CardDrawer/CartDrawer';
@@ -16,10 +17,10 @@ const WishList = ({ drawerWidth = 300 }) => {
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [wishListProducts, setWishListProducts] = useState([]);
   const [loader, setLoader] = useState(false);
 
   const user = GetUser();
+  const wishlistLoading = GetWishlistLoading();
   const language = GetLanguage(); // Get the current language (en or ar)
   const isRTL = language === 'ar'; // Check if the language is Arabic
 
@@ -30,10 +31,10 @@ const WishList = ({ drawerWidth = 300 }) => {
   const loadProducts = async () => {
     setLoader(true);
     const wishListProducts = await Api.getWishListProducts(user.id);
-    if (wishListProducts) {
-      setWishListProducts(wishListProducts);
+    if (wishListProducts?.length > 0) {
+      dispatch(getProductsSuccess({ products: wishListProducts, count: wishListProducts.length }));
     } else {
-      setWishListProducts([]);
+      dispatch(getProductsSuccess({ products: [], count: 0 }));
     }
     setLoader(false);
   };
@@ -42,7 +43,7 @@ const WishList = ({ drawerWidth = 300 }) => {
     if (user) {
       loadProducts();
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, wishlistLoading]);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -81,9 +82,6 @@ const WishList = ({ drawerWidth = 300 }) => {
         {/* Product Grid */}
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            cursor: 'pointer',
             transition: 'margin 0.3s ease',
             direction: isRTL ? 'rtl' : 'ltr',
           }}
@@ -92,7 +90,6 @@ const WishList = ({ drawerWidth = 300 }) => {
             hasMoreItems={hasMoreItems}
             loadProducts={loadProducts}
             isFetching={loader}
-            products={wishListProducts}
             isRTL={isRTL}
             open={open}
             loadMore={loader}
