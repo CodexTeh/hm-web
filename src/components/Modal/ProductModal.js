@@ -20,6 +20,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
+import { openLoginModal } from '@redux-state/actions';
 import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
 import emptyProductImage from '@assets/icons/empty-product.jpg';
@@ -255,6 +256,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
   }
 
   const addRemoveInWishlist = () => {
+    if (!user) return dispatch(openLoginModal(true));
     dispatch(addRemoveToWishlist({ productId: product.id, userId: user.id, type: wishListItem ? 'remove' : 'add' }));
   }
   const productLink = `${process.env.REACT_APP_FE_URL}/product/${product?.barcode}`;
@@ -335,7 +337,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
               }}>
                 {isRTL ? product?.arabicName : product?.website_name}
               </Typography>
-              {user && <Tooltip title={wishlistTooltipText()} arrow>
+              <Tooltip title={wishlistTooltipText()} arrow>
                 <IconButton
                   onClick={addRemoveInWishlist}
                   sx={{
@@ -355,7 +357,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
                     height: { xs: 20, md: 30 },
                   }} />}
                 </IconButton>
-              </Tooltip>}
+              </Tooltip>
               {/* Share Button */}
               <Tooltip title="Share" arrow>
                 <IconButton
