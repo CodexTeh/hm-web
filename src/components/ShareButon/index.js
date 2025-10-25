@@ -14,9 +14,9 @@ const SharePopover = ({
   isRTL,
 }) => {
   const caption =
-    `${title} : ${productLink}`;
+    `${title} : ${productLink}\n`.trim();
 
-  const encodedText = encodeURIComponent(`${caption}`);
+  const encodedText = encodeURIComponent(`${caption}\n`);
   const waLink = `https://wa.me/?text=${encodedText}`;
   const instaLink = `https://www.instagram.com/?url=${encodedText}`;
   const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedText}`;
