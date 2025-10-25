@@ -13,28 +13,10 @@ const SharePopover = ({
   title,
   isRTL,
 }) => {
+  const caption =
+    `${title} : ${productLink}`;
 
-  function stripTagsAndTrim(input = '') {
-    return String(input)
-      .replace(/<[^>]*>/g, '')   // remove HTML tags
-      .replace(/\s+/g, ' ')      // collapse whitespace/newlines
-      .trim();
-  }
-
-  function safeUrl(url) {
-    try {
-      const u = new URL(url);
-      return u.toString();
-    } catch {
-      return ''; // or fallback to window.location.href
-    }
-  }
-
-  const safeTitle = stripTagsAndTrim(title);
-  const safeProductLink = safeUrl(productLink) || window.location.href;
-  const caption = `${safeTitle} : ${safeProductLink}`.trim();
-  const encodedText = encodeURIComponent(caption + '\n'); // no template pitfalls
-
+  const encodedText = encodeURIComponent(`${caption}`);
   const waLink = `https://wa.me/?text=${encodedText}`;
   const instaLink = `https://www.instagram.com/?url=${encodedText}`;
   const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedText}`;
