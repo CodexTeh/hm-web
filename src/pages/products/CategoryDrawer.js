@@ -69,7 +69,7 @@ const CategoryDrawer = ({ setFilter, height }) => {
             open={drawerOpen}
             onClose={() => setDrawerOpen(false)}
             PaperProps={{
-              sx: { width: {xs: 200, md: 260}, maxWidth: "80vw", p: 2 },
+              sx: { width: { xs: 200, md: 260 }, maxWidth: "80vw", p: 2 },
             }}
           >
             {categories?.map((cat, index) => {
@@ -77,6 +77,7 @@ const CategoryDrawer = ({ setFilter, height }) => {
               return (
                 <CategoryView
                   subCategories={subCats}
+                  setDrawerOpen={setDrawerOpen}
                   isRTL={isRTL}
                   setFilter={setFilter}
                   language={language}
@@ -98,6 +99,7 @@ const CategoryDrawer = ({ setFilter, height }) => {
             return (
               <CategoryView
                 subCategories={subCats}
+                setDrawerOpen={setDrawerOpen}
                 isRTL={isRTL}
                 setFilter={setFilter}
                 language={language}

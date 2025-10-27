@@ -291,7 +291,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
             '&:hover': { bgcolor: colorPalette.lightShadow }
           }}
         >
-          <CloseIcon sx={{ color: 'white' }} />
+          <CloseIcon sx={{ color: 'white', '&:hover': { color: colorPalette.black } }} />
         </IconButton>
       </DialogActions>
       <DialogContent

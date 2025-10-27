@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from '@mui/material';
 import { colorPalette } from '@utils/colorPalette';
 
-export default function CategoryView({ isRTL, setFilter, category, subCategories, index, language }) {
+export default function CategoryView({ isRTL, setFilter, category, subCategories, index, language, setDrawerOpen }) {
   const [expanded, setExpanded] = useState(false);
   const [child, setChild] = useState();
 
@@ -62,6 +62,7 @@ export default function CategoryView({ isRTL, setFilter, category, subCategories
             <Box sx={{ cursor: 'pointer' }} onClick={() => {
               setChild(subCat.id)
               setFilter(subCatFilter)
+              setDrawerOpen(false)
             }} key={index}>
               <Typography fontSize={{ xs: 12, sm: 13 }} sx={{ color: child === subCat.id ? colorPalette.theme : colorPalette.darkText }} textAlign={language === 'ar' ? 'right' : 'left'} variant='subtitle2' fontWeight={510} width={{ xs: 120, sm: 150 }} key={index} marginTop={2}>
                 {isRTL ? subCat.ar_subcategory : subCat.subcategory}
