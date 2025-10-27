@@ -171,8 +171,8 @@ export const CustomCarousel = React.memo(function CustomCarousel({
           left: 30,
           transform: 'translateY(-50%)',
           zIndex: 2,
-          width: 40,
-          height: 40,
+          width: 25,
+          height: 25,
           backgroundColor: 'white',
           borderRadius: '50%',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
@@ -182,7 +182,7 @@ export const CustomCarousel = React.memo(function CustomCarousel({
           cursor: 'pointer',
         }}
       >
-        <ArrowBackIosIcon fontSize="small" />
+        <ArrowBackIosIcon fontSize="inherit" />
       </Box>
     ), []);
 
@@ -197,8 +197,8 @@ export const CustomCarousel = React.memo(function CustomCarousel({
           right: 30,
           transform: 'translateY(-50%)',
           zIndex: 2,
-          width: 40,
-          height: 40,
+          width: 25,
+          height: 25,
           backgroundColor: 'white',
           borderRadius: '50%',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
@@ -208,7 +208,7 @@ export const CustomCarousel = React.memo(function CustomCarousel({
           cursor: 'pointer',
         }}
       >
-        <ArrowForwardIosIcon fontSize="small" />
+        <ArrowForwardIosIcon fontSize="inherit" />
       </Box>
     ), []);
 

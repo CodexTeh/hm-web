@@ -194,6 +194,7 @@ const TopBar = () => {
           <Box sx={{
             display: "flex",
             alignItems: "center",
+            direction: "ltr",
             gap: { xs: 0.5, sm: 1.5, md: 2 }
           }}>
             {/* Search Icon */}
