@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { createAccountSuccess, forgetPasswordResponse, signInSuccess, toggleToast } from '../actions';
+import { createAccountSuccess, forgetPasswordResponse, openLoginModal, openRegisterModal, signInSuccess, toggleToast } from '../actions';
 import { Api } from './api'
 import {
   CREATE_ACCOUNT,
@@ -12,22 +12,18 @@ import { setToken } from '@helpers/tokenActions';
 function* createAccount(action) {
 
   try {
-    const data = yield call(Api.createAccount, action.payload);
-    if (data) {
-
-      yield put(
-        toggleToast(true, 'User created successfully!', 'success')
-      );
-      yield put(createAccountSuccess());
-    }
-
+    yield call(Api.createAccount, action.payload);
+    yield put(
+      toggleToast(true, 'User created successfully!', 'success')
+    );
+    yield put(createAccountSuccess());
+    yield put(openRegisterModal(false));
+    yield put(openLoginModal(true));
   } catch (error) {
     yield put(
       toggleToast(true, error.message, 'error')
     );
     yield put(createAccountSuccess());
-
-    // yield put(Actions.requestFailed(error.message));
     console.log("error", error);
   }
 }

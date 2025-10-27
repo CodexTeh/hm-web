@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
-import { GetUser, GetToken, GetToastMessage, GetToastType, GetToggleToast } from '@redux-state/selectors';
-import { toggleToast } from '@redux-state/actions';
+import { GetUser, GetToken, GetToastMessage, GetToastType, GetToggleToast, GetRegisterModalState, GetloginModalState } from '@redux-state/selectors';
+import { toggleToast, openLoginModal, openRegisterModal } from '@redux-state/actions';
 import LoginModal from '@components/Modal/LoginModal';
 import RegisterModal from '@components/Modal/RegisterModal';
 import TopBar from './TopBar';
@@ -17,8 +17,8 @@ const Layout = () => {
   const user = GetUser();
   const token = GetToken();
 
-  const [loginModal, setLoginModal] = useState(false);
-  const [registerModal, setRegisterModal] = useState(false);
+  const registerModal = GetRegisterModalState();
+  const loginModal = GetloginModalState();
 
   // useEffect(() => {
   //   const handleScroll = () => {
@@ -49,19 +49,20 @@ const Layout = () => {
   };
 
   const onCLoseLoginModal = () => {
-    setLoginModal(false)
+    dispatch(openLoginModal(false));
   }
   const onCLoseRegisterModal = () => {
-    setRegisterModal(false)
+    dispatch(openRegisterModal(false));
   }
   useEffect(() => {
     if (!token) {
-      setLoginModal(true)
+      dispatch(openLoginModal(true));
       onCLoseRegisterModal();
     } else {
       onCLoseLoginModal();
-      setRegisterModal(true)
+      dispatch(openRegisterModal(true));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   return (
@@ -85,8 +86,8 @@ const Layout = () => {
       </Snackbar>
       {!user &&
         <>
-          {loginModal && <LoginModal open={loginModal} handleClose={onCLoseLoginModal} setRegisterModal={setRegisterModal} />}
-          {registerModal && <RegisterModal setLoginModal={setLoginModal} open={registerModal} handleClose={onCLoseRegisterModal} />}
+          {loginModal && <LoginModal open={loginModal} handleClose={onCLoseLoginModal} />}
+          {registerModal && <RegisterModal open={registerModal} handleClose={onCLoseRegisterModal} />}
         </>
       }
     </Box>

@@ -17,10 +17,10 @@ import logo from "@assets/icons/logo.png";
 import { GetLanguage, GetUserLoginLoader, GetloginModalState } from "@redux-state/selectors";
 import { signIn } from '@redux-state/actions';
 import { colorPalette } from '@utils/colorPalette';
-import { openLoginModal } from "@redux-state/common/action";
+import { openRegisterModal } from "@redux-state/common/action";
 import { forgetPassword } from "@redux-state/actions";
 
-const LoginModal = ({ open, handleClose, setRegisterModal }) => {
+const LoginModal = ({ handleClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -45,13 +45,9 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
     }
   };
 
-  const closeLoginModal = () => {
-    dispatch(openLoginModal(false));
-  }
-
-  const openRegisterModal = () => {
-    setRegisterModal(true);
-    closeLoginModal();
+  const openRegistrationModal = () => {
+    dispatch(openRegisterModal(true));
+    handleClose()
   }
 
 
@@ -105,7 +101,7 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
       open={loginModal}
       maxWidth="xs"
       fullWidth
-      onClose={closeLoginModal}
+      onClose={handleClose}
       sx={{
         "& .MuiDialog-paper": {
           borderRadius: "12px",
@@ -204,7 +200,7 @@ const LoginModal = ({ open, handleClose, setRegisterModal }) => {
           <Typography
             component="span"
             sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
-            onClick={openRegisterModal}
+            onClick={openRegistrationModal}
           >
             {text.register}
           </Typography>

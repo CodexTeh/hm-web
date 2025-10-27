@@ -37,7 +37,8 @@ import {
   EMPTY_CART,
   SET_SEARCH_TEXT,
   GET_SALE_TIMER,
-  GET_SALE_TIMER_SUCCESS
+  GET_SALE_TIMER_SUCCESS,
+  OPEN_REGISTER_MODAL
 } from './types';
 
 export const addToCart = (cart) => (
@@ -285,6 +286,13 @@ export const toggleToast = (isOpen, message, toastType) => (
 export const openLoginModal = (open) => (
   {
     type: OPEN_LOGIN_MODAL,
+    payload: open
+  }
+);
+
+export const openRegisterModal = (open) => (
+  {
+    type: OPEN_REGISTER_MODAL,
     payload: open
   }
 );

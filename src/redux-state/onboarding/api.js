@@ -1,5 +1,7 @@
-const API_URL = process.env.REACT_APP_API_URL;
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL;
 export const Api = {
   createAccount: async (data) => {
     const { username, email, password, phone, address } = data;
@@ -19,6 +21,7 @@ export const Api = {
 
       switch (response.status) {
         case 200:
+          toast("Registration Successfully Completed!");
           const data = await response.json();
           return data;
         case 400:

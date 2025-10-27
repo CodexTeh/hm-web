@@ -16,11 +16,11 @@ import { useDispatch } from "react-redux";
 import logo from "@assets/icons/logo.png";
 import PhoneTextInput from '@components/PhoneTextInput';
 import useRouter from '@helpers/useRouter';
-import { GetLanguage, GetUserRegisterationLoader } from "@redux-state/selectors";
+import { GetLanguage, GetUserRegisterationLoader, GetRegisterModalState } from "@redux-state/selectors";
 import { colorPalette } from '@utils/colorPalette';
-import { createAccount } from "@redux-state/onboarding/action";
+import { openLoginModal, createAccount } from "@redux-state/actions";
 
-const RegisterModal = ({ open, handleClose, setLoginModal }) => {
+const RegisterModal = ({ handleClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
@@ -30,6 +30,7 @@ const RegisterModal = ({ open, handleClose, setLoginModal }) => {
   const [address, setAddress] = useState('');
   const [username, setUsername] = useState('');
 
+  const registerModal = GetRegisterModalState();
   const loading = GetUserRegisterationLoader();
   const language = GetLanguage(); // Get the current language (en or ar)
   const isRTL = language === "ar"; // Check if Arabic is enabled
@@ -53,8 +54,8 @@ const RegisterModal = ({ open, handleClose, setLoginModal }) => {
     login: isRTL ? "تسجيل الدخول" : "Login",
   };
 
-  const openLoginModal = () => {
-    setLoginModal(true);
+  const openSigninModal = () => {
+    dispatch(openLoginModal(true));
     handleClose();
   }
 
@@ -89,9 +90,10 @@ const RegisterModal = ({ open, handleClose, setLoginModal }) => {
 
   return (
     <Dialog
-      open={open}
+      open={registerModal}
       maxWidth="xs"
       fullWidth
+      onClose={handleClose}
       sx={{
         "& .MuiDialog-paper": {
           borderRadius: "12px",
@@ -204,7 +206,7 @@ const RegisterModal = ({ open, handleClose, setLoginModal }) => {
           <Typography
             component="span"
             sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
-            onClick={openLoginModal}
+            onClick={openSigninModal}
           >
             {text.login}
           </Typography>

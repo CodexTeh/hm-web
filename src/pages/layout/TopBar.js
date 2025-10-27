@@ -20,7 +20,7 @@ import useRouter from '@helpers/useRouter';
 import { useDispatch } from "react-redux";
 import { removeToken } from "@helpers/tokenActions";
 import { GetLanguage, GetUser } from "@redux-state/selectors";
-import { logout, emptyCart, changeLanguage } from "@redux-state/actions";
+import { logout, emptyCart, changeLanguage, openLoginModal } from "@redux-state/actions";
 import { colorPalette } from "@utils/colorPalette";
 
 const TopBar = () => {
@@ -195,13 +195,18 @@ const TopBar = () => {
             display: "flex",
             alignItems: "center",
             direction: "ltr",
-            gap: { xs: 0.5, sm: 1.5, md: 2 }
+            p: 0,
+            m: 0,
+            gap: { xs: 0.2, sm: 1.5, md: 2 }
           }}>
             {/* Search Icon */}
             <IconButton
               aria-label="search"
               onClick={() => setHasScrolled(true)}
-              sx={{ color: colorPalette.black }}
+              sx={{
+                color: colorPalette.black, p: 0,
+                m: 0,
+              }}
             >
               <SearchIcon />
             </IconButton>
@@ -219,6 +224,7 @@ const TopBar = () => {
                 variant={language === "en" ? "contained" : "outlined"}
                 sx={{
                   textTransform: "none",
+                  fontSize: isMobile ? 10 : 14,
                   border: `1px solid ${colorPalette.theme}`,
                   backgroundColor: language === "en" ? colorPalette.theme : "transparent",
                   color: language === "en" ? "#fff" : colorPalette.theme,
@@ -234,6 +240,7 @@ const TopBar = () => {
                 variant={language === "ar" ? "contained" : "outlined"}
                 sx={{
                   textTransform: "none",
+                  fontSize: isMobile ? 10 : 14,
                   border: `1px solid ${colorPalette.theme}`,
                   backgroundColor: language === "ar" ? colorPalette.theme : "transparent",
                   color: language === "ar" ? "#fff" : colorPalette.theme,
@@ -246,6 +253,25 @@ const TopBar = () => {
             </Box>
 
             {/* User Avatar */}
+            {!user && (
+              <Button
+                size="small"
+                onClick={() => dispatch(openLoginModal(true))}
+                variant={language === "ar" ? "contained" : "outlined"}
+                sx={{
+                  textTransform: "none",
+                  fontSize: isMobile ? 10 : 14,
+                  border: `1px solid ${colorPalette.theme}`,
+                  backgroundColor: language === "ar" ? colorPalette.theme : "transparent",
+                  color: language === "ar" ? "#fff" : colorPalette.theme,
+                  minWidth: 30,
+                  width: { xs: 35, md: "auto" },
+                }}
+              >
+                {language === "ar" ? "ينضم" : "Join"}
+              </Button>
+            )
+            }
             {user && (
               <Box ml={isMobile ? 0 : 2} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Tooltip title={language === "ar" ? "افتح الإعدادات" : "Open settings"}>

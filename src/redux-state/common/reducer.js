@@ -33,6 +33,7 @@ import {
   ADD_REMOVE_TO_WISHLIST,
   ADD_TO_WISHLIST_SUCCESS,
   OPEN_LOGIN_MODAL,
+  OPEN_REGISTER_MODAL,
   GET_BANNERS,
   GET_BANNERS_SUCCESS,
   GET_USER_PROFILE,
@@ -50,6 +51,7 @@ const INITIAL_STATE = {
   toastType: '',
   toastMessage: '',
   loginModal: false,
+  registerModal: false,
   profile: null,
   getProfileLoading: false,
   searchText: null,
@@ -114,6 +116,8 @@ export default (state = INITIAL_STATE, action) => {
 
     case OPEN_LOGIN_MODAL:
       return { ...state, loginModal: payload };
+    case OPEN_REGISTER_MODAL:
+      return { ...state, registerModal: payload };
 
     case PLACE_ORDER:
       return { ...state, placeOrderLoading: true };
