@@ -20,27 +20,6 @@ const Layout = () => {
   const registerModal = GetRegisterModalState();
   const loginModal = GetloginModalState();
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const scrollPosition = window.scrollY; // Current scroll position
-  //     const totalHeight = document.documentElement.scrollHeight - window.innerHeight; // Total scrollable height
-  //     const scrolledPercentage = (scrollPosition / totalHeight) * 100;
-
-  //     if (scrolledPercentage >= 5 && !hasScrolled) {
-  //       setHasScrolled(true);
-  //     } else if (scrolledPercentage < 5 && hasScrolled) {
-  //       setHasScrolled(false);
-  //     }
-  //   };
-  //   if (!stopScroll) {
-  //     window.addEventListener('scroll', handleScroll);
-
-  //     return () => {
-  //       window.removeEventListener('scroll', handleScroll);
-  //     };
-  //   }
-  // }, [hasScrolled, stopScroll]);
-
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;

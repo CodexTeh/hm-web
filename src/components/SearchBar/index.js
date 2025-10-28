@@ -51,9 +51,9 @@ const SearchBar = ({ setHasScrolled }) => {
       <form
         onSubmit={(e) => {
           e.preventDefault(); // Prevent the default form submission behavior
-          if (searchText) {
-            searchProducts();
-          }
+          // if (searchText) {
+          //   searchProducts();
+          // }
         }}
         style={{ width: '100%' }}
       >

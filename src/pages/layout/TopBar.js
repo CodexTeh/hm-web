@@ -7,12 +7,11 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
-import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles";
-import { useMediaQuery } from "@mui/material";
+import { createTheme, useTheme } from "@mui/material/styles";
+import { ThemeProvider, useMediaQuery } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "@assets/icons/logo.png";
 import SearchBar from "@components/SearchBar";
@@ -48,7 +47,7 @@ const TopBar = () => {
   };
 
   // State for menu/drawer
-  const [anchorElUser, setAnchorElUser] = useState(null); // User menu
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false); // Mobile nav drawer
   const [hasScrolled, setHasScrolled] = useState(false);
 
@@ -116,23 +115,17 @@ const TopBar = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar
-        elevation={hasScrolled ? 2 : 0}
-        sx={{
-          background: colorPalette.white,
-          transition: "box-shadow 0.3s",
-          position: "sticky",
-        }}
-      >
-        <Toolbar
-          sx={{
-            minHeight: { xs: 64, md: 80 },
-            px: { xs: 1, md: 4 },
-            display: "flex",
-            flexDirection: language === "ar" ? "row-reverse" : "row",
-            justifyContent: "space-between"
-          }}
-        >
+      <AppBar position="static" sx={{
+        background: colorPalette.white,
+        transition: "box-shadow 0.3s",
+      }}>
+        <Toolbar sx={{
+          minHeight: { xs: 64, md: 80 },
+          px: { xs: 1, md: 4 },
+          display: "flex",
+          flexDirection: language === "ar" ? "row-reverse" : "row",
+          justifyContent: "space-between"
+        }}>
           {/* Left side: Hamburger on mobile, logo always */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
@@ -272,96 +265,100 @@ const TopBar = () => {
               </Button>
             )
             }
-            {user && (
-              <Box ml={isMobile ? 0 : 2} sx={{ display: 'flex', alignItems: 'center' }}>
-                <Tooltip title={language === "ar" ? "افتح الإعدادات" : "Open settings"}>
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      sx={{
-                        bgcolor: colorPalette.theme,
-                        color: "#fff",
-                        width: isMobile ? 40 : 48,
-                        height: isMobile ? 40 : 48,
-                        fontSize: isMobile ? 18 : 20,
-                      }}
-                    >
-                      {userName}
-                    </Avatar>
-                  </IconButton>
-                </Tooltip>
+
+            {/* --- Drawer for mobile navigation --- */}
+            <Drawer
+              anchor={language === "ar" ? "right" : "left"}
+              open={drawerOpen}
+              onClose={toggleDrawer(false)}
+              PaperProps={{
+                sx: { width: 220, p: 2, bgcolor: colorPalette.white }
+              }}
+            >
+              <Box
+                role="presentation"
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1
+                }}
+              >
+                {pages[language].map((page, idx) => (
+                  <Button
+                    key={idx}
+                    onClick={() => onClickPage(page)}
+                    sx={{
+                      justifyContent: language === "ar" ? "flex-end" : "flex-start",
+                      color: colorPalette.black,
+                      fontWeight: 500,
+                      width: "100%",
+                      textAlign: language === "ar" ? "right" : "left"
+                    }}
+                  >
+                    {page}
+                  </Button>
+                ))}
               </Box>
+            </Drawer>
+
+            {user && (
+              <>
+                <IconButton
+                  size="small"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenUserMenu}
+                  color="inherit"
+                >
+                  <Avatar
+                    sx={{
+                      bgcolor: colorPalette.theme,
+                      color: "#fff",
+                      width: isMobile ? 30 : 48,
+                      height: isMobile ? 30 : 48,
+                      fontSize: isMobile ? 12 : 20,
+                    }}
+                  >
+                    {userName}
+                  </Avatar>
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings[language].map((setting, index) => (
+                    <MenuItem key={index} onClick={handleCloseUserMenu}>
+                      <Box onClick={() => {
+                        if (setting.title === 'Logout' || setting.title === "تسجيل الخروج") {
+                          dispatch(logout());
+                          dispatch(emptyCart());
+                          removeToken();
+                        } else {
+                          routeToPath(setting.path);
+                        }
+                      }}>
+                        <Typography>{setting.title}</Typography>
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
             )}
           </Box>
         </Toolbar>
-
-        {/* --- Drawer for mobile navigation --- */}
-        <Drawer
-          anchor={language === "ar" ? "right" : "left"}
-          open={drawerOpen}
-          onClose={toggleDrawer(false)}
-          PaperProps={{
-            sx: { width: 220, p: 2, bgcolor: colorPalette.white }
-          }}
-        >
-          <Box
-            role="presentation"
-            sx={{
-              mt: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 1
-            }}
-          >
-            {pages[language].map((page, idx) => (
-              <Button
-                key={idx}
-                onClick={() => onClickPage(page)}
-                sx={{
-                  justifyContent: language === "ar" ? "flex-end" : "flex-start",
-                  color: colorPalette.black,
-                  fontWeight: 500,
-                  width: "100%",
-                  textAlign: language === "ar" ? "right" : "left"
-                }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-        </Drawer>
-
-        {/* --- User Menu --- */}
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: language === "ar" ? "left" : "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: language === "ar" ? "left" : "right",
-          }}
-          open={Boolean(anchorElUser)}
-          onClose={handleCloseUserMenu}
-        >
-          {settings[language].map((setting, index) => (
-            <MenuItem key={index} onClick={handleCloseUserMenu}>
-              <Box onClick={() => {
-                if (setting.title === 'Logout' || setting.title === "تسجيل الخروج") {
-                  dispatch(logout());
-                  dispatch(emptyCart());
-                  removeToken();
-                } else {
-                  routeToPath(setting.path);
-                }
-              }}>
-                <Typography>{setting.title}</Typography>
-              </Box>
-            </MenuItem>
-          ))}
-        </Menu>
-
         {/* --- Search Overlay --- */}
         {hasScrolled && renderSearchOverlay()}
       </AppBar>

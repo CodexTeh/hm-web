@@ -1,25 +1,10 @@
 import {
   adaptV4Theme,
   createTheme,
-  Palette,
-  PaletteColor,
-  Theme,
-  ThemeOptions,
   useTheme
 } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 
-interface PsPalette extends Palette {
-  third: PaletteColor;
-}
-
-export interface PsTheme extends Theme {
-  palette: PsPalette;
-}
-
-interface PsThemeOptions extends ThemeOptions {
-  palette?: PsPalette;
-}
 
 export const useIsSmallScreen = () => {
   const theme = useTheme();
@@ -130,7 +115,7 @@ export const colorPalette = {
   semiBlack: '#0000001A'
 };
 
-const themeOptions: PsThemeOptions = {
+const themeOptions = {
   typography: {
     fontFamily: 'Montserrat, sans-serif',
     fontSize: 14,
@@ -166,6 +151,6 @@ const themeOptions: PsThemeOptions = {
       }
     }
   }
-} as unknown as PsThemeOptions;
+};
 
 export const theme = createTheme(adaptV4Theme(themeOptions));
