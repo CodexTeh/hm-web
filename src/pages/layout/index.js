@@ -35,7 +35,7 @@ const Layout = () => {
   }
   useEffect(() => {
     if (!token) {
-      dispatch(openLoginModal(true));
+      // dispatch(openLoginModal(true));
       onCLoseRegisterModal();
     } else {
       onCLoseLoginModal();

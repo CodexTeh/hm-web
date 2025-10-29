@@ -182,7 +182,7 @@ export const CustomCarousel = React.memo(function CustomCarousel({
           cursor: 'pointer',
         }}
       >
-        <ArrowBackIosIcon fontSize="inherit" />
+        <ArrowBackIosIcon fontSize="inherit" sx={{ marginLeft: 0.5}} />
       </Box>
     ), []);
 

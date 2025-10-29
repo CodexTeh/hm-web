@@ -106,7 +106,11 @@ const RegisterModal = ({ handleClose }) => {
       <DialogContent>
         {/* Logo */}
         <Box display="flex" justifyContent="center">
-          <img src={logo} alt="HM Logo" width="140" height="140" />
+          <img src={logo} alt="HM Logo" style={{
+            objectFit: "contain",
+            width: "200px",
+            height: "200px",
+          }} />
         </Box>
 
         {/* Terms & Policy Text */}

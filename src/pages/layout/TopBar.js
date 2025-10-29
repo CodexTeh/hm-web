@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -21,6 +21,7 @@ import { removeToken } from "@helpers/tokenActions";
 import { GetLanguage, GetUser } from "@redux-state/selectors";
 import { logout, emptyCart, changeLanguage, openLoginModal } from "@redux-state/actions";
 import { colorPalette } from "@utils/colorPalette";
+import { useLocation } from "react-router-dom";
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -28,11 +29,13 @@ const TopBar = () => {
   const user = GetUser();
   const userName = user ? user.username.substring(0, 2).toUpperCase() : "?";
   const router = useRouter();
+  const { pathname } = useLocation();
 
-  const pages = {
+  const pages = React.useMemo(() => ({
     en: ["Shop", "Offers", "Flash Sale", "Contact Us"],
     ar: ["محل", "العروض", "بيع فلاش", "اتصل بنا"],
-  };
+  }), []);
+
   const settings = {
     en: [
       { title: "Profile", path: `/profile/${user?._id}` },
@@ -65,14 +68,19 @@ const TopBar = () => {
   }, [language]);
 
   // Handlers
-  const routeToPath = (path) => router.push(`${path}`);
-  const onClickPage = (page) => {
-    if (page === pages[language][0]) routeToPath('/home');
-    else if (page === pages[language][1]) routeToPath('/offers');
-    else if (page === pages[language][2]) routeToPath('/flashSale');
-    else if (page === pages[language][3]) routeToPath('/contact-us');
-    setDrawerOpen(false); // Always close drawer if on mobile
-  };
+  const routeToPath = useCallback((path) => router.push(`${path}`), [router]);
+
+  const onClickPage = useCallback(
+    (page) => {
+      if (page === pages[language][0]) window.location.replace("/home");
+      else if (page === pages[language][1]) window.location.replace("/offers");
+      else if (page === pages[language][2]) window.location.replace("/flashSale");
+      else if (page === pages[language][3]) window.location.replace("/contact-us");
+
+      setDrawerOpen(false); // Always close drawer if on mobile
+    },
+    [language, pages, setDrawerOpen]
+  );
 
   const handleLanguageChange = (newLang) => dispatch(changeLanguage(newLang));
 
@@ -165,21 +173,30 @@ const TopBar = () => {
           {/* Middle: Navigation (hidden on mobile) */}
           {!isMobile && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {pages[language].map((page, idx) => (
-                <Button
-                  key={idx}
-                  onClick={() => onClickPage(page)}
-                  sx={{
-                    color: colorPalette.black,
-                    fontWeight: 600,
-                    fontSize: 14,
-                    mx: 0.5,
-                    '&:hover': { background: colorPalette.lightGrey }
-                  }}
-                >
-                  {page}
-                </Button>
-              ))}
+              {pages[language].map((page, idx) => {
+                // Define the route each page corresponds to
+                const routes = ["/home", "/offers", "/flashSale", "/contact-us"];
+                const isActive = pathname === routes[idx]; // highlight active route
+                console.log('yoyo', isActive);
+                
+                return (
+                  <Button
+                    key={idx}
+                    onClick={() => onClickPage(page)}
+                    sx={{
+                      color: isActive ? colorPalette.white : colorPalette.black,
+                      background: isActive ? colorPalette.theme : "transparent",
+                      fontWeight: 600,
+                      fontSize: 14,
+                      mx: 0.5,
+                      borderRadius: 1,
+                      transition: "background 0.2s ease",
+                    }}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
             </Box>
           )}
 
@@ -261,7 +278,7 @@ const TopBar = () => {
                   width: { xs: 35, md: "auto" },
                 }}
               >
-                {language === "ar" ? "ينضم" : "Join"}
+                {language === "ar" ? "ينضم" : "Login"}
               </Button>
             )
             }

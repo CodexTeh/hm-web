@@ -90,8 +90,8 @@ const LoginModal = ({ handleClose }) => {
         alert(!isRTL ? "Please enter a valid email" : "الرجاء إدخال بريد إلكتروني صالح");
         return;
       }
-      dispatch(forgetPassword({email}));
-    } else{
+      dispatch(forgetPassword({ email }));
+    } else {
       alert(!isRTL ? "Please enter email" : "الرجاء إدخال البريد الإلكتروني");
     }
   };
@@ -114,7 +114,11 @@ const LoginModal = ({ handleClose }) => {
       <DialogContent>
         {/* Logo */}
         <Box display="flex" justifyContent="center" mb={2}>
-          <img src={logo} alt="HM Logo" width="140" height="140" />
+          <img src={logo} alt="HM Logo" style={{
+            objectFit: "contain",
+            width: "200px",
+            height: "200px",
+          }} />
         </Box>
 
         {/* Login Title */}
