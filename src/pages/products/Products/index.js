@@ -18,7 +18,7 @@ import { getProducts, getProductCatalog, getCategories, getSaleTimers, getProduc
 import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
 import CategoryDrawer from '../CategoryDrawer';
-import moment, { min } from 'moment/moment';
+import moment from 'moment/moment';
 import Timer from '../../../components/Timer';
 import { useTimer } from 'react-timer-hook';
 

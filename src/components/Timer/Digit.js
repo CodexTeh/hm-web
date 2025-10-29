@@ -16,7 +16,7 @@ function separateDigits(number) {
 }
 
 export function Digit({ value, title }) {
-  const { digit1, digit2, digit3 } = separateDigits(value);
+  const { digit2, digit3 } = separateDigits(value);
   return (
     <Container>
       <DigitContainer>
