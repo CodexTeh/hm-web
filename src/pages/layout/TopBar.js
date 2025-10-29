@@ -177,7 +177,6 @@ const TopBar = () => {
                 // Define the route each page corresponds to
                 const routes = ["/home", "/offers", "/flashSale", "/contact-us"];
                 const isActive = pathname === routes[idx]; // highlight active route
-                console.log('yoyo', isActive);
                 
                 return (
                   <Button

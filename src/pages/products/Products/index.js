@@ -18,7 +18,9 @@ import { getProducts, getProductCatalog, getCategories, getSaleTimers, getProduc
 import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
 import CategoryDrawer from '../CategoryDrawer';
-import moment from 'moment/moment';
+import moment, { min } from 'moment/moment';
+import Timer from '../../../components/Timer';
+import { useTimer } from 'react-timer-hook';
 
 const StyledDescriptionFieldText = styled(TextField)({
   borderRadius: '8px',
@@ -49,7 +51,7 @@ const SORT_OPTIONS = {
 // -----------------------------
 
 const ProductCardView = () => {
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
   const [filter, setFilter] = useState(null);
@@ -57,6 +59,7 @@ const ProductCardView = () => {
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
   const [priceError, setPriceError] = useState('');
+  const [timerExpiry, setTimerExpiry] = useState(null);
   const [expanded, setExpanded] = useState(false);
   // --- NEW STATE FOR SORTING ---
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NONE);
@@ -120,8 +123,8 @@ const ProductCardView = () => {
         const currentTime = moment();  // Current local time
         // Parse the sale times
         const endSaleTime = moment(saleTimer.endSale);
-
         if (endSaleTime.isAfter(currentTime)) {
+          setTimerExpiry(endSaleTime.valueOf());
           const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
           setFilter({ [filterKey]: filterKey });
         } else {
@@ -371,8 +374,32 @@ const ProductCardView = () => {
     fetchFeedData();
   }, [pagination.perPage, fetchFeedData]);
 
+  // const { seconds, minutes, hours, days } = useTimer({
+  //   expiryTimestamp: new Date(parseInt(timerExpiry)),
+  //   autoStart: true
+  // });
+
+  const SaleTimer = ({ expiryMs }) => {
+    // ensure we pass a valid Date
+    const expiryDate = new Date(Number(expiryMs));
+    // guard: if invalid, don't render anything
+    if (!expiryMs || Number.isNaN(expiryDate.getTime()) || expiryDate.getTime() <= Date.now()) {
+      return null;
+    }
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { seconds, minutes, hours, days } = useTimer({
+      expiryTimestamp: expiryDate,
+      autoStart: true,
+    });
+
+    // Your existing Timer component expects seconds, minutes, hours, days
+    return <Timer seconds={seconds} minutes={minutes} hours={hours} days={days} />;
+  };
+
   return (
     <Box sx={{ background: colorPalette.greyBackground }}>
+
       <Box
         sx={{
           display: 'flex',
@@ -387,9 +414,10 @@ const ProductCardView = () => {
 
         <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
+
           {/* FILTER BAR */}
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: { xs: 'center', md: 'start' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
-            <Card sx={{ width: expanded ? '96%' : null }}>
+          <Box sx={{ width: '100%', display: 'flex', flexDirection: expanded ? 'column' : isMobile ? 'column' : 'row', justifyContent: { xs: 'center', md: 'space-evenly' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
+            <Card sx={{ width: expanded ? '96%' : null, height: !expanded ? 50 : 'auto', mb: expanded ? 2 : 0 }}>
               {/* Header row with filter button */}
               <CardContent sx={{ height: isMobile ? 6 : 10 }}>
                 <Box sx={{ display: 'flex' }}>
@@ -515,12 +543,23 @@ const ProductCardView = () => {
                 </CardContent>
               </Collapse>
             </Card>
-
+            {timerExpiry && !isMobile && <Box sx={{ ml: expanded ? 0 : 2, mt: expanded ? 2 : 0, mb: expanded ? 2 : 0, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: isMobile ? 12 : 16, color: 'text.secondary', mr: 1 }}>
+                {isRTL ? 'ينتهي العرض في:' : 'Offer ends in:'}
+              </Typography>
+              <SaleTimer expiryMs={timerExpiry} />
+            </Box>}
           </Box>
           {/* PRODUCTS LIST */}
           {!isMobile && <RenderProductsView />}
         </Box>
       </Box>
+      {timerExpiry && isMobile && <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: isMobile ? 12 : 16, color: 'text.secondary', mr: 1 }}>
+          {isRTL ? 'ينتهي العرض في:' : 'Offer ends in:'}
+        </Typography>
+        <SaleTimer expiryMs={timerExpiry} />
+      </Box>}
       {isMobile && <RenderProductsView />}
     </Box >
   );

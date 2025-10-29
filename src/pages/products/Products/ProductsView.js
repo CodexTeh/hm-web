@@ -11,7 +11,7 @@ import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux
 import { addToCart } from '@redux-state/common/action';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true, sortBy = null}) => {
+const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true, sortBy = null }) => {
   const user = GetUser();
   const dispatch = useDispatch();
   let products = GetProducts();
@@ -156,7 +156,9 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
               >
-                {open === index + 1 && <ProductModal filter={filter} hasDiscount={hasDiscount} isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} finalPrice={finalPrice} />}
+                {open === index + 1 &&
+                  <ProductModal filter={filter} hasDiscount={hasDiscount} isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} finalPrice={finalPrice} />
+                }
 
                 <Card
                   sx={{
@@ -294,7 +296,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                             sx={{
                               fontWeight: 'bold',
                               marginTop: isMobile ? 1 : 4,
-                            marginBottom: isMobile ? 0 : 4,
+                              marginBottom: isMobile ? 0 : 4,
                               alignSelf: 'center',
                               height: 40,
                               textTransform: 'capitalize',
