@@ -12,6 +12,7 @@ import WishList from '@pages/wishlist';
 import AboutUs from '@pages/about-us';
 import UserProfile from '@pages/profile';
 import ContactUs from '@pages/contact-us';
+import { ProductView } from '@pages/productView';
 
 export const AppRoutes = [
   {
@@ -37,7 +38,7 @@ export const AppRoutes = [
           {
             path: '/product/:barcode',
             key: 'products',
-            element: <><Layout /><Products /></>,
+            element: <><Layout /><ProductView /></>,
             errorElement: <ErrorElement />
           },
           {

@@ -1,15 +1,17 @@
 import React from 'react';
 import { Button, Box, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { colorPalette } from '@utils/colorPalette';
 import useRouter from '@helpers/useRouter';
 import { GetUser } from '@redux-state/selectors';
 import { openLoginModal } from '@redux-state/actions';
-import { useDispatch } from 'react-redux';
+import { GetCartDetails } from '@redux-state/selectors';
 
 
-const CheckoutButton = ({ isRTL, cartDetails }) => {
+const CheckoutButton = ({ isRTL }) => {
   const user = GetUser();
   const router = useRouter();
+  const cartDetails = GetCartDetails();
 
   const dispatch = useDispatch();
   return (

@@ -223,7 +223,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
   const material = isRTL ? enMaterials.find(material => material?.id?.toString() === arProductMaterial?.id?.toString()) : enMaterials.find(material => material?.id?.toString() === enProductMaterial?.id?.toString())
   const color = isRTL ? enAvailableColors.find(color => color?.id?.toString() === arProductColor?.id?.toString()) : enAvailableColors.find(color => color?.id?.toString() === enProductColor?.id?.toString())
 
-  const existingProduct = cartDetails?.items.find(item => item.id === product.id);
+  const existingProduct = cartDetails?.items.find(item => item?.id === product?.id);
 
   const qty = parseInt(product?.qty_onhand);
 

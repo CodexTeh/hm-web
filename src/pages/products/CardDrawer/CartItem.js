@@ -87,7 +87,11 @@ const Cart = ({ isRTL, cartDetails }) => {
       // Remove the item directly from the cart
       const updatedItems = cartDetails.items.filter(item => item.id !== product.id);
 
-      const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      // const newTotalPrice = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+      const newTotalPrice = updatedItems.reduce(
+        (sum, item) => sum + parseFloat(item.totalPrice || 0),
+        0
+      );
 
       // Update the cart (dispatch the action to update the Redux store)
       dispatch(addToCart({ items: updatedItems, user: user, totalPrice: newTotalPrice }));

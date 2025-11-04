@@ -2,16 +2,15 @@ import React from 'react';
 import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton, CircularProgress, useTheme, useMediaQuery } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-import emptyProductImage from '@assets/icons/empty-product.jpg';
-import { colorPalette } from '@utils/colorPalette';
-import { ProductModal } from '@components/Modal/ProductModal';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import emptyProductImage from '@assets/icons/empty-product.jpg';
 import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
+import { colorPalette } from '@utils/colorPalette';
 import EmptyView from './EmptyView';
 
-const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, open, handleOpen, setOpen, ChildView, loadMore = true, sortBy = null }) => {
+const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loadMore = true, sortBy = null }) => {
   const user = GetUser();
   const dispatch = useDispatch();
   let products = GetProducts();
@@ -121,7 +120,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
           sx={{ marginLeft: { md: !open ? 0.5 : null }, maxWidth: '98%' }}
           container spacing={3}>
           {products.map((product, index) => {
-            const existingProduct = cartDetails?.items.find(item => item.id === product.id);
+            const existingProduct = cartDetails?.items.find(item => item?.id === product?.id);
 
             const enProductSize = enSizes.find(size => size?.id?.toString() === product?.size?.toString());
             const arProductSize = enSizes.find(size => size?.id?.toString() === product?.ar_size?.toString());
@@ -156,10 +155,6 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? 'rtl' : 'ltr' }} // Ensure each card respects the language direction
               >
-                {open === index + 1 &&
-                  <ProductModal filter={filter} hasDiscount={hasDiscount} isRTL={isRTL} imageUrls={imageUrls} open={open === index + 1} setOpen={setOpen} product={product} ChildView={ChildView} finalPrice={finalPrice} />
-                }
-
                 <Card
                   sx={{
                     maxWidth: isMobile ? 200 : 300,
@@ -169,7 +164,7 @@ const ProductsView = ({ filter, hasMoreItems, isFetching, loadProducts, isRTL, o
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleOpen(index + 1)
+                    window.location.replace(`/product/${product?.barcode}`);
                   }}
                 >
                   {/* Discount Badge */}

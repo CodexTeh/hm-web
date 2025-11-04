@@ -32,8 +32,8 @@ const TopBar = () => {
   const { pathname } = useLocation();
 
   const pages = React.useMemo(() => ({
-    en: ["Shop", "Offers", "Flash Sale", "Contact Us"],
-    ar: ["محل", "العروض", "بيع فلاش", "اتصل بنا"],
+    en: ["Home", "Offers", "Flash Sale", "Contact Us"],
+    ar: ["بيت", "العروض", "بيع فلاش", "اتصل بنا"],
   }), []);
 
   const settings = {
