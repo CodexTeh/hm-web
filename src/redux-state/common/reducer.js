@@ -158,7 +158,8 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_CATEGORIES_SUCCESS:
       const { category, subcategory } = payload;
-      return { ...state, getCategoriesLoading: false, categories: category, subCategories: subcategory };
+      const filterCats = category.filter(item => item.id !== 27);
+      return { ...state, getCategoriesLoading: false, categories: filterCats, subCategories: subcategory };
 
     case GET_SEARCHED_PRODUCTS:
       return { ...state, productsLoading: true };

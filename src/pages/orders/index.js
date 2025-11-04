@@ -49,6 +49,11 @@ const rtlStatusMapper = {
   'delivered': 'تم التوصيل',
 };
 
+const rtlPaymentStatusMapper = {
+  'payment-pending': 'الدفع معلق',
+  'success': 'نجاح',
+};
+
 const translations = {
   en: {
     backToHome: 'Back to Home',
@@ -390,7 +395,7 @@ const OrderList = () => {
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 5,
-        mt: { xs: 6, md: 0 },
+        mt: { xs: 6, md: 3 },
         justifyContent: 'space-between',
         alignItems: 'flex-end',
       }}>
@@ -453,7 +458,7 @@ const OrderList = () => {
                 {t.paymentStatus}:
               </Typography>
               <Chip
-                label={t.payOnline}
+                label={isRTL ? rtlPaymentStatusMapper[currentOrder?.paymentStatus] : currentOrder?.paymentStatus }
                 sx={{
                   fontSize: 15,
                   fontWeight: 'bold',

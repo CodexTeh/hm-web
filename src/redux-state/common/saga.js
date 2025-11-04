@@ -47,7 +47,7 @@ function* getOrders(action) {
 
 function* getProfile(action) {
   try {
-  const token = yield select(getToken);
+    const token = yield select(getToken);
 
     const data = yield call(Api.getProfile, action.payload, token);
     yield put(Actions.getProfileSuccess(data));
@@ -190,6 +190,9 @@ function* placeOrder(action) {
 
   try {
     yield call(Api.placeOrder, action.payload, token, language);
+    yield put(
+      Actions.toggleToast(true, 'Order Placed successfully!', 'success')
+    );
     yield put(Actions.placeOrderSuccess());
   } catch (error) {
     yield put(Actions.placeOrderSuccess());

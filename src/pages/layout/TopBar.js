@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
 import { createTheme, useTheme } from "@mui/material/styles";
-import { ThemeProvider, useMediaQuery } from "@mui/material";
+import { Chip, ThemeProvider, useMediaQuery } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "@assets/icons/logo.png";
 import SearchBar from "@components/SearchBar";
@@ -175,29 +175,50 @@ const TopBar = () => {
           {!isMobile && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {pages[language].map((page, idx) => {
-                // Define the route each page corresponds to
                 const routes = ["/home", "/new-arrivals", "/offers", "/flashSale", "/contact-us"];
-                const isActive = pathname === routes[idx]; // highlight active route
-                
+                const route = routes[idx];
+                const isActive = pathname === route;
+
+                const showNewBadge = route === "/new-arrivals"; // 👈 condition for badge
+
                 return (
-                  <Button
-                    key={idx}
-                    onClick={() => onClickPage(page)}
-                    sx={{
-                      color: isActive ? colorPalette.white : colorPalette.black,
-                      background: isActive ? colorPalette.theme : "transparent",
-                      fontWeight: 600,
-                      fontSize: 14,
-                      mx: 0.5,
-                      borderRadius: 1,
-                      transition: "background 0.2s ease",
-                    }}
-                  >
-                    {page}
-                  </Button>
+                  <Box key={idx} sx={{ position: "relative", display: "inline-flex" }}>
+                    <Button
+                      onClick={() => onClickPage(page)}
+                      sx={{
+                        color: isActive ? colorPalette.white : colorPalette.black,
+                        background: isActive ? colorPalette.theme : "transparent",
+                        fontWeight: 600,
+                        fontSize: 14,
+                        mx: 0.5,
+                        borderRadius: 1,
+                        transition: "background 0.2s ease",
+                      }}
+                    >
+                      {page}
+                    </Button>
+
+                    {showNewBadge && (
+                      <Chip
+                        label={language === "ar" ? "جديد": "New"}
+                        size="small"
+                        sx={{
+                          position: "absolute",
+                          top: -6,
+                          right: language === "ar" ? null : 0,
+                          left: language === "ar" ? 0 : null,
+                          backgroundColor: "orange",
+                          color: "white",
+                          fontSize: 10,
+                          height: 16,
+                        }}
+                      />
+                    )}
+                  </Box>
                 );
               })}
             </Box>
+
           )}
 
           {/* Right: Search, Language, Avatar */}

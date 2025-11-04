@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, select, takeLatest } from 'redux-saga/effects'
 import { createAccountSuccess, forgetPasswordResponse, openLoginModal, openRegisterModal, signInSuccess, toggleToast } from '../actions';
 import { Api } from './api'
 import {
@@ -8,13 +8,16 @@ import {
 } from './types'
 import { setToken } from '@helpers/tokenActions';
 
+const getLanguage = state => state.common.language;
+
 
 function* createAccount(action) {
 
   try {
+    const language = yield select(getLanguage);
     yield call(Api.createAccount, action.payload);
     yield put(
-      toggleToast(true, 'User created successfully!', 'success')
+      toggleToast(true, language === 'en'? 'User created successfully!' : 'تم إنشاء المستخدم بنجاح!', 'success')
     );
     yield put(createAccountSuccess());
     yield put(openRegisterModal(false));
@@ -30,9 +33,14 @@ function* createAccount(action) {
 
 function* signIn(action) {
   try {
+    const language = yield select(getLanguage);
+
     const data = yield call(Api.signIn, action.payload);
     if (data && data?.info?.token) {
       setToken(data.info.token)
+      yield put(
+        toggleToast(true, language === 'en' ? 'User login successfully!' : 'تم تسجيل دخول المستخدم بنجاح!', 'success')
+      );
       yield put(signInSuccess(data));
     } else {
       yield put(signInSuccess(null));
