@@ -10,17 +10,17 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material';
+import moment from 'moment/moment';
+import { useTimer } from 'react-timer-hook';
 import {
   GetAllProductsCount, GetProductsLoading, GetLanguage,
   GetCategories, GetProductCatalogs, GetSearchText, GetSaleTimers
 } from '@redux-state/common/selectors';
+import Timer from '@components/Timer';
 import { getProducts, getProductCatalog, getCategories, getSaleTimers, getProductsSuccess } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 import ProductsView from './ProductsView';
 import CategoryDrawer from '../CategoryDrawer';
-import moment from 'moment/moment';
-import Timer from '../../../components/Timer';
-import { useTimer } from 'react-timer-hook';
 
 const StyledDescriptionFieldText = styled(TextField)({
   borderRadius: '8px',

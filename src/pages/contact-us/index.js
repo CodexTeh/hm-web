@@ -23,6 +23,7 @@ import 'leaflet/dist/leaflet.css';
 import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import Material-UI icons
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import BackButton from '@components/BackButton';
 
 // Custom styled component for the outer container
 const StyledContactCard = styled(Box)(({ theme }) => ({
@@ -204,6 +205,7 @@ const ContactPage = () => {
 
   return (
     <Box>
+      <BackButton />
       {/* Banner Section */}
       <Box
         sx={{

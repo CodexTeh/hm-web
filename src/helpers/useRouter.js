@@ -11,21 +11,24 @@ export default function useRouter() {
   const location = useLocation();
   const navigate = useNavigate();
   const match = useMatch('');
+
   // Return our custom router object
   return {
-    // For convenience add push(), replace(), pathname at top level
+    // Navigation helpers
     push: (url) => navigate(url),
     replace: (url) => navigate(url, { replace: true }),
+    back: () => window.history.length > 1 ? navigate(-1) : navigate('/'),
+
+    // Basic router info
     pathname: location.pathname,
-    // Merge params and parsed query string into single "query" object
-    // so that they can be used interchangeably.
-    // Example: /:topic?sort=popular -> { topic: "react", sort: "popular" }
+
+    // Combine params + query
     query: {
-      ...queryString.parse(location.search), // Convert string to object
+      ...queryString.parse(location.search),
       ...params
     },
-    // Include match, location, history objects so we have
-    // access to extra React Router functionality if needed.
+
+    // Expose raw router objects
     match,
     location,
     navigate

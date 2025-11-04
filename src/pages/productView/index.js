@@ -43,6 +43,10 @@ export const ProductView = () => {
   const language = GetLanguage(); // 'en' | 'ar'
   const isRTL = language === 'ar';
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Fetch single product when barcode changes
   useEffect(() => {
     let cancelled = false;
@@ -114,10 +118,8 @@ export const ProductView = () => {
   const [openShare, setOpenShare] = React.useState(false);
 
   const loopRef = useRef();
-  
-  
   const dispatch = useDispatch();
-  
+
   const allCategories = GetCategories();
   const subCategories = GetSubCategories();
   const products = GetProducts();
@@ -140,19 +142,19 @@ export const ProductView = () => {
     setAnchorEl(null);
   };
 
-useEffect(() => {
-  if (
-    cartDetails &&
-    typeof cartDetails.totalPrice !== 'undefined' &&
-    cartDetails.totalPrice !== prevTotalPriceRef.current
-  ) {
-    handleDrawerOpen();
-  }
+  useEffect(() => {
+    if (
+      cartDetails &&
+      typeof cartDetails.totalPrice !== 'undefined' &&
+      cartDetails.totalPrice !== prevTotalPriceRef.current
+    ) {
+      handleDrawerOpen();
+    }
 
-  // update ref after checking
-  prevTotalPriceRef.current = cartDetails?.totalPrice;
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [cartDetails]);
+    // update ref after checking
+    prevTotalPriceRef.current = cartDetails?.totalPrice;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartDetails]);
 
 
   const handleIncrease = (product, finalPrice) => {
@@ -356,12 +358,15 @@ useEffect(() => {
         sx={{
           position: 'sticky',
           top: 80,
-          zIndex: 1000, 
+          zIndex: 1000,
           justifyContent: isRTL ? 'flex-end' : 'flex-start',
         }}
       >
         <IconButton
-          onClick={() => window.location.replace('/home')}
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            router.back();
+          }}
           sx={{
             backgroundColor: colorPalette.theme,
             color: colorPalette.white,

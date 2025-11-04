@@ -5,6 +5,7 @@ import LocalMallIcon from '@mui/icons-material/LocalMall';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import emptyProductImage from '@assets/icons/empty-product.jpg';
+import useRouter from '@helpers/useRouter';
 import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
@@ -13,6 +14,8 @@ import EmptyView from './EmptyView';
 const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loadMore = true, sortBy = null }) => {
   const user = GetUser();
   const dispatch = useDispatch();
+  const router = useRouter();
+
   let products = GetProducts();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -164,7 +167,8 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    window.location.replace(`/product/${product?.barcode}`);
+                    router.push(`/product/${product?.barcode}`);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   {/* Discount Badge */}
