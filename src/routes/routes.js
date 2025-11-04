@@ -36,6 +36,13 @@ export const AppRoutes = [
             errorElement: <ErrorElement />
           },
           {
+            index: true,
+            path: '/new-arrivals',
+            key: 'products',
+            element: <><Layout /><Products /></>,
+            errorElement: <ErrorElement />
+          },
+          {
             path: '/product/:barcode',
             key: 'products',
             element: <><Layout /><ProductView /></>,

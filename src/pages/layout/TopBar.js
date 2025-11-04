@@ -32,8 +32,8 @@ const TopBar = () => {
   const { pathname } = useLocation();
 
   const pages = React.useMemo(() => ({
-    en: ["Home", "Offers", "Flash Sale", "Contact Us"],
-    ar: ["بيت", "العروض", "بيع فلاش", "اتصل بنا"],
+    en: ["Home", "New Arrivals", "Offers", "Flash Sale", "Contact Us"],
+    ar: ["بيت", "الوافدون الجدد", "العروض", "بيع فلاش", "اتصل بنا"],
   }), []);
 
   const settings = {
@@ -73,9 +73,10 @@ const TopBar = () => {
   const onClickPage = useCallback(
     (page) => {
       if (page === pages[language][0]) window.location.replace("/home");
-      else if (page === pages[language][1]) window.location.replace("/offers");
-      else if (page === pages[language][2]) window.location.replace("/flashSale");
-      else if (page === pages[language][3]) window.location.replace("/contact-us");
+      else if (page === pages[language][1]) window.location.replace("/new-arrivals");
+      else if (page === pages[language][2]) window.location.replace("/offers");
+      else if (page === pages[language][3]) window.location.replace("/flashSale");
+      else if (page === pages[language][4]) window.location.replace("/contact-us");
 
       setDrawerOpen(false); // Always close drawer if on mobile
     },
@@ -175,7 +176,7 @@ const TopBar = () => {
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {pages[language].map((page, idx) => {
                 // Define the route each page corresponds to
-                const routes = ["/home", "/offers", "/flashSale", "/contact-us"];
+                const routes = ["/home", "/new-arrivals", "/offers", "/flashSale", "/contact-us"];
                 const isActive = pathname === routes[idx]; // highlight active route
                 
                 return (

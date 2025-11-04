@@ -12,6 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RemoveIcon from '@mui/icons-material/Remove';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
@@ -137,9 +138,9 @@ export const ProductView = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => { 
-    if(cartDetails && cartDetails.items && cartDetails.items.length > 0) handleDrawerOpen()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (cartDetails && cartDetails.items && cartDetails.items.length > 0) handleDrawerOpen()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartDetails]);
 
   const handleIncrease = (product, finalPrice) => {
@@ -337,7 +338,31 @@ export const ProductView = () => {
   const handleDrawerClose = useCallback(() => setOpenDrawer(false), []);
 
   return (
-    <Box sx={{ padding: 5, marginTop: 15 }}>
+    <Box sx={{ padding: 5, marginTop: 10 }}>
+      {/* Back Button */}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 80,
+          zIndex: 1000, 
+          justifyContent: isRTL ? 'flex-end' : 'flex-start',
+        }}
+      >
+        <IconButton
+          onClick={() => window.location.replace('/home')}
+          sx={{
+            backgroundColor: colorPalette.theme,
+            color: colorPalette.white,
+            '&:hover': {
+              backgroundColor: colorPalette.themeHover || '#333',
+            },
+          }}
+        >
+          {/* Flip icon for RTL */}
+          <ArrowBackIcon sx={{ transform: isRTL ? 'rotate(180deg)' : 'none' }} />
+        </IconButton>
+      </Box>
+
       <Grid container spacing={2}>
         {/* Left Section: Carousel */}
         <Grid item xs={12} md={6} >

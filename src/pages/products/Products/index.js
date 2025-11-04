@@ -116,31 +116,35 @@ const ProductCardView = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if ((pathname === '/flashSale' || pathname === '/offers') && timers?.length > 0) {
-      const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
-      const saleTimer = timers.find(timer => timer.saleType === saleType);
-      if (saleTimer) {
-        const currentTime = moment();  // Current local time
-        // Parse the sale times
-        const endSaleTime = moment(saleTimer.endSale);
-        if (endSaleTime.isAfter(currentTime)) {
-          setTimerExpiry(endSaleTime.valueOf());
-          const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
-          setFilter({ [filterKey]: filterKey });
+    if (pathname !== '/new-arrivals') {
+      if ((pathname === '/flashSale' || pathname === '/offers') && timers?.length > 0) {
+        const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
+        const saleTimer = timers.find(timer => timer.saleType === saleType);
+        if (saleTimer) {
+          const currentTime = moment();  // Current local time
+          // Parse the sale times
+          const endSaleTime = moment(saleTimer.endSale);
+          if (endSaleTime.isAfter(currentTime)) {
+            setTimerExpiry(endSaleTime.valueOf());
+            const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
+            setFilter({ [filterKey]: filterKey });
+          } else {
+            dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
+          }
         } else {
           dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
         }
       } else {
-        dispatch(getProductsSuccess({ products: [], total: 0 })); // Clear products if sale ended
-      }
-    } else {
-      if (categories?.length > 0 && (pathname !== '/flashSale' || pathname !== '/offers')) {
-        const randomIndex = Math.floor(Math.random() * categories.length);
-        setFilter({ webCategory: categories[randomIndex]?.id })
-      } else if (searchText) {
-        setFilter({ [isRTL ? "arabicName" : "website_name"]: searchText });
-      }
-    };
+        if (categories?.length > 0 && (pathname !== '/flashSale' || pathname !== '/offers')) {
+          const randomIndex = Math.floor(Math.random() * categories.length);
+          setFilter({ webCategory: categories[randomIndex]?.id })
+        } else if (searchText) {
+          setFilter({ [isRTL ? "arabicName" : "website_name"]: searchText });
+        }
+      };
+    } else if (pathname === '/new-arrivals') {
+      setFilter({ webCategory: 27 })
+    }
   }, [pathname, categories, searchText, timers, dispatch, isRTL]);
 
   useEffect(() => {
@@ -412,7 +416,7 @@ const ProductCardView = () => {
         }}
       >
 
-        <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />
+        {pathname !== '/new-arrivals' && <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
 
           {/* FILTER BAR */}
