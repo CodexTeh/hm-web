@@ -114,10 +114,10 @@ export const ProductView = () => {
   const [openShare, setOpenShare] = React.useState(false);
 
   const loopRef = useRef();
-
-
+  
+  
   const dispatch = useDispatch();
-
+  
   const allCategories = GetCategories();
   const subCategories = GetSubCategories();
   const products = GetProducts();
@@ -126,6 +126,8 @@ export const ProductView = () => {
   const cartDetails = GetCartDetails();
   const wishListLoading = GetWishlistLoading();
   const user = GetUser();
+
+  const prevTotalPriceRef = useRef(cartDetails?.totalPrice);
 
   // share popper handlers
   const handleShareClick = (event) => {
@@ -138,10 +140,20 @@ export const ProductView = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    if (cartDetails && cartDetails.items && cartDetails.items.length > 0) handleDrawerOpen()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartDetails]);
+useEffect(() => {
+  if (
+    cartDetails &&
+    typeof cartDetails.totalPrice !== 'undefined' &&
+    cartDetails.totalPrice !== prevTotalPriceRef.current
+  ) {
+    handleDrawerOpen();
+  }
+
+  // update ref after checking
+  prevTotalPriceRef.current = cartDetails?.totalPrice;
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [cartDetails]);
+
 
   const handleIncrease = (product, finalPrice) => {
     const existingProductIndex = cartDetails?.items.findIndex(item => item.id === product.id);

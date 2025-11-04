@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import Footer from '@components/Footer';
 import { getCategories } from '@redux-state/common/action';
@@ -18,6 +18,7 @@ export default function Products() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const dispatch = useDispatch();
   const cartDetails = GetCartDetails();
+  const prevTotalPriceRef = useRef(cartDetails?.totalPrice);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -25,7 +26,16 @@ export default function Products() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (cartDetails && cartDetails.items && cartDetails.items.length > 0) handleDrawerOpen()
+    if (
+      cartDetails &&
+      typeof cartDetails.totalPrice !== 'undefined' &&
+      cartDetails.totalPrice !== prevTotalPriceRef.current
+    ) {
+      handleDrawerOpen();
+    }
+
+    // update ref after checking
+    prevTotalPriceRef.current = cartDetails?.totalPrice;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartDetails]);
   // Drawer handlers
