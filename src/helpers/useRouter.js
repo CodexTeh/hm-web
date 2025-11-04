@@ -17,7 +17,16 @@ export default function useRouter() {
     // Navigation helpers
     push: (url) => navigate(url),
     replace: (url) => navigate(url, { replace: true }),
-    back: () => window.history.length > 1 ? navigate(-1) : navigate('/'),
+    back: (state = null, fallback = '/') => {
+      if (state) {
+        sessionStorage.setItem('__router_back_state', JSON.stringify(state));
+      }
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate(fallback);
+      }
+    },
 
     // Basic router info
     pathname: location.pathname,

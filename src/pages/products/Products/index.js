@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import TuneIcon from '@mui/icons-material/Tune'
@@ -303,8 +303,26 @@ const ProductCardView = () => {
     }
   }
 
+  const skipLoadRef = useRef(false);
+
   useEffect(() => {
-    if (filter && Object.keys(filter).length > 0) {
+    // use a ref to persist across re-renders during this mount
+
+    // 1️⃣ Check if we came back with backState
+    const backState = sessionStorage.getItem('__router_back_state');
+    if (backState) {
+      const { isRender } = JSON.parse(backState);
+      if (isRender) {
+        // Mark that we should skip loadProducts for this render
+        skipLoadRef.current = true;
+      }
+
+      // Always clear after reading
+      sessionStorage.removeItem('__router_back_state');
+    }
+
+    // 2️⃣ Only load products if we’re not skipping
+    if (!skipLoadRef.current && filter && Object.keys(filter).length > 0) {
       loadProducts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

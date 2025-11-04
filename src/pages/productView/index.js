@@ -365,7 +365,7 @@ export const ProductView = () => {
         <IconButton
           onClick={() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            router.back();
+            router.back({ isRender: true });
           }}
           sx={{
             backgroundColor: colorPalette.theme,
