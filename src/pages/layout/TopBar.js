@@ -154,7 +154,7 @@ const TopBar = () => {
                 alignItems: "center",
                 cursor: 'pointer'
               }}
-              onClick={() => routeToPath('/')}
+              onClick={() => routeToPath('/home')}
             >
               <img
                 src={logo}
