@@ -315,6 +315,9 @@ const ProductCardView = () => {
       if (isRender) {
         // Mark that we should skip loadProducts for this render
         skipLoadRef.current = true;
+        setTimeout(() => {
+            window.scrollTo({ top: 100, behavior: 'instant' });
+          }, 0);
       }
 
       // Always clear after reading

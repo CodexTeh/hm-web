@@ -23,8 +23,10 @@ const BackButton = () => {
     >
       <IconButton
         onClick={() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          router.back();
+          router.back({ isRender: true });
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }, 0);
         }}
         sx={{
           backgroundColor: colorPalette.theme,

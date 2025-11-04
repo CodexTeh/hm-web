@@ -12,7 +12,6 @@ import {
   useTheme,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RemoveIcon from '@mui/icons-material/Remove';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
@@ -30,6 +29,7 @@ import { addRemoveToWishlist } from '@redux-state/actions';
 import { GetWishlistLoading, GetLanguage } from '@redux-state/selectors';
 import { CustomCarousel } from '@components/CustomCarousal';
 import SharePopover from '@components/ShareButon';
+import BackButton from '@components/BackButton';
 import CartFloatButton from '../products/CartFloatButton';
 import CardDrawer from '../products/CardDrawer/CartDrawer';
 
@@ -353,32 +353,7 @@ export const ProductView = () => {
 
   return (
     <Box sx={{ padding: 5, marginTop: 10 }}>
-      {/* Back Button */}
-      <Box
-        sx={{
-          position: 'sticky',
-          top: 80,
-          zIndex: 1000,
-          justifyContent: isRTL ? 'flex-end' : 'flex-start',
-        }}
-      >
-        <IconButton
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            router.back({ isRender: true });
-          }}
-          sx={{
-            backgroundColor: colorPalette.theme,
-            color: colorPalette.white,
-            '&:hover': {
-              backgroundColor: colorPalette.themeHover || '#333',
-            },
-          }}
-        >
-          {/* Flip icon for RTL */}
-          <ArrowBackIcon sx={{ transform: isRTL ? 'rotate(180deg)' : 'none' }} />
-        </IconButton>
-      </Box>
+      <BackButton />
 
       <Grid container spacing={2}>
         {/* Left Section: Carousel */}
