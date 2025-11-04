@@ -229,7 +229,7 @@ export const ProductView = () => {
       if (!element) return;
       const isBottomReached = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
       if (isBottomReached) {
-        setRowsPerPage((prevRows) => prevRows + 10);
+        setRowsPerPage((prevRows) => prevRows + 50);
       }
     };
 

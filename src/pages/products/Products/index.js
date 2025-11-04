@@ -277,7 +277,7 @@ const ProductCardView = () => {
   // ---------------------------------------
 
   const loadProducts = () => {
-    setRowsPerPage((prev) => prev + 10);
+    setRowsPerPage((prev) => prev + 50);
     if ((pathname === '/flashSale' || pathname === '/offers')) {
       if (timers?.length > 0) {
         const saleType = pathname === '/flashSale' ? 'flashSale' : 'offer';
