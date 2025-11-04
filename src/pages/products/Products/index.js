@@ -136,8 +136,9 @@ const ProductCardView = () => {
         }
       } else {
         if (categories?.length > 0 && (pathname !== '/flashSale' || pathname !== '/offers')) {
-          const randomIndex = Math.floor(Math.random() * categories.length);
-          setFilter({ webCategory: categories[randomIndex]?.id })
+          const result = [14, 15, 17]
+          const randomIndex = Math.floor(Math.random() * result.length);
+          setFilter({ webCategory: result[randomIndex] });
         } else if (searchText) {
           setFilter({ [isRTL ? "arabicName" : "website_name"]: searchText });
         }
