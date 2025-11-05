@@ -13,7 +13,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch } from "react-redux";
-import logo from "@assets/icons/logo.png";
+import logo from "@assets/icons/logo.jpeg";
 import { GetLanguage, GetUserLoginLoader, GetloginModalState } from "@redux-state/selectors";
 import { signIn } from '@redux-state/actions';
 import { colorPalette } from '@utils/colorPalette';
@@ -103,9 +103,11 @@ const LoginModal = ({ handleClose }) => {
       fullWidth
       onClose={handleClose}
       sx={{
+        "& .MuiBackdrop-root": {
+          backgroundColor: "rgba(0,0,0,0.1)", // very light dimming
+        },
         "& .MuiDialog-paper": {
           borderRadius: "12px",
-          padding: "24px",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           direction: isRTL ? "rtl" : "ltr",
         },
@@ -116,8 +118,8 @@ const LoginModal = ({ handleClose }) => {
         <Box display="flex" justifyContent="center" mb={2}>
           <img src={logo} alt="HM Logo" style={{
             objectFit: "contain",
-            width: "200px",
-            height: "200px",
+            height: "100px",
+            padding: 0,
           }} />
         </Box>
 

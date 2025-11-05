@@ -13,7 +13,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch } from "react-redux";
-import logo from "@assets/icons/logo.png";
+import logo from "@assets/icons/logo.jpeg";
 import PhoneTextInput from '@components/PhoneTextInput';
 import useRouter from '@helpers/useRouter';
 import { GetLanguage, GetUserRegisterationLoader, GetRegisterModalState } from "@redux-state/selectors";
@@ -93,11 +93,14 @@ const RegisterModal = ({ handleClose }) => {
       open={registerModal}
       maxWidth="xs"
       fullWidth
+      scroll="paper"
       onClose={handleClose}
       sx={{
+        "& .MuiBackdrop-root": {
+          backgroundColor: "rgba(0,0,0,0.1)", // very light dimming
+        },
         "& .MuiDialog-paper": {
           borderRadius: "12px",
-          padding: "24px",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           direction: isRTL ? "rtl" : "ltr",
         },
@@ -108,13 +111,12 @@ const RegisterModal = ({ handleClose }) => {
         <Box display="flex" justifyContent="center">
           <img src={logo} alt="HM Logo" style={{
             objectFit: "contain",
-            width: "200px",
-            height: "200px",
+            height: "80px",
           }} />
         </Box>
 
         {/* Terms & Policy Text */}
-        <Typography variant="body2" align="center" color="textSecondary" mb={2}>
+        <Typography variant="caption" align="center" color="textSecondary" >
           {isRTL ? "بالتسجيل، أنت توافق على" : "By signing up, you agree to our"}{" "}
           <Typography
             component="span"
@@ -137,6 +139,7 @@ const RegisterModal = ({ handleClose }) => {
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
             value={username}
+            margin="normal"
             onChange={(e) => setUsername(e.target.value)}
             required size="small" label={text.name} variant="outlined" fullWidth />
           <TextField
@@ -196,7 +199,7 @@ const RegisterModal = ({ handleClose }) => {
         </Box>
 
         {/* Separator */}
-        <Box display="flex" alignItems="center" my={2}>
+        <Box display="flex" alignItems="center" my={1}>
           <Box flex={1} height="1px" bgcolor="lightgray" />
           <Typography variant="body2" mx={1} color="textSecondary">
             {text.or}

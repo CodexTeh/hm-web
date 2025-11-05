@@ -8,7 +8,7 @@ import { openLoginModal } from '@redux-state/actions';
 import { GetCartDetails } from '@redux-state/selectors';
 
 
-const CheckoutButton = ({ isRTL }) => {
+const CheckoutButton = ({ isRTL, handleDrawerClose }) => {
   const user = GetUser();
   const router = useRouter();
   const cartDetails = GetCartDetails();
@@ -29,6 +29,7 @@ const CheckoutButton = ({ isRTL }) => {
       <Button
         variant="contained"
         onClick={() => {
+          handleDrawerClose();
           if (!user) return dispatch(openLoginModal(true));
           router.push('/checkout')
         }}

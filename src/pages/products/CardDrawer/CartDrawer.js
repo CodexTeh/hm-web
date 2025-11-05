@@ -96,7 +96,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
               <Cart isRTL={isRTL} cartDetails={cartDetails} />
               :
               <EmptyCart isRTL={isRTL} />}
-            <CheckoutButton isRTL={isRTL} cartDetails={cartDetails} />
+            <CheckoutButton handleDrawerClose={handleDrawerClose} isRTL={isRTL} cartDetails={cartDetails} />
           </Box>
         </StyledMainBox>
 
