@@ -438,7 +438,7 @@ const ProductCardView = () => {
         }}
       >
 
-        {pathname !== '/new-arrivals' && <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />}
+        {(pathname === '/' || pathname === '/home') && <CategoryDrawer setFilter={setFilter} pagination={pagination} height={'100vh'} />}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
 
           {/* FILTER BAR */}
