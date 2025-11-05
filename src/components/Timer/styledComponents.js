@@ -12,7 +12,7 @@ export const Container = styled('div')({
 });
 
 export const Title = styled('span')(() => ({
-  color: colorPalette.red,
+  color: colorPalette.theme,
   fontSize: '1rem',
   fontWeight: 400
 }));
@@ -25,7 +25,7 @@ export const DigitContainer = styled('div')({
 
 export const SingleDigit = styled('span')(({ theme }) => ({
   borderRadius: '.3125rem',
-  color: colorPalette.red,
+  color: colorPalette.theme,
   display: 'flex',
   flex: '0 1 25%',
   fontSize: '1.5rem',
