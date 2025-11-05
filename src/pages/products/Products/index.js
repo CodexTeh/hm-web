@@ -16,6 +16,7 @@ import {
   GetAllProductsCount, GetProductsLoading, GetLanguage,
   GetCategories, GetProductCatalogs, GetSearchText, GetSaleTimers
 } from '@redux-state/common/selectors';
+import BackButton from '@components/BackButton';
 import Timer from '@components/Timer';
 import { getProducts, getProductCatalog, getCategories, getSaleTimers, getProductsSuccess } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
@@ -428,7 +429,7 @@ const ProductCardView = () => {
 
   return (
     <Box sx={{ background: colorPalette.greyBackground }}>
-
+      {(pathname === '/new-arrivals' || pathname === '/offers' || pathname === '/flashSale') && <BackButton />}
       <Box
         sx={{
           display: 'flex',

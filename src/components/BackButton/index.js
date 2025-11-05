@@ -17,7 +17,6 @@ const BackButton = () => {
       sx={{
         position: 'sticky',
         top: 90,
-        zIndex: 1000,
         justifyContent: isRtl ? 'flex-end' : 'flex-start',
       }}
     >
@@ -28,8 +27,10 @@ const BackButton = () => {
             window.scrollTo({ top: 0, behavior: 'instant' });
           }, 0);
         }}
+        size='small'
         sx={{
           backgroundColor: colorPalette.theme,
+          margin: 1,
           color: colorPalette.white,
           '&:hover': {
             backgroundColor: colorPalette.themeHover || '#333',

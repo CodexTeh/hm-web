@@ -205,14 +205,13 @@ const ContactPage = () => {
 
   return (
     <Box>
-      <BackButton />
       {/* Banner Section */}
       <Box
         sx={{
           width: '100%',
           height: { xs: 150, sm: 220, md: 550 },
           overflow: 'hidden',
-          mt: { xs: 12, sm: 8, md: 15 },
+          mt: { xs: 12, sm: 8, md: 10 },
           mb: { xs: 3, sm: 5, md: 7 },
         }}
       >
@@ -227,7 +226,7 @@ const ContactPage = () => {
           }}
         />
       </Box>
-
+      <BackButton />
       <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', mb: 4 }}>
         <Grid container spacing={{ xs: 2, md: 4 }}>
           {/* Contact Info Section */}
