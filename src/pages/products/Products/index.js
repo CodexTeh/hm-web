@@ -64,7 +64,10 @@ const ProductCardView = () => {
   // --- NEW STATE FOR SORTING ---
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NONE);
   // -----------------------------
-  const toggle = () => setExpanded((s) => !s);
+  const toggle = (e) => {
+    e.stopPropagation();
+    setExpanded((s) => !s)
+  };
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -316,8 +319,8 @@ const ProductCardView = () => {
         // Mark that we should skip loadProducts for this render
         skipLoadRef.current = true;
         setTimeout(() => {
-            window.scrollTo({ top: 100, behavior: 'instant' });
-          }, 0);
+          window.scrollTo({ top: 100, behavior: 'instant' });
+        }, 0);
       }
 
       // Always clear after reading
@@ -443,13 +446,12 @@ const ProductCardView = () => {
 
           {/* FILTER BAR */}
           <Box sx={{ width: '100%', display: 'flex', flexDirection: expanded ? 'column' : isMobile ? 'column' : 'row', justifyContent: { xs: 'center', md: 'space-evenly' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
-            <Card sx={{ width: expanded ? '96%' : null, height: !expanded ? 50 : 'auto', mb: expanded ? 2 : 0 }}>
+            <Card sx={{ width: expanded ? '96%' : 150, height: !expanded ? 50 : 'auto', mb: expanded ? 2 : 0 }}>
               {/* Header row with filter button */}
-              <CardContent sx={{ height: isMobile ? 6 : 10 }}>
+              <CardContent onClick={toggle} sx={{ height: isMobile ? 6 : 10 }}>
                 <Box sx={{ display: 'flex' }}>
                   {/* Toggle button / accessible text button */}
                   <Box
-                    onClick={toggle}
                     sx={{ ml: 1, fontSize: isMobile ? 12 : 14, fontWeight: 600 }}
                     aria-expanded={expanded}
                     aria-controls="filter-collapse"
@@ -460,7 +462,6 @@ const ProductCardView = () => {
                   {/* Rotating icon button */}
                   <ExpandMore
                     expand={expanded}
-                    onClick={toggle}
                     aria-expanded={expanded}
                     aria-label={expanded ? 'collapse filters' : 'expand filters'}
                     sx={{ ml: 0.5, p: 0, mt: isMobile ? -0.5 : -0.2 }}
