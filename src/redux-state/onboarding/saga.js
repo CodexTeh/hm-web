@@ -15,7 +15,7 @@ function* createAccount(action) {
 
   try {
     const language = yield select(getLanguage);
-    yield call(Api.createAccount, action.payload);
+    yield call(Api.createAccount, action.payload, language);
     yield put(
       toggleToast(true, language === 'en'? 'User created successfully!' : 'تم إنشاء المستخدم بنجاح!', 'success')
     );
@@ -35,7 +35,7 @@ function* signIn(action) {
   try {
     const language = yield select(getLanguage);
 
-    const data = yield call(Api.signIn, action.payload);
+    const data = yield call(Api.signIn, action.payload, language);
     if (data && data?.info?.token) {
       setToken(data.info.token)
       yield put(
@@ -57,7 +57,9 @@ function* signIn(action) {
 
 function* forgetPassword(action) {
   try {
-    const response = yield call(Api.forgetPassword, action.payload);
+    const language = yield select(getLanguage);
+
+    const response = yield call(Api.forgetPassword, action.payload, language);
     yield put(
       forgetPasswordResponse({
         resetPasswordStatus: response.data.message

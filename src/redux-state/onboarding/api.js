@@ -1,10 +1,8 @@
-import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
-
 const API_URL = process.env.REACT_APP_API_URL;
 export const Api = {
-  createAccount: async (data) => {
+  createAccount: async (data, language) => {
     const { username, email, password, phone, address } = data;
+    const isRTL = language === 'ar';
 
     try {
       let response;
@@ -21,13 +19,12 @@ export const Api = {
 
       switch (response.status) {
         case 200:
-          toast("Registration Successfully Completed!");
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error(!isRTL ? 'All fields required!' : 'جميع الحقول مطلوبة!');
         case 409:
-          throw new Error('User already exists!');
+          throw new Error(!isRTL ? 'User already exists!' : 'المستخدم موجود بالفعل!');
         default:
           throw new Error('Something went wrong!');
 
@@ -37,8 +34,10 @@ export const Api = {
 
     }
   },
-  signIn: async (data) => {
+  signIn: async (data, language) => {
     const { email, password } = data;
+    const isRTL = language === 'ar';
+
     try {
       let response;
       const options = {
@@ -56,13 +55,13 @@ export const Api = {
           const data = await response.json();
           return data;
         case 401:
-          throw new Error('Invalid email or password!');
+          throw new Error(!isRTL ? 'Invalid email or password!' : 'البريد الإلكتروني أو كلمة المرور غير صحيحة!');
         case 404:
-          throw new Error('User does not exists!');
+          throw new Error(!isRTL ? 'User does not exists!' : 'المستخدم غير موجود!');
         case 400:
-          throw new Error('All fields required!');
+          throw new Error(!isRTL ? 'All fields required!' : 'جميع الحقول مطلوبة!');
         case 409:
-          throw new Error('User already exists!');
+          throw new Error(!isRTL ? 'User already exists!' : 'المستخدم موجود بالفعل!');
 
         default:
           throw new Error('Something went wrong!');
@@ -71,7 +70,9 @@ export const Api = {
       throw new Error(e.message);
     }
   },
-  forgetPassword: async ({ email }) => {
+  forgetPassword: async ({ email }, language) => {
+    const isRTL = language === 'ar';
+
     try {
       let response;
       const options = {
@@ -86,10 +87,10 @@ export const Api = {
       switch (response.status) {
         case 200:
           const data = await response.json();
-          alert('Reset Email has been sent to your mail!');
+          alert(!isRTL ? 'Reset Email has been sent to your mail!' : 'تم إرسال بريد إعادة التعيين إلى بريدك الإلكتروني!');
           return data;
         case 401:
-          throw new Error('User does not exists!');
+          throw new Error(!isRTL ? 'User does not exists!' : 'المستخدم غير موجود!');
         case 400:
           throw new Error('All fields required!');
         default:
