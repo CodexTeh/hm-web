@@ -226,7 +226,7 @@ const ContactPage = () => {
           }}
         />
       </Box>
-      <BackButton />
+      <BackButton routeToHome={true} />
       <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', mb: 4 }}>
         <Grid container spacing={{ xs: 2, md: 4 }}>
           {/* Contact Info Section */}

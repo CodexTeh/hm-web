@@ -429,7 +429,7 @@ const ProductCardView = () => {
 
   return (
     <Box sx={{ background: colorPalette.greyBackground }}>
-      {(pathname === '/new-arrivals' || pathname === '/offers' || pathname === '/flashSale') && <BackButton />}
+      {(pathname === '/new-arrivals' || pathname === '/offers' || pathname === '/flashSale') && <BackButton routeToHome={true}/>}
       <Box
         sx={{
           display: 'flex',
@@ -498,7 +498,8 @@ const ProductCardView = () => {
 
                     <IconButton
                       onClick={() => {
-                        const randomIndex = Math.floor(Math.random() * categories.length);
+                        const result = [14, 15, 17]
+                        const randomIndex = Math.floor(Math.random() * result.length);
                         setFrom('');
                         setTo('');
                         setBrand(ALL_VALUE);

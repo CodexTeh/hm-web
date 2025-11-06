@@ -8,7 +8,7 @@ import useRouter from '@helpers/useRouter';
 import { colorPalette } from '@utils/colorPalette';
 import { GetLanguage } from "@redux-state/selectors";
 
-const BackButton = () => {
+const BackButton = ({ routeToHome = false }) => {
   const router = useRouter();
   const language = GetLanguage();
   const isRtl = language === 'ar';
@@ -22,7 +22,7 @@ const BackButton = () => {
     >
       <IconButton
         onClick={() => {
-          router.back({ isRender: true });
+          routeToHome ? router.push('/home') : router.back({ isRender: true });
           setTimeout(() => {
             window.scrollTo({ top: 0, behavior: 'instant' });
           }, 0);

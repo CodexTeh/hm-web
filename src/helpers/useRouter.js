@@ -17,7 +17,8 @@ export default function useRouter() {
     // Navigation helpers
     push: (url) => navigate(url),
     replace: (url) => navigate(url, { replace: true }),
-    back: (state = null, fallback = '/') => {
+    back: (state = null, fallback = '/home') => {
+      
       if (state) {
         sessionStorage.setItem('__router_back_state', JSON.stringify(state));
       }

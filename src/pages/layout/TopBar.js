@@ -19,7 +19,7 @@ import useRouter from '@helpers/useRouter';
 import { useDispatch } from "react-redux";
 import { removeToken } from "@helpers/tokenActions";
 import { GetLanguage, GetUser } from "@redux-state/selectors";
-import { logout, emptyCart, changeLanguage, openLoginModal } from "@redux-state/actions";
+import { logout, changeLanguage, openLoginModal } from "@redux-state/actions";
 import { colorPalette } from "@utils/colorPalette";
 import { useLocation } from "react-router-dom";
 
@@ -382,7 +382,7 @@ const TopBar = () => {
                       <Box onClick={() => {
                         if (setting.title === 'Logout' || setting.title === "تسجيل الخروج") {
                           dispatch(logout());
-                          dispatch(emptyCart());
+                          // dispatch(emptyCart());
                           removeToken();
                         } else {
                           routeToPath(setting.path);
