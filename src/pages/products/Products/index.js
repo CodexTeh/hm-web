@@ -111,6 +111,7 @@ const ProductCardView = () => {
 
   const {
     en: {
+      // eslint-disable-next-line no-unused-vars
       brand: enBrands = []
     } = {},
   } = splitByTypeAndLanguage(allProductCatalogs || []);
@@ -199,42 +200,42 @@ const ProductCardView = () => {
     []
   );
 
-  const InputBrandsSelectField = useCallback(
-    // ... (InputBrandsSelectField definition remains the same)
-    () => {
-      const bilingualAll = isRTL ? 'الكل' : 'All';
+  // const InputBrandsSelectField = useCallback(
+  //   // ... (InputBrandsSelectField definition remains the same)
+  //   () => {
+  //     const bilingualAll = isRTL ? 'الكل' : 'All';
 
-      return (
-        <Box sx={{ mb: 1, ml: 1 }}>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', minWidth: 70, mb: 1 }}
-          >
-            {isRTL ? 'ماركة' : 'Brand'}
-          </Typography>
+  //     return (
+  //       <Box sx={{ mb: 1, ml: 1 }}>
+  //         <Typography
+  //           variant="subtitle1"
+  //           sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', minWidth: 70, mb: 1 }}
+  //         >
+  //           {isRTL ? 'ماركة' : 'Brand'}
+  //         </Typography>
 
-          <Select
-            sx={{ height: 40, background: colorPalette.white }}
-            size="medium"
-            value={brand ?? ALL_VALUE}
-            onChange={(e) => {
-              setSortBy(SORT_OPTIONS.NONE);
-              setBrand(e.target.value)
-            }}
-            input={<OutlinedInput />}
-          >
-            <MenuItem value={ALL_VALUE}>{bilingualAll}</MenuItem>
+  //         <Select
+  //           sx={{ height: 40, background: colorPalette.white }}
+  //           size="medium"
+  //           value={brand ?? ALL_VALUE}
+  //           onChange={(e) => {
+  //             setSortBy(SORT_OPTIONS.NONE);
+  //             setBrand(e.target.value)
+  //           }}
+  //           input={<OutlinedInput />}
+  //         >
+  //           <MenuItem value={ALL_VALUE}>{bilingualAll}</MenuItem>
 
-            {(enBrands ?? []).map((b, idx) => (
-              <MenuItem key={idx} value={b.id}>
-                {isRTL ? b.ar_title : b.title}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      );
-    }, [isRTL, brand, enBrands]
-  );
+  //           {(enBrands ?? []).map((b, idx) => (
+  //             <MenuItem key={idx} value={b.id}>
+  //               {isRTL ? b.ar_title : b.title}
+  //             </MenuItem>
+  //           ))}
+  //         </Select>
+  //       </Box>
+  //     );
+  //   }, [isRTL, brand, enBrands]
+  // );
 
   // --- NEW INPUT COMPONENT FOR SORTING ---
   const InputSortBySelectField = useCallback(() => {
@@ -553,7 +554,7 @@ const ProductCardView = () => {
                         flexWrap: 'wrap',
                       }}
                     >
-                      <InputBrandsSelectField fullWidth />
+                      {/* <InputBrandsSelectField fullWidth /> */}
 
                       <Box>
                         <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: 12, color: 'text.secondary', ml: 1, mr: 1, mb: 1 }}>
