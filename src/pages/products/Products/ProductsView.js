@@ -18,12 +18,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
   const router = useRouter();
   const { pathname } = useLocation();
 
-  const allProducts = GetProducts();
-
-  let products = Array.isArray(allProducts)
-    && (pathname === '/home' || pathname === '/')
-    ? allProducts.filter(p => Number(p.flash_sale) === 0 && Number(p.discount_offer) === 0)
-    : allProducts;
+  let products = GetProducts();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -151,7 +146,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
               return discountedValue.toFixed(3);
             };
 
-            const hasDiscount = discountValue > 0;
+            const hasDiscount = (pathname === '/offers' || pathname === '/flashSale') && discountValue > 0;
 
             const finalPrice = hasDiscount ? getDiscountedPrice() : product?.price.toFixed(3);
 
@@ -248,7 +243,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
                         }}
                       >
                         {/* Old Price */}
-                        {discountValue > 0 && <Typography
+                        {hasDiscount && discountValue > 0 && <Typography
                           variant="caption"
                           color="textDisabled"
                           sx={{ textDecoration: 'line-through' }}
