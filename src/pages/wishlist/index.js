@@ -6,6 +6,7 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { GetLanguage, GetUser, GetWishlistLoading } from '@redux-state/selectors';
 import { colorPalette } from '@utils/colorPalette';
 import Footer from '@components/Footer';
+import BackButton from '@components/BackButton';
 import { Api } from '@redux-state/common/api';
 import { getProductsSuccess } from '@redux-state/common/action';
 import ProductsView from '../products/Products/ProductsView';
@@ -56,6 +57,7 @@ const WishList = ({ drawerWidth = 300 }) => {
   return (
     <>
       <Box sx={{ background: colorPalette.greyBackground, minHeight: '100vh', padding: 3 }}>
+      <BackButton routeToHome={true} />
 
         <Box
           sx={{
