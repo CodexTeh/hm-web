@@ -32,6 +32,7 @@ import SharePopover from '@components/ShareButon';
 import BackButton from '@components/BackButton';
 import CartFloatButton from '../products/CartFloatButton';
 import CardDrawer from '../products/CardDrawer/CartDrawer';
+import { useLocation } from 'react-router-dom';
 
 export const ProductView = () => {
   const router = useRouter();
@@ -109,6 +110,7 @@ export const ProductView = () => {
   }, [product]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { pathname } = useLocation();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
@@ -122,7 +124,7 @@ export const ProductView = () => {
 
   const allCategories = GetCategories();
   const subCategories = GetSubCategories();
-  const products = GetProducts();
+  const allProducts = GetProducts();
   const itemsCount = GetAllProductsCount();
   const isFetching = GetProductsLoading();
   const cartDetails = GetCartDetails();
@@ -130,7 +132,12 @@ export const ProductView = () => {
   const user = GetUser();
 
   const prevTotalPriceRef = useRef(cartDetails?.totalPrice);
-
+  
+  const products = Array.isArray(allProducts)
+    && (pathname === '/home' || pathname === '/')
+    ? allProducts.filter(p => Number(p.flash_sale) === 0 && Number(p.discount_offer) === 0)
+    : allProducts;
+  
   // share popper handlers
   const handleShareClick = (event) => {
     setAnchorEl(event.currentTarget);

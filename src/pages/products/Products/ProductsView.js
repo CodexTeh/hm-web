@@ -10,13 +10,21 @@ import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux
 import { addToCart } from '@redux-state/common/action';
 import { colorPalette } from '@utils/colorPalette';
 import EmptyView from './EmptyView';
+import { useLocation } from 'react-router-dom';
 
 const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loadMore = true, sortBy = null }) => {
   const user = GetUser();
   const dispatch = useDispatch();
   const router = useRouter();
+  const { pathname } = useLocation();
 
-  let products = GetProducts();
+  const allProducts = GetProducts();
+
+  let products = Array.isArray(allProducts)
+    && (pathname === '/home' || pathname === '/')
+    ? allProducts.filter(p => Number(p.flash_sale) === 0 && Number(p.discount_offer) === 0)
+    : allProducts;
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
