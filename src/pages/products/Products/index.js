@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material';
-import moment from 'moment/moment';
+import moment from 'moment-timezone';
 import { useTimer } from 'react-timer-hook';
 import {
   GetAllProductsCount, GetProductsLoading, GetLanguage,
@@ -128,9 +128,17 @@ const ProductCardView = () => {
         if (saleTimer) {
           const currentTime = moment();  // Current local time
           // Parse the sale times
-          const endSaleTime = moment(saleTimer.endSale);
+          const endSaleTime = moment(saleTimer.endSale).local();
+
+          const localWallTime = saleTimer.endSale.replace(/Z$/, '');
+
+          const [y, m, d, h, mi, s] = localWallTime
+            .split(/[-T:.]/)
+            .map((n) => parseInt(n, 10));
+          const localTimestamp = new Date(y, m - 1, d, h, mi, s).getTime();
+
           if (endSaleTime.isAfter(currentTime)) {
-            setTimerExpiry(endSaleTime.valueOf());
+            setTimerExpiry(localTimestamp);
             const filterKey = pathname === '/flashSale' ? 'flash_sale' : 'discount_offer';
             setFilter({ [filterKey]: filterKey });
           } else {
@@ -428,9 +436,25 @@ const ProductCardView = () => {
     return <Timer seconds={seconds} minutes={minutes} hours={hours} days={days} />;
   };
 
+  const renderBackButton = useCallback(() => {
+    if (
+      pathname === "/new-arrivals" ||
+      pathname === "/offers" ||
+      pathname === "/flashSale"
+    ) {
+      return <BackButton routeToHome={true} />;
+    }
+    return null;
+  }, [pathname]);
+
+
+  useEffect(() => {
+    if (pathname === '/home' || pathname === "/new-arrivals") setTimerExpiry(null)
+  }, [pathname])
+
   return (
     <Box sx={{ background: colorPalette.greyBackground }}>
-      {(pathname === '/new-arrivals' || pathname === '/offers' || pathname === '/flashSale') && <BackButton routeToHome={true}/>}
+      {renderBackButton()}
       <Box
         sx={{
           display: 'flex',
