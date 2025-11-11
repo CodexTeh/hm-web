@@ -46,6 +46,7 @@ const PhoneTextInput = ({
 
   return (
     <TextField
+      dir={rtl ? "rtl" : "ltr"}
       variant="outlined"
       color="primary"
       size={size}

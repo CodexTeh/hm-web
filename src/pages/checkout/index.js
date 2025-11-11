@@ -117,7 +117,15 @@ const CheckoutPage = () => {
         order_note: orderNote
       }
     }))
-  }, [orderNote, phone, selectedDeliveryOption])
+  }, [orderNote, phone, selectedDeliveryOption, shippingAddress])
+
+  const getOrderMessage = (data) => {
+    if (isRTL) {
+      return `شكرًا لتسوقك مع اتش ام. رقم الطلب: ${data.orderId} أنت القادم التالي!`;
+    } else {
+      return `Thanks for shopping with HM. Order number: ${data.orderId} You are the next one!`;
+    }
+  };
 
   useEffect(() => {
     const channel = pusher.subscribe(constants.ORDER_PLACE_CHANNEL);
@@ -126,7 +134,7 @@ const CheckoutPage = () => {
       //   setLatestOrders(data.orderId)
       // );
       dispatch(
-        toggleToast(true, `Thanks for shopping with HM. Order number: ${data.orderId} You are the next one!`, 'success')
+        toggleToast(true, getOrderMessage(data), 'success')
       );
       dispatch(emptyCart());
       router.push('/orders')
@@ -166,7 +174,7 @@ const CheckoutPage = () => {
               justifyContent: 'center',
               color: colorPalette.white,
               lineHeight: '30px',
-              marginLeft: isRTL ? 1 :0 ,
+              marginLeft: isRTL ? 1 : 0,
             }}
           >
             <Typography variant="h6">{step}</Typography>
@@ -190,8 +198,10 @@ const CheckoutPage = () => {
   };
 
   return (
-    <>
-      <BackButton />
+    <Box sx={{ background: colorPalette.greyBackground, marginTop: 10 }}>
+      <Box sx={{ background: colorPalette.greyBackground }}>
+        <BackButton />
+      </Box>
       <Box
         sx={{
           display: 'flex',
@@ -225,14 +235,17 @@ const CheckoutPage = () => {
                   step={2}
                   text={currentTranslations.email}
                 />
-                <TextField
-                  fullWidth
-                  disabled
-                  value={user?.email}
-                  variant="outlined"
-                  rows={4}
-                  sx={{ marginTop: 1 }}
-                />
+                <div dir={isRTL ? "rtl" : "ltr"}>
+                  <TextField
+                    fullWidth
+                    disabled
+                    value={user?.email}
+                    variant="outlined"
+                    rows={4}
+                    sx={{ marginTop: 1 }}
+                  />
+                </div>
+
               </CardContent>
             </Card>
             {/* Name */}
@@ -242,14 +255,17 @@ const CheckoutPage = () => {
                   step={3}
                   text={currentTranslations.name}
                 />
-                <TextField
-                  fullWidth
-                  disabled
-                  value={user?.username}
-                  variant="outlined"
-                  rows={4}
-                  sx={{ marginTop: 1 }}
-                />
+                <div dir={isRTL ? "rtl" : "ltr"}>
+
+                  <TextField
+                    fullWidth
+                    disabled
+                    value={user?.username}
+                    variant="outlined"
+                    rows={4}
+                    sx={{ marginTop: 1 }}
+                  />
+                </div>
               </CardContent>
             </Card>
             {/* Shipping Address */}
@@ -260,15 +276,18 @@ const CheckoutPage = () => {
                   text={currentTranslations.shippingAddress}
                   buttonText={currentTranslations.add}
                 />
-                <TextField
-                  fullWidth
-                  multiline
-                  value={shippingAddress}
-                  onChange={(e) => setShippingAddress(e.target.value)}
-                  variant="outlined"
-                  rows={4}
-                  sx={{ marginTop: 1 }}
-                />
+                <div dir={isRTL ? "rtl" : "ltr"}>
+
+                  <TextField
+                    fullWidth
+                    multiline
+                    value={shippingAddress}
+                    onChange={(e) => setShippingAddress(e.target.value)}
+                    variant="outlined"
+                    rows={4}
+                    sx={{ marginTop: 1 }}
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -297,15 +316,17 @@ const CheckoutPage = () => {
                   text={currentTranslations.orderNote}
                   buttonText={currentTranslations.add}
                 />
-                <TextField
-                  fullWidth
-                  multiline
-                  value={orderNote}
-                  onChange={(e) => setOrderNote(e.target.value)}
-                  variant="outlined"
-                  rows={4}
-                  sx={{ marginTop: 1 }}
-                />
+                <div dir={isRTL ? "rtl" : "ltr"}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    value={orderNote}
+                    onChange={(e) => setOrderNote(e.target.value)}
+                    variant="outlined"
+                    rows={4}
+                    sx={{ marginTop: 1 }}
+                  />
+                </div>
               </CardContent>
             </Card>
           </Grid>
@@ -319,7 +340,7 @@ const CheckoutPage = () => {
             </Typography>
           </Box>}
       </Box>
-    </>
+    </Box>
 
   );
 };

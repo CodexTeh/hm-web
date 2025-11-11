@@ -195,17 +195,19 @@ const ProductCardView = () => {
         setSortBy(SORT_OPTIONS.NONE)
       };
       return (
-        <StyledDescriptionFieldText
-          multiline={multiline}
-          size='small'
-          label={label}
-          type={type}
-          value={value}
-          onChange={handleChange}
-        />
+        <div dir={isRTL ? 'rtl' : 'ltr'} >
+          <StyledDescriptionFieldText
+            multiline={multiline}
+            size='small'
+            label={label}
+            type={type}
+            value={value}
+            onChange={handleChange}
+          />
+        </div>
       );
     },
-    []
+    [isRTL]
   );
 
   // const InputBrandsSelectField = useCallback(
@@ -597,7 +599,7 @@ const ProductCardView = () => {
                 </CardContent>
               </Collapse>
             </Card>
-            {timerExpiry && !isMobile && <Box sx={{ ml: expanded ? 0 : 2, mt: expanded ? 2 : 0, mb: expanded ? 2 : 0, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            {timerExpiry && !isMobile && <Box sx={{ ml: expanded ? 0 : 2, mt: expanded ? 2 : 0, mb: expanded ? 2 : 0, display: 'flex', alignItems: 'center', flexDirection: 'column', direction: 'ltr' }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: isMobile ? 12 : 16, color: 'text.secondary', mr: 1 }}>
                 {isRTL ? 'ينتهي العرض في:' : 'Offer ends in:'}
               </Typography>

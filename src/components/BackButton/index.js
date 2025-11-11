@@ -22,7 +22,7 @@ const BackButton = ({ routeToHome = false }) => {
       width: isMobile ? '100%' : '70%',
       display: 'flex',
       flexDirection: 'row',
-      direction: 'ltr',
+      // direction: 'ltr',
       marginBottom: 5,
       justifyContent: 'space-between',
       alignItems: 'flex-end',

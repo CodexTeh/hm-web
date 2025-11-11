@@ -437,7 +437,7 @@ export const ProductView = () => {
               open={openShare}
               onClose={handleCloseShare}
               productLink={productLink}
-              title={product?.website_name}
+              title={isRTL ? product?.arabicName : product?.website_name}
               isRTL={isRTL}
               productImage={images[0]}
             />

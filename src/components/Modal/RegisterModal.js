@@ -136,68 +136,69 @@ const RegisterModal = ({ handleClose }) => {
         </Typography>
 
         {/* Registration Form */}
-        <Box display="flex" flexDirection="column" gap={2}>
-          <TextField
-            value={username}
-            margin="normal"
-            onChange={(e) => setUsername(e.target.value)}
-            required size="small" label={text.name} variant="outlined" fullWidth />
-          <TextField
-            size="small"
-            value={email}
-            required
-            onChange={handleEmailChange}
-            label={isRTL ? "البريد الإلكتروني" : "Email"}
-            type="email"
-            variant="outlined"
-            fullWidth
-            error={emailError}
-            helperText={emailHelperText}
-            style={{ textAlign: isRTL ? "right" : "left" }}
-          />
-          <PhoneTextInput size="small" value={phone} onChange={setPhone} />
+        <div dir={isRTL ? "rtl" : "ltr"}>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextField
+              value={username}
+              margin="normal"
+              onChange={(e) => setUsername(e.target.value)}
+              required size="small" label={text.name} variant="outlined" fullWidth />
+            <TextField
+              size="small"
+              value={email}
+              required
+              onChange={handleEmailChange}
+              label={isRTL ? "البريد الإلكتروني" : "Email"}
+              type="email"
+              variant="outlined"
+              fullWidth
+              error={emailError}
+              helperText={emailHelperText}
+              style={{ textAlign: isRTL ? "right" : "left" }}
+            />
+            <PhoneTextInput size="small" value={phone} onChange={setPhone} />
 
-          <TextField
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required size="small" label={text.address} variant="outlined" fullWidth />
+            <TextField
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required size="small" label={text.address} variant="outlined" fullWidth />
 
-          {/* Password Field with Visibility Toggle */}
-          <TextField required
-            size="small"
-            label={text.password}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type={showPassword ? "text" : "password"}
-            variant="outlined"
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+            {/* Password Field with Visibility Toggle */}
+            <TextField required
+              size="small"
+              label={text.password}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type={showPassword ? "text" : "password"}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-          <Button
-            variant="contained"
-            fullWidth
-            onClick={signUp}
-            sx={{
-              backgroundColor: colorPalette.theme,
-              color: "white",
-              padding: "12px",
-              borderRadius: "6px",
-              "&:hover": { backgroundColor: colorPalette.theme },
-            }}
-          >
-            {loading ? <CircularProgress size={30} /> : text.register}
-          </Button>
-        </Box>
-
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={signUp}
+              sx={{
+                backgroundColor: colorPalette.theme,
+                color: "white",
+                padding: "12px",
+                borderRadius: "6px",
+                "&:hover": { backgroundColor: colorPalette.theme },
+              }}
+            >
+              {loading ? <CircularProgress size={30} /> : text.register}
+            </Button>
+          </Box>
+        </div>
         {/* Separator */}
         <Box display="flex" alignItems="center" my={1}>
           <Box flex={1} height="1px" bgcolor="lightgray" />

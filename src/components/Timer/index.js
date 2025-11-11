@@ -5,12 +5,15 @@ import {
   SepartorContainer,
   TimerContainer
 } from './styledComponents';
+import { GetLanguage } from '@redux-state/selectors';
 
 export default function Timer({ seconds, minutes, hours, days }) {
+  const language = GetLanguage();
+  const isRTL = language === 'ar';
   return (
     <TimerContainer>
       {days !== undefined ? (
-        <Digit value={days} title='DAYS' />
+        <Digit value={days} title={isRTL ? 'أيام' : 'DAYS'} />
       ) : null}
       {days !== undefined ? (
         <SepartorContainer>
@@ -18,17 +21,17 @@ export default function Timer({ seconds, minutes, hours, days }) {
           <Separtor />
         </SepartorContainer>
       ) : null}
-      <Digit value={hours} title='HOURS' />
+      <Digit value={hours} title={isRTL ? 'ساعات' : 'HOURS'} />
       <SepartorContainer>
         <Separtor />
         <Separtor />
       </SepartorContainer>
-      <Digit value={minutes} title='MINUTES' />
+      <Digit value={minutes} title={isRTL ? 'دقائق' : 'MINUTES'} />
       <SepartorContainer>
         <Separtor />
         <Separtor />
       </SepartorContainer>
-      <Digit value={seconds} title='SECONDS' />
+      <Digit value={seconds} title={isRTL ? 'ثواني' : 'SECONDS'} />
     </TimerContainer>
   );
 }
