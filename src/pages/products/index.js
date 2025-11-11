@@ -5,7 +5,7 @@ import { getCategories } from '@redux-state/common/action';
 import WhatsAppButton from '@components/WhatsAppButton';
 import CardDrawer from './CardDrawer/CartDrawer';
 import CartFloatButton from './CartFloatButton';
-import Banner from './Banner';
+// import Banner from './Banner';
 import ProductCardView from './Products';
 import { OffersSlider } from './OffersSlider';
 import { Box } from '@mui/material';
@@ -44,7 +44,7 @@ export default function Products() {
 
   return (
     <Box sx={{ paddingTop: 10 }}>
-      <Banner />
+      {/* <Banner /> */}
       <OffersSlider />
       <ProductCardView />
       <CardDrawer open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />

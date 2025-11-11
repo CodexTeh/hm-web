@@ -1,10 +1,10 @@
 import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Button, Box, IconButton, CircularProgress, useTheme, useMediaQuery } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Button, Box, IconButton, CircularProgress, useTheme, useMediaQuery } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import emptyProductImage from '@assets/icons/empty-product.jpg';
+// import emptyProductImage from '@assets/icons/empty-product.jpg';
 import useRouter from '@helpers/useRouter';
 import { GetUser, GetProducts, GetCartDetails, GetProductCatalogs } from '@redux-state/selectors';
 import { addToCart } from '@redux-state/common/action';
@@ -191,7 +191,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
                     {isRTL ? `٪${discountValue}` : `${discountValue}%`}
                   </Box>}
                   {/* Product Image */}
-                  <CardMedia
+                  {/* <CardMedia
                     component="img"
                     height={isMobile ? "100" : "300"}
                     image={
@@ -200,7 +200,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
                     }
                     alt={product?.website_name}
                     sx={{ objectFit: 'contain' }}
-                  />
+                  /> */}
                   <CardContent>
                     {/* Product Name */}
                     <Typography sx={{
