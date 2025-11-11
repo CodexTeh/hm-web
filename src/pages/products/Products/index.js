@@ -347,6 +347,13 @@ const ProductCardView = () => {
   }, [dispatch, filter, pathname]);
 
   useEffect(() => {
+    if (skipLoadRef.current && filter && Object.keys(filter).length > 0) {
+      skipLoadRef.current = false
+    }
+  }, [filter])
+
+
+  useEffect(() => {
     if (priceError) {
       alert(priceError)
       return;
