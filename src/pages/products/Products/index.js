@@ -482,7 +482,7 @@ const ProductCardView = () => {
                     aria-expanded={expanded}
                     aria-controls="filter-collapse"
                   >
-                    {expanded ? (isRTL ? 'إخفاء' : 'Hide') : (isRTL ? 'عرض' : 'Show')} {isRTL ? '' : 'Filters'}
+                    {expanded ? (isRTL ? 'إخفاء' : 'Hide') : (isRTL ? 'عرض' : 'Show')} {isRTL ? 'المرشحات' : 'Filters'}
                   </Box>
 
                   {/* Rotating icon button */}

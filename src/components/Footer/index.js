@@ -42,6 +42,15 @@ const Footer = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const convertToArabicDigits = (str) => {
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return str.replace(/[0-9]/g, (digit) => arabicDigits[parseInt(digit)]);
+  };
+  const currentYear = new Date().getFullYear(); // Get current year
+
+  // Convert the year to Arabic digits if rtl is true
+  const arabicYear = convertToArabicDigits(currentYear.toString());
+
   // small memoized QR size
   const qrSize = useMemo(() => (isMobile ? 50 : 88), [isMobile]);
 
@@ -73,7 +82,7 @@ const Footer = () => {
             gutterBottom
             sx={{ fontSize: { xs: 15, sm: 16 } }}
           >
-            {rtl ? "عن HM AWANI" : "ABOUT HM AWANI"}
+            {rtl ? "عن اتش ام للأواني" : "ABOUT HM AWANI"}
           </Typography>
           <Typography variant="caption" sx={{ fontSize: { xs: 12, sm: 13 } }}>
             {rtl
@@ -256,7 +265,9 @@ const Footer = () => {
       {/* Footer Bottom Bar */}
       <Box sx={{ borderTop: "1px solid #444", mt: { xs: 3, sm: 4 }, pt: 2, textAlign: "center" }}>
         <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 13 } }}>
-          {rtl ? "© 2025 HM AWANI مؤسسة حسين بن علوي مقيبل للتجارة" : "© 2025 HUSSAIN BIN ALAWI MOQAIBAL TRAD. EST."}
+          {rtl
+            ? `© ${arabicYear} اتش ام للأواني مؤسسة حسين بن علوي مقيبل للتجارة`
+            : `© ${currentYear} HUSSAIN BIN ALAWI MOQAIBAL TRAD. EST.`}
         </Typography>
       </Box>
     </Box>

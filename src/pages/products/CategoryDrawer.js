@@ -44,7 +44,7 @@ const CategoryDrawer = ({ setFilter, height }) => {
             }}
           >
             <Button
-              startIcon={<MenuIcon sx={{ fontSize: 22 }} />}
+              startIcon={<MenuIcon sx={{ fontSize: 22, marginLeft: isRTL ? 1 : 0 }} />}
               variant="contained"
               onClick={() => setDrawerOpen(true)}
               sx={{

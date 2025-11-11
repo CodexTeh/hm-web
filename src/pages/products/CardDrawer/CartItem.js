@@ -230,7 +230,7 @@ const Cart = ({ isRTL, cartDetails }) => {
                 WebkitBoxOrient: "vertical",
               }}
             >
-              {item.website_name}
+              {isRTL ? item.arabicName : item.website_name}
             </Typography>
             <Typography
               variant="body2"

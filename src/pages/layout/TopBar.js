@@ -200,7 +200,7 @@ const TopBar = () => {
 
                     {showNewBadge && (
                       <Chip
-                        label={language === "ar" ? "جديد": "New"}
+                        label={language === "ar" ? "جديد" : "New"}
                         size="small"
                         sx={{
                           position: "absolute",
@@ -322,21 +322,46 @@ const TopBar = () => {
                   gap: 1
                 }}
               >
-                {pages[language].map((page, idx) => (
-                  <Button
-                    key={idx}
-                    onClick={() => onClickPage(page)}
-                    sx={{
-                      justifyContent: language === "ar" ? "flex-end" : "flex-start",
-                      color: colorPalette.black,
-                      fontWeight: 500,
-                      width: "100%",
-                      textAlign: language === "ar" ? "right" : "left"
-                    }}
-                  >
-                    {page}
-                  </Button>
-                ))}
+                {pages[language].map((page, idx) => {
+                  const routes = ["/home", "/new-arrivals", "/offers", "/flashSale", "/contact-us"];
+                  const route = routes[idx];
+                  const isActive = pathname === route;
+                  const showNewBadge = route === "/new-arrivals"; // 👈 condition for badge
+
+                  return (
+                    <>
+                      {showNewBadge && (
+                        <Chip
+                          label={language === "ar" ? "جديد" : "New"}
+                          size="small"
+                          sx={{
+                            position: "absolute",
+                            top: 70,
+                            zIndex: 100,
+                            backgroundColor: "orange",
+                            color: "white",
+                            fontSize: 10,
+                            height: 16,
+                          }}
+                        />
+                      )}
+                      <Button
+                        key={idx}
+                        onClick={() => onClickPage(page)}
+                        sx={{
+                          justifyContent: language === "ar" ? "flex-end" : "flex-start",
+                          color: isActive ? colorPalette.white : colorPalette.black,
+                          background: isActive ? colorPalette.theme : "transparent",
+                          fontWeight: 500,
+                          width: "100%",
+                          textAlign: language === "ar" ? "right" : "left"
+                        }}
+                      >
+                        {page}
+                      </Button>
+                    </>
+                  )
+                })}
               </Box>
             </Drawer>
 

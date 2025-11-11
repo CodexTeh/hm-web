@@ -1,3 +1,4 @@
+import React from "react";
 import {
   InputAdornment,
   MenuItem,
@@ -5,7 +6,6 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import React from "react";
 import {
   defaultCountries,
   FlagEmoji,
@@ -13,11 +13,17 @@ import {
   usePhoneInput
 } from "react-international-phone";
 
+// Function to convert numbers to Arabic digits
+const convertToArabicDigits = (str) => {
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return str.replace(/[0-9]/g, (digit) => arabicDigits[parseInt(digit)]);
+};
 
 const PhoneTextInput = ({
   value,
   onChange,
   size = "medium",
+  rtl = false, // New prop for RTL support
   ...restProps
 }) => {
   const {
@@ -35,13 +41,16 @@ const PhoneTextInput = ({
     }
   });
 
+  // Convert phone number to Arabic digits if rtl is true
+  const displayPhone = rtl ? convertToArabicDigits(phone) : phone;
+
   return (
     <TextField
       variant="outlined"
       color="primary"
       size={size}
       placeholder="Phone number"
-      value={phone}
+      value={displayPhone}
       fullWidth
       onChange={handlePhoneValueChange}
       type="tel"
@@ -67,7 +76,6 @@ const PhoneTextInput = ({
               }}
               sx={{
                 width: "max-content",
-                // Remove default outline (display only on focus)
                 fieldset: {
                   display: "none"
                 },
@@ -76,7 +84,6 @@ const PhoneTextInput = ({
                     display: "block"
                   }
                 },
-                // Update default spacing
                 ".MuiSelect-select": {
                   padding: "8px",
                   paddingRight: "24px !important"
@@ -106,7 +113,8 @@ const PhoneTextInput = ({
               })}
             </Select>
           </InputAdornment>
-        )
+        ),
+        style: rtl ? { direction: 'rtl' } : {}, // Apply RTL style if rtl is true
       }}
       {...restProps}
     />

@@ -41,7 +41,7 @@ const Layout = () => {
       onCLoseLoginModal();
       dispatch(openRegisterModal(true));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   return (
@@ -50,13 +50,15 @@ const Layout = () => {
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={togleToast}
-        autoHideDuration={3000}
+        autoHideDuration={30000}
         onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity={toastType}
           sx={{
             width: 350,
+            margin: 2,
+            direction: 'ltr'
           }}
           variant="filled"
         >

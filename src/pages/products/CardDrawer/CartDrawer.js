@@ -39,6 +39,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             sx={{
               width: { xs: '100%', md: '100%' },
               display: 'flex',
+              direction: 'ltr',
               justifyContent: { xs: 'space-between', md: 'space-between' },
               alignItems: 'center',
               marginBottom: 2,
@@ -47,7 +48,6 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: isRTL ? 'row-reverse' : 'row', // Reverse layout for RTL
                 alignItems: 'center',
                 width: '40%',
               }}
@@ -59,7 +59,7 @@ export default function CardDrawer({ open, handleDrawerOpen, handleDrawerClose }
                   fontWeight: 510,
                   variant: 'subtitle1',
                   fontSize: { xs: '14px', md: '16px' },
-                  marginLeft: isRTL ? 0 : 1,
+                  marginLeft: 1,
                   marginRight: isRTL ? 1 : 0, // Adjust margin for RTL
                 }}
               >

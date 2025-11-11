@@ -253,7 +253,7 @@ const OrderList = () => {
 
       return (
         <Box sx={{ marginTop: 3 }}>
-          <Typography fontWeight={510}>{isRTL ? 'طلبات:' : 'Orders:'}</Typography>
+          <Typography variant={isMobile ? "body2" : "body1"} fontWeight={510}>{isRTL ? 'طلبات:' : 'Orders:'}</Typography>
           <Select
             sx={{ height: 40, width: 200, background: colorPalette.white }}
             fullWidth
@@ -395,18 +395,17 @@ const OrderList = () => {
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 5,
-        mt: { xs: 6, md: 3 },
         justifyContent: 'space-between',
         alignItems: 'flex-end',
       }}>
         <Button
           variant="text"
           sx={{ color: colorPalette.theme }}
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/home')}
           startIcon={!isRTL && <HomeIcon sx={{ marginRight: -1, marginLeft: 1 }} />}
           endIcon={isRTL && <HomeIcon sx={{ marginLeft: -1, marginRight: 1 }} />}
         >
-          <Typography variant="body1" fontWeight={510} marginLeft={1} sx={{ textTransform: 'none' }}>
+          <Typography variant={isMobile ? "body2" : "body1"} fontWeight={510} marginLeft={1} sx={{ textTransform: 'none' }}>
             {t.backToHome}
           </Typography>
         </Button>
@@ -437,13 +436,13 @@ const OrderList = () => {
             }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} sx={{ fontWeight: 'bold' }}>
                 {t.orderStatus}:
               </Typography>
               <Chip
                 label={isRTL ? rtlStatusMapper[currentOrder?.status] : currentOrder?.status}
                 sx={{
-                  fontSize: 15,
+                  fontSize:  isMobile ? 10 : 15,
                   fontWeight: 'bold',
                   borderColor: 'transparent',
                   background: colorPalette.coneGreen,
@@ -453,14 +452,14 @@ const OrderList = () => {
                 variant="outlined"
               />
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1, margin: 1 }}>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} sx={{ fontWeight: 'bold' }}>
                 {t.paymentStatus}:
               </Typography>
               <Chip
                 label={isRTL ? rtlPaymentStatusMapper[currentOrder?.paymentStatus] : currentOrder?.paymentStatus }
                 sx={{
-                  fontSize: 15,
+                  fontSize: isMobile ? 10 : 15,
                   fontWeight: 'bold',
                   borderColor: colorPalette.lightGreen,
                 }}
@@ -485,7 +484,7 @@ const OrderList = () => {
               {renderDetails(pricing)}
             </Grid> */}
             <Grid item xs={12} sm={6}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t.orderDetails}
               </Typography>
               {renderDetails(details)}

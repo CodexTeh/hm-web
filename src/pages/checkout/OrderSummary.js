@@ -120,7 +120,7 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
                   WebkitBoxOrient: 'vertical',
                 }}
               >
-                {item.website_name}
+                {isRTL ? item.arabicName : item.website_name}
               </Typography>
               <Typography
                 color='textDisabled'

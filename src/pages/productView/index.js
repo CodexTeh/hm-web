@@ -130,7 +130,7 @@ export const ProductView = () => {
   const user = GetUser();
 
   const prevTotalPriceRef = useRef(cartDetails?.totalPrice);
-  
+
   // share popper handlers
   const handleShareClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -352,7 +352,7 @@ export const ProductView = () => {
   const handleDrawerClose = useCallback(() => setOpenDrawer(false), []);
 
   return (
-    <Box sx={{ padding: 5, marginTop: 10 }}>
+    <Box sx={{ padding: 3, marginTop: 10 }}>
       <BackButton />
 
       <Grid container spacing={2}>
@@ -567,24 +567,27 @@ export const ProductView = () => {
             }].map((attr, idx) => (
               <Grid item xs={6} sm={6} md={4} key={idx}>
                 <Typography
-                  variant="body2"
+                  variant="body1"
+                  color="textSecondary"
+                  sx={{
+                    fontWeight: 900,
+                    direction: isRTL ? 'rtl' : 'ltr',
+                    textAlign: isRTL ? 'right' : 'left',
+                    fontSize: 16
+                  }}
+                >
+                  {attr.label}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
                   color="textSecondary"
                   sx={{
                     direction: isRTL ? 'rtl' : 'ltr',
                     textAlign: isRTL ? 'right' : 'left',
-                    fontSize: { xs: 13, sm: 15 }
+                    fontSize: { xs: 13, sm: 15 },
                   }}
                 >
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    fontWeight={900}
-                    sx={{
-                      direction: isRTL ? 'rtl' : 'ltr',
-                      textAlign: isRTL ? 'right' : 'left',
-                      fontSize: { xs: 13, sm: 15 },
-                    }}
-                  >{attr.label}</Typography>{attr.value}
+                  {attr.value}
                 </Typography>
               </Grid>
             ))}
@@ -604,6 +607,7 @@ export const ProductView = () => {
                   color: colorPalette.black,
                   borderColor: colorPalette.boxShadowGrey,
                   ml: 2, // Adds margin to the left for spacing
+                  mr: 2,
                   fontSize: { xs: 10, md: 12 },
                   borderRadius: 2, // Optional: to make the button's corners rounded
                   padding: '4px 10px' // Optional: you can adjust the padding for better alignment
@@ -678,6 +682,8 @@ export const ProductView = () => {
       <Box
         sx={{
           cursor: 'pointer',
+          marginLeft: -3,
+          marginRight: -3,
           transition: 'margin 0.3s ease',
           direction: isRTL ? 'rtl' : 'ltr',
         }}

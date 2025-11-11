@@ -212,7 +212,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
                       WebkitLineClamp: 2, // Limit to two lines
                       WebkitBoxOrient: 'vertical',
                       marginBottom: isMobile ? 1 : 2
-                    }} variant={isMobile ? "body2" : "body1"} component="div">
+                    }} variant={isMobile ? "caption" : "body1"} component="div">
                       {isRTL ? product?.arabicName || product?.website_name : product?.website_name}
                     </Typography>
                     <Typography sx={{
@@ -245,7 +245,7 @@ const ProductsView = ({ hasMoreItems, isFetching, loadProducts, isRTL, open, loa
                         {/* Old Price */}
                         {hasDiscount && discountValue > 0 && <Typography
                           variant="caption"
-                          color="textDisabled"
+                          color="error"
                           sx={{ textDecoration: 'line-through' }}
                         >
                           {isRTL ? `ر.ع ${product?.price}` : `OMR ${product?.price}`}

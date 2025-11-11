@@ -166,6 +166,7 @@ const CheckoutPage = () => {
               justifyContent: 'center',
               color: colorPalette.white,
               lineHeight: '30px',
+              marginLeft: isRTL ? 1 :0 ,
             }}
           >
             <Typography variant="h6">{step}</Typography>
@@ -205,21 +206,21 @@ const CheckoutPage = () => {
         {cart?.items?.length > 0 ? <Grid container spacing={3} sx={{ maxWidth: '1200px', width: '100%' }}>
           <Grid item xs={12} md={8}>
             <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent>
+              <CardContent sx={{ direction: 'ltr' }}>
                 <Stepper
                   step={1}
                   text={currentTranslations.contactNumber}
                   buttonText={currentTranslations.update}
                 />
                 <Box sx={{ marginTop: 5 }}>
-                  <PhoneTextInput value={phone} onChange={setPhone} />
+                  <PhoneTextInput rtl={isRTL} value={phone} onChange={setPhone} />
                 </Box>
               </CardContent>
             </Card>
 
             {/* Email */}
             <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent>
+              <CardContent sx={{ direction: 'ltr' }}>
                 <Stepper
                   step={2}
                   text={currentTranslations.email}
@@ -236,7 +237,7 @@ const CheckoutPage = () => {
             </Card>
             {/* Name */}
             <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent>
+              <CardContent sx={{ direction: 'ltr' }}>
                 <Stepper
                   step={3}
                   text={currentTranslations.name}
@@ -253,7 +254,7 @@ const CheckoutPage = () => {
             </Card>
             {/* Shipping Address */}
             <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent>
+              <CardContent sx={{ direction: 'ltr' }}>
                 <Stepper
                   step={4}
                   text={currentTranslations.shippingAddress}
@@ -290,7 +291,7 @@ const CheckoutPage = () => {
 
             {/* Order Note */}
             <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent>
+              <CardContent sx={{ direction: 'ltr' }}>
                 <Stepper
                   step={5}
                   text={currentTranslations.orderNote}

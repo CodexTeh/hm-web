@@ -9,6 +9,7 @@ import { GetLanguage } from '@redux-state/common/selectors';
 import { useParams } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import OrderList from '../orders';
+import { useIsSmallScreen } from '../../theme';
 
 const translations = {
   profile: {
@@ -24,7 +25,7 @@ const translations = {
     ar: "البريد الإلكتروني:",
   },
   contact: {
-    en: "Contact #:",
+    en: "Contact:",
     ar: "رقم التواصل:",
   },
   address: {
@@ -48,6 +49,7 @@ const UserProfile = () => {
   const language = GetLanguage();
   const isRTL = language === 'ar';
   const profileLoading = GetProfileLoading();
+  const isMobile = useIsSmallScreen();
 
   useEffect(() => {
     if (userId) {
@@ -62,7 +64,7 @@ const UserProfile = () => {
           <Container
             maxWidth="md"
             sx={{
-              marginTop: { xs: 20, sm: 20, md: 20 },
+              marginTop: { xs: 15, sm: 20, md: 20 },
               direction: isRTL ? 'rtl' : 'ltr',
             }}
           >
@@ -87,66 +89,62 @@ const UserProfile = () => {
               <Grid item xs={12}>
                 <Box
                   display="flex"
-                  justifyContent="space-between"
-                  flexDirection={isRTL ? 'row-reverse' : 'row'}
+                  alignItems='center'
                 >
-                  <Typography variant="h6" fontWeight={500}>
+                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
                     {translations.username[language]}
                   </Typography>
-                  <Typography variant="body1">{profile?.username}</Typography>
+                  <Typography variant="subtitle2" margin={1}>{profile?.username}</Typography>
                 </Box>
               </Grid>
               {/* Email */}
               <Grid item xs={12}>
                 <Box
                   display="flex"
-                  justifyContent="space-between"
-                  flexDirection={isRTL ? 'row-reverse' : 'row'}
+                  alignItems='center'
                 >
-                  <Typography variant="h6" fontWeight={500}>
+                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
                     {translations.email[language]}
                   </Typography>
-                  <Typography variant="body1">{profile?.email}</Typography>
+                  <Typography variant="subtitle2" margin={1}>{profile?.email}</Typography>
                 </Box>
               </Grid>
               {/* Contact */}
               <Grid item xs={12}>
                 <Box
                   display="flex"
-                  justifyContent="space-between"
-                  flexDirection={isRTL ? 'row-reverse' : 'row'}
+                  alignItems='center'
                 >
-                  <Typography variant="h6" fontWeight={500}>
+                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
                     {translations.contact[language]}
                   </Typography>
-                  <Typography variant="body1">{profile?.phone}</Typography>
+                  <Typography variant="subtitle2" margin={1}>{profile?.phone}</Typography>
                 </Box>
               </Grid>
               {/* Address */}
               <Grid item xs={12}>
                 <Box
                   display="flex"
-                  justifyContent="space-between"
-                  flexDirection={isRTL ? 'row-reverse' : 'row'}
+                  alignItems='center'
                 >
-                  <Typography variant="h6" fontWeight={500}>
+                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
                     {translations.address[language]}
                   </Typography>
-                  <Typography variant="body1">{profile?.location}</Typography>
+                  <Typography variant="subtitle2" margin={1}>{profile?.location}</Typography>
                 </Box>
               </Grid>
             </Grid>
             {/* Deactivate Account Button */}
-            <Box mt={5} textAlign={isRTL ? 'right' : 'center'}>
+            <Box mt={5} textAlign={isRTL ? 'right' : 'center'} alignItems='center' justifyContent='center' display='flex'>
               <Button
                 variant="contained"
                 color="error"
                 onClick={() => window.open('https://api.hmawani.com/support')}
                 fullWidth={isRTL ? true : false} // full width on Arabic for better usability
                 sx={{
-                  maxWidth: { xs: '100%', sm: '250px' },
+                  maxWidth: { xs: '70%', sm: '250px' },
                   fontWeight: 600,
-                  fontSize: { xs: 14, sm: 16 },
+                  fontSize: { xs: 12, sm: 16 },
                 }}
               >
                 {translations.deactivate[language]}
