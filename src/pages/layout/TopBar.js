@@ -132,7 +132,7 @@ const TopBar = () => {
           minHeight: { xs: 64, md: 80 },
           px: { xs: 1, md: 4 },
           display: "flex",
-          flexDirection: language === "ar" ? "row-reverse" : "row",
+          // flexDirection: language === "ar" ? "row-reverse" : "row",
           justifyContent: "space-between"
         }}>
           {/* Left side: Hamburger on mobile, logo always */}
@@ -225,7 +225,7 @@ const TopBar = () => {
           <Box sx={{
             display: "flex",
             alignItems: "center",
-            direction: "ltr",
+            // direction: "ltr",
             p: 0,
             m: 0,
             gap: { xs: 0.2, sm: 1.5, md: 2 }
