@@ -10,10 +10,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
-import { useTheme } from "@mui/material/styles";
-
-import createTheme from "@mui/material/styles/createTheme";
-
+import { useTheme, createTheme } from "@mui/material/styles";
 import { Chip, ThemeProvider, useMediaQuery } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "assets/icons/logo.png";

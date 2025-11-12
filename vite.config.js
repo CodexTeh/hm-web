@@ -9,8 +9,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     optimizeDeps: {
-      include: ['@mui/material', '@mui/material/styles', '@mui/system', "@mui/material/Box", "@mui/material/styles/createTheme",]
-    },
+        include: ['@mui/material', '@emotion/react', '@emotion/styled'],
+      },
     // Core plugins
     plugins: [
       react(), // React + Fast Refresh support

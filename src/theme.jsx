@@ -1,10 +1,9 @@
 import {
   adaptV4Theme,
-  useTheme
+  useTheme,
+  createTheme
 } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
-import createTheme from "@mui/material/styles/createTheme";
-
 
 export const useIsSmallScreen = () => {
   const theme = useTheme();
