@@ -480,7 +480,7 @@ const ProductCardView = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: { xs: 1, md: 2 } }}>
 
           {/* FILTER BAR */}
-          <Box sx={{ width: '100%', display: 'flex', flexDirection: expanded ? 'column' : isMobile ? 'column' : 'row', justifyContent: { xs: 'center', md: 'space-evenly' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
+          <Box sx={{ display: 'flex', flexDirection: expanded ? 'column' : isMobile ? 'column' : 'row', justifyContent: { xs: 'center', md: 'space-evenly' }, ml: { xs: 0, md: 4 }, mr: { xs: 0, md: 3 } }}>
             <Card sx={{ width: expanded ? '96%' : isMobile ? 150 : 180, height: !expanded ? 50 : 'auto', mb: expanded ? 2 : 0 }}>
               {/* Header row with filter button */}
               <CardContent onClick={toggle} sx={{ height: isMobile ? 6 : 10 }}>

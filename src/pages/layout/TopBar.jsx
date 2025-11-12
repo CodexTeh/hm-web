@@ -165,7 +165,7 @@ const TopBar = () => {
                   marginRight: language === "ar" ? 0 : 10,
                   marginLeft: language === "ar" ? 10 : 0,
                   marginTop: 3,
-                  objectFit: "cover"
+                  objectFit: "cover",
                 }}
               />
             </Box>

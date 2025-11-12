@@ -248,7 +248,7 @@ const ProductsView = ({
                 size={{
                   xs: products.length > 1 ? 6 : 12,
                   sm: products.length > 1 ? 6 : 12,
-                  md: products.length > 1 ? 3 : 12,
+                  md: products.length > 1 ? products.length === 2 ? 6 : products.length === 3 ? 4 : 3 : 12,
                 }}
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? "rtl" : "ltr" }} // Ensure each card respects the language direction
