@@ -111,7 +111,7 @@ export const ProductView = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [wishListItem, setWishListItem] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);

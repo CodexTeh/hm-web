@@ -52,7 +52,7 @@ const SORT_OPTIONS = {
 // -----------------------------
 
 const ProductCardView = () => {
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [open, setOpen] = useState(null);
   const [filter, setFilter] = useState(null);
