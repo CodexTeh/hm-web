@@ -1,15 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
-  Container, Typography, Grid, Box, LinearProgress, Button
-} from '@mui/material';
+  Container,
+  Typography,
+  Grid,
+  Box,
+  LinearProgress,
+  Button,
+} from "@mui/material";
 import { GetProfile, GetProfileLoading } from "redux-state/selectors";
 import { getProfile } from "redux-state/actions";
-import { GetLanguage } from 'redux-state/common/selectors';
+import { GetLanguage } from "redux-state/common/selectors";
 
 import { useParams } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import OrderList from '../orders';
-import { useIsSmallScreen } from '../../theme';
+import { useDispatch } from "react-redux";
+import OrderList from "../orders";
+import { useIsSmallScreen } from "../../theme";
 
 const translations = {
   profile: {
@@ -39,7 +44,7 @@ const translations = {
   deactivate: {
     en: "Deactivate Account",
     ar: "تعطيل الحساب",
-  }
+  },
 };
 
 const UserProfile = () => {
@@ -47,25 +52,25 @@ const UserProfile = () => {
   const dispatch = useDispatch();
   const profile = GetProfile();
   const language = GetLanguage();
-  const isRTL = language === 'ar';
+  const isRTL = language === "ar";
   const profileLoading = GetProfileLoading();
   const isMobile = useIsSmallScreen();
 
   useEffect(() => {
     if (userId) {
-      dispatch(getProfile(userId))
+      dispatch(getProfile(userId));
     }
   }, [dispatch, userId]);
 
   return (
     <>
-      {profile ?
+      {profile ? (
         <>
           <Container
             maxWidth="md"
             sx={{
               marginTop: { xs: 15, sm: 20, md: 20 },
-              direction: isRTL ? 'rtl' : 'ltr',
+              direction: isRTL ? "rtl" : "ltr",
             }}
           >
             {profileLoading && <LinearProgress value={10} />}
@@ -73,11 +78,11 @@ const UserProfile = () => {
             {/* Title */}
             <Typography
               variant="h4"
-              textAlign={isRTL ? 'right' : 'center'}
+              textAlign={isRTL ? "right" : "center"}
               mb={{ xs: 4, sm: 6 }}
               sx={{
                 fontWeight: 600,
-                fontSize: { xs: 22, sm: 30 }
+                fontSize: { xs: 22, sm: 30 },
               }}
             >
               {translations.profile[language]}
@@ -86,63 +91,77 @@ const UserProfile = () => {
             {/* Profile Fields */}
             <Grid container spacing={2}>
               {/* Username */}
-              <Grid item xs={12}>
-                <Box
-                  display="flex"
-                  alignItems='center'
-                >
-                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
+              <Grid item size={{ xs: 12 }}>
+                <Box display="flex" alignItems="center">
+                  <Typography
+                    variant={isMobile ? "subtitle1" : "h6"}
+                    fontWeight={900}
+                  >
                     {translations.username[language]}
                   </Typography>
-                  <Typography variant="subtitle2" margin={1}>{profile?.username}</Typography>
+                  <Typography variant="subtitle2" margin={1}>
+                    {profile?.username}
+                  </Typography>
                 </Box>
               </Grid>
               {/* Email */}
-              <Grid item xs={12}>
-                <Box
-                  display="flex"
-                  alignItems='center'
-                >
-                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
+              <Grid item size={{ xs: 12 }}>
+                <Box display="flex" alignItems="center">
+                  <Typography
+                    variant={isMobile ? "subtitle1" : "h6"}
+                    fontWeight={900}
+                  >
                     {translations.email[language]}
                   </Typography>
-                  <Typography variant="subtitle2" margin={1}>{profile?.email}</Typography>
+                  <Typography variant="subtitle2" margin={1}>
+                    {profile?.email}
+                  </Typography>
                 </Box>
               </Grid>
               {/* Contact */}
-              <Grid item xs={12}>
-                <Box
-                  display="flex"
-                  alignItems='center'
-                >
-                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
+              <Grid item size={{ xs: 12 }}>
+                <Box display="flex" alignItems="center">
+                  <Typography
+                    variant={isMobile ? "subtitle1" : "h6"}
+                    fontWeight={900}
+                  >
                     {translations.contact[language]}
                   </Typography>
-                  <Typography variant="subtitle2" margin={1}>{profile?.phone}</Typography>
+                  <Typography variant="subtitle2" margin={1}>
+                    {profile?.phone}
+                  </Typography>
                 </Box>
               </Grid>
               {/* Address */}
-              <Grid item xs={12}>
-                <Box
-                  display="flex"
-                  alignItems='center'
-                >
-                  <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight={900}>
+              <Grid item size={{ xs: 12 }}>
+                <Box display="flex" alignItems="center">
+                  <Typography
+                    variant={isMobile ? "subtitle1" : "h6"}
+                    fontWeight={900}
+                  >
                     {translations.address[language]}
                   </Typography>
-                  <Typography variant="subtitle2" margin={1}>{profile?.location}</Typography>
+                  <Typography variant="subtitle2" margin={1}>
+                    {profile?.location}
+                  </Typography>
                 </Box>
               </Grid>
             </Grid>
             {/* Deactivate Account Button */}
-            <Box mt={5} textAlign={isRTL ? 'right' : 'center'} alignItems='center' justifyContent='center' display='flex'>
+            <Box
+              mt={5}
+              textAlign={isRTL ? "right" : "center"}
+              alignItems="center"
+              justifyContent="center"
+              display="flex"
+            >
               <Button
                 variant="contained"
                 color="error"
-                onClick={() => window.open('https://api.hmawani.com/support')}
+                onClick={() => window.open("https://api.hmawani.com/support")}
                 fullWidth={isRTL ? true : false} // full width on Arabic for better usability
                 sx={{
-                  maxWidth: { xs: '70%', sm: '250px' },
+                  maxWidth: { xs: "70%", sm: "250px" },
                   fontWeight: 600,
                   fontSize: { xs: 12, sm: 16 },
                 }}
@@ -153,19 +172,19 @@ const UserProfile = () => {
           </Container>
           <OrderList />
         </>
-        :
+      ) : (
         <Typography
           variant="h4"
-          textAlign={isRTL ? 'right' : 'center'}
+          textAlign={isRTL ? "right" : "center"}
           marginBottom={10}
           sx={{
             fontWeight: 600,
-            fontSize: { xs: 22, sm: 30 }
+            fontSize: { xs: 22, sm: 30 },
           }}
         >
           {translations.notfound[language]}
         </Typography>
-      }
+      )}
     </>
   );
 };

@@ -346,7 +346,7 @@ const ContactPage = () => {
 
               <Box component="form" noValidate onSubmit={handleSubmit}>
                 <Grid container spacing={2} direction={rtl ? 'row-reverse' : 'row'}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'الاسم الكامل' : 'Full Name'}
@@ -361,7 +361,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'البريد الإلكتروني' : 'Email'}
@@ -377,7 +377,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'رقم الهاتف' : 'Phone'}
@@ -392,7 +392,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'الموضوع' : 'Subject'}
@@ -407,7 +407,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item size={{xs:12}}>
                     <TextField
                       fullWidth
                       label={rtl ? 'الرسالة' : 'Message'}
@@ -470,7 +470,7 @@ const ContactPage = () => {
           </Grid>
 
           {/* Map Section */}
-          <Grid item xs={12}>
+          <Grid item size={{xs:12}}>
             <Box mt={2} mb={4} sx={{ height: { xs: 230, sm: 320, md: 400 }, width: '100%' }}>
               <MapContainer
                 center={[selectedLocation.lat, selectedLocation.lng]}

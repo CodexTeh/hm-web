@@ -75,7 +75,7 @@ const Footer = () => {
         }}
       >
         {/* About */}
-        <Grid item xs={6} sm={6} md={2}>
+        <Grid item size={{ xs:6, sm:6, md:2 }}>
           <Typography
             variant="body1"
             fontWeight={600}
@@ -92,7 +92,7 @@ const Footer = () => {
         </Grid>
 
         {/* Policies */}
-        <Grid item xs={6} sm={6} md={2}>
+        <Grid item size={{ xs:6, sm:6, md:2 }}>
           <Typography
             variant="body1"
             fontWeight={600}
@@ -115,7 +115,7 @@ const Footer = () => {
         </Grid>
 
         {/* Information */}
-        <Grid item xs={6} sm={6} md={2}>
+        <Grid item size={{ xs:6, sm:6, md:2 }}>
           <Typography
             variant="body1"
             fontWeight={600}
@@ -135,7 +135,7 @@ const Footer = () => {
         </Grid>
 
         {/* Help */}
-        <Grid item xs={6} sm={6} md={2}>
+        <Grid item size={{ xs:6, sm:6, md:2 }}>
           <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
             {rtl ? "تحتاج إلى مساعدة؟" : "NEED HELP?"}
           </Typography>
@@ -150,7 +150,7 @@ const Footer = () => {
         </Grid>
 
         {/* App Download Cards */}
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item size={{ xs:12, sm:6, md:3 }}>
           <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
             {rtl ? "امسح QR أو اضغط للتنزيل" : "SCAN OR CLICK TO DOWNLOAD APP"}
           </Typography>

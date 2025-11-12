@@ -1,39 +1,46 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, Grid, TextField, Card, CardContent } from '@mui/material';
-import { colorPalette } from 'utils/colorPalette';
-import { GetUser, GetLanguage, GetCartDetails } from 'redux-state/selectors';
-import { useDispatch } from 'react-redux';
-import PhoneTextInput from 'components/PhoneTextInput';
-import { emptyCart, addToCart } from 'redux-state/common/action';
-import pusher from 'helpers/pusherConfig';
-import constants from 'helpers/constants';
-import useRouter from 'helpers/useRouter';
-import { toggleToast } from 'redux-state/common/action';
-import OrderSummary from './OrderSummary';
-import BackButton from 'components/BackButton';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  Card,
+  CardContent,
+} from "@mui/material";
+import { colorPalette } from "utils/colorPalette";
+import { GetUser, GetLanguage, GetCartDetails } from "redux-state/selectors";
+import { useDispatch } from "react-redux";
+import PhoneTextInput from "components/PhoneTextInput";
+import { emptyCart, addToCart } from "redux-state/common/action";
+import pusher from "helpers/pusherConfig";
+import constants from "helpers/constants";
+import useRouter from "helpers/useRouter";
+import { toggleToast } from "redux-state/common/action";
+import OrderSummary from "./OrderSummary";
+import BackButton from "components/BackButton";
 
 const blue = {
-  100: '#DAECFF',
-  200: '#b6daff',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75',
+  100: "#DAECFF",
+  200: "#b6daff",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  900: "#003A75",
 };
 
 const grey = {
-  50: '#F3F6F9',
-  100: '#E5EAF2',
-  200: '#DAE2ED',
-  300: '#C7D0DD',
-  400: '#B0B8C4',
-  500: '#9DA8B7',
-  600: '#6B7A90',
-  700: '#434D5B',
-  800: '#303740',
-  900: '#1C2025',
+  50: "#F3F6F9",
+  100: "#E5EAF2",
+  200: "#DAE2ED",
+  300: "#C7D0DD",
+  400: "#B0B8C4",
+  500: "#9DA8B7",
+  600: "#6B7A90",
+  700: "#434D5B",
+  800: "#303740",
+  900: "#1C2025",
 };
 
 const CheckoutPage = () => {
@@ -42,30 +49,30 @@ const CheckoutPage = () => {
   const language = GetLanguage();
   const cart = GetCartDetails();
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const isRTL = language === 'ar';
+  const isRTL = language === "ar";
 
   const translations = {
     en: {
-      contactNumber: 'Contact Number',
-      email: 'Email',
-      name: 'Name',
-      shippingAddress: 'Shipping Address',
-      deliverySchedule: 'Delivery Schedule',
-      orderNote: 'Order Note',
-      update: 'Update',
-      add: 'Add',
+      contactNumber: "Contact Number",
+      email: "Email",
+      name: "Name",
+      shippingAddress: "Shipping Address",
+      deliverySchedule: "Delivery Schedule",
+      orderNote: "Order Note",
+      update: "Update",
+      add: "Add",
     },
     ar: {
-      contactNumber: 'رقم الاتصال',
-      email: 'بريد إلكتروني',
-      name: 'اسم',
-      shippingAddress: 'عنوان الشحن',
-      deliverySchedule: 'جدول التسليم',
-      orderNote: 'ملاحظات الطلب',
-      update: 'تحديث',
-      add: 'إضافة',
+      contactNumber: "رقم الاتصال",
+      email: "بريد إلكتروني",
+      name: "اسم",
+      shippingAddress: "عنوان الشحن",
+      deliverySchedule: "جدول التسليم",
+      orderNote: "ملاحظات الطلب",
+      update: "تحديث",
+      add: "إضافة",
     },
   };
 
@@ -74,17 +81,21 @@ const CheckoutPage = () => {
   const [shippingAddress, setShippingAddress] = useState(user?.location);
   const [orderNote, setOrderNote] = useState("");
   const [phone, setPhone] = useState(user?.phone);
-  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState("Express Delivery");
+  const [selectedDeliveryOption, setSelectedDeliveryOption] =
+    useState("Express Delivery");
 
   useEffect(() => {
-    dispatch(addToCart({
-      ...cart, orderDetails: {
-        shipping_address: shippingAddress,
-        phone: phone,
-        order_note: orderNote
-      }
-    }))
-  }, [orderNote, phone, selectedDeliveryOption, shippingAddress])
+    dispatch(
+      addToCart({
+        ...cart,
+        orderDetails: {
+          shipping_address: shippingAddress,
+          phone: phone,
+          order_note: orderNote,
+        },
+      })
+    );
+  }, [orderNote, phone, selectedDeliveryOption, shippingAddress]);
 
   const getOrderMessage = (data) => {
     if (isRTL) {
@@ -100,11 +111,9 @@ const CheckoutPage = () => {
       // dispatch(
       //   setLatestOrders(data.orderId)
       // );
-      dispatch(
-        toggleToast(true, getOrderMessage(data), 'success')
-      );
+      dispatch(toggleToast(true, getOrderMessage(data), "success"));
       dispatch(emptyCart());
-      router.push('/orders')
+      router.push("/orders");
     });
     return () => {
       channel.unbind(constants.order);
@@ -116,19 +125,19 @@ const CheckoutPage = () => {
     return (
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: isRTL ? 'row-reverse' : 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexDirection: isRTL ? "row-reverse" : "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           marginBottom: 5,
-          textAlign: isRTL ? 'right' : 'left',
+          textAlign: isRTL ? "right" : "left",
         }}
       >
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: isRTL ? 'row-reverse' : 'row',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: isRTL ? "row-reverse" : "row",
+            alignItems: "center",
           }}
         >
           <Box
@@ -137,10 +146,10 @@ const CheckoutPage = () => {
               background: colorPalette.theme,
               width: 30,
               height: 30,
-              textAlign: 'center',
-              justifyContent: 'center',
+              textAlign: "center",
+              justifyContent: "center",
               color: colorPalette.white,
-              lineHeight: '30px',
+              lineHeight: "30px",
               marginLeft: isRTL ? 1 : 0,
             }}
           >
@@ -171,95 +180,97 @@ const CheckoutPage = () => {
       </Box>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           paddingTop: 15,
-          background: cart?.items?.length > 0 ? colorPalette.greyBackground : colorPalette.white,
-          direction: isRTL ? 'rtl' : 'ltr',
+          background:
+            cart?.items?.length > 0
+              ? colorPalette.greyBackground
+              : colorPalette.white,
+          direction: isRTL ? "rtl" : "ltr",
         }}
       >
-
-        {cart?.items?.length > 0 ? <Grid container spacing={3} sx={{ maxWidth: '1200px', width: '100%' }}>
-          <Grid item xs={12} md={8}>
-            <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent sx={{ direction: 'ltr' }}>
-                <Stepper
-                  step={1}
-                  text={currentTranslations.contactNumber}
-                  buttonText={currentTranslations.update}
-                />
-                <Box sx={{ marginTop: 5 }}>
-                  <PhoneTextInput rtl={isRTL} value={phone} onChange={setPhone} />
-                </Box>
-              </CardContent>
-            </Card>
-
-            {/* Email */}
-            <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent sx={{ direction: 'ltr' }}>
-                <Stepper
-                  step={2}
-                  text={currentTranslations.email}
-                />
-                <div dir={isRTL ? "rtl" : "ltr"}>
-                  <TextField
-                    fullWidth
-                    disabled
-                    value={user?.email}
-                    variant="outlined"
-                    rows={4}
-                    sx={{ marginTop: 1 }}
+        {cart?.items?.length > 0 ? (
+          <Grid
+            container
+            spacing={3}
+            sx={{ maxWidth: "1200px", width: "100%" }}
+          >
+            <Grid item size={{ xs: 12, md: 6 }}>
+              <Card sx={{ marginBottom: 3, padding: 2 }}>
+                <CardContent sx={{ direction: "ltr" }}>
+                  <Stepper
+                    step={1}
+                    text={currentTranslations.contactNumber}
+                    buttonText={currentTranslations.update}
                   />
-                </div>
+                  <Box sx={{ marginTop: 5 }}>
+                    <PhoneTextInput
+                      rtl={isRTL}
+                      value={phone}
+                      onChange={setPhone}
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
 
-              </CardContent>
-            </Card>
-            {/* Name */}
-            <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent sx={{ direction: 'ltr' }}>
-                <Stepper
-                  step={3}
-                  text={currentTranslations.name}
-                />
-                <div dir={isRTL ? "rtl" : "ltr"}>
-
-                  <TextField
-                    fullWidth
-                    disabled
-                    value={user?.username}
-                    variant="outlined"
-                    rows={4}
-                    sx={{ marginTop: 1 }}
+              {/* Email */}
+              <Card sx={{ marginBottom: 3, padding: 2 }}>
+                <CardContent sx={{ direction: "ltr" }}>
+                  <Stepper step={2} text={currentTranslations.email} />
+                  <div dir={isRTL ? "rtl" : "ltr"}>
+                    <TextField
+                      fullWidth
+                      disabled
+                      value={user?.email}
+                      variant="outlined"
+                      rows={4}
+                      sx={{ marginTop: 1 }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+              {/* Name */}
+              <Card sx={{ marginBottom: 3, padding: 2 }}>
+                <CardContent sx={{ direction: "ltr" }}>
+                  <Stepper step={3} text={currentTranslations.name} />
+                  <div dir={isRTL ? "rtl" : "ltr"}>
+                    <TextField
+                      fullWidth
+                      disabled
+                      value={user?.username}
+                      variant="outlined"
+                      rows={4}
+                      sx={{ marginTop: 1 }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+              {/* Shipping Address */}
+              <Card sx={{ marginBottom: 3, padding: 2 }}>
+                <CardContent sx={{ direction: "ltr" }}>
+                  <Stepper
+                    step={4}
+                    text={currentTranslations.shippingAddress}
+                    buttonText={currentTranslations.add}
                   />
-                </div>
-              </CardContent>
-            </Card>
-            {/* Shipping Address */}
-            <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent sx={{ direction: 'ltr' }}>
-                <Stepper
-                  step={4}
-                  text={currentTranslations.shippingAddress}
-                  buttonText={currentTranslations.add}
-                />
-                <div dir={isRTL ? "rtl" : "ltr"}>
+                  <div dir={isRTL ? "rtl" : "ltr"}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      value={shippingAddress}
+                      onChange={(e) => setShippingAddress(e.target.value)}
+                      variant="outlined"
+                      rows={4}
+                      sx={{ marginTop: 1 }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
 
-                  <TextField
-                    fullWidth
-                    multiline
-                    value={shippingAddress}
-                    onChange={(e) => setShippingAddress(e.target.value)}
-                    variant="outlined"
-                    rows={4}
-                    sx={{ marginTop: 1 }}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Delivery Schedule */}
-            {/* <Card sx={{ marginBottom: 3, padding: 2 }}>
+              {/* Delivery Schedule */}
+              {/* <Card sx={{ marginBottom: 3, padding: 2 }}>
             <CardContent>
               <Stepper
                 step={3}
@@ -275,40 +286,52 @@ const CheckoutPage = () => {
             </CardContent>
           </Card> */}
 
-            {/* Order Note */}
-            <Card sx={{ marginBottom: 3, padding: 2 }}>
-              <CardContent sx={{ direction: 'ltr' }}>
-                <Stepper
-                  step={5}
-                  text={currentTranslations.orderNote}
-                  buttonText={currentTranslations.add}
-                />
-                <div dir={isRTL ? "rtl" : "ltr"}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    value={orderNote}
-                    onChange={(e) => setOrderNote(e.target.value)}
-                    variant="outlined"
-                    rows={4}
-                    sx={{ marginTop: 1 }}
+              {/* Order Note */}
+              <Card sx={{ marginBottom: 3, padding: 2 }}>
+                <CardContent sx={{ direction: "ltr" }}>
+                  <Stepper
+                    step={5}
+                    text={currentTranslations.orderNote}
+                    buttonText={currentTranslations.add}
                   />
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
+                  <div dir={isRTL ? "rtl" : "ltr"}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      value={orderNote}
+                      onChange={(e) => setOrderNote(e.target.value)}
+                      variant="outlined"
+                      rows={4}
+                      sx={{ marginTop: 1 }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Right Side */}
-          <OrderSummary isRTL={isRTL} shippingAddress={shippingAddress} deliverySchedule={selectedDeliveryOption} />
-        </Grid> :
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
+            {/* Right Side */}
+            <OrderSummary
+              isRTL={isRTL}
+              shippingAddress={shippingAddress}
+              deliverySchedule={selectedDeliveryOption}
+            />
+          </Grid>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignSelf: "center",
+            }}
+          >
             <Typography variant="h5" color="textSecondary">
               {isRTL ? "العربة فارغة" : "Cart is Empty"}
             </Typography>
-          </Box>}
+          </Box>
+        )}
       </Box>
     </Box>
-
   );
 };
 

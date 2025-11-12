@@ -1,20 +1,26 @@
-import React from 'react';
-import { Popper, Grow, Paper, ClickAwayListener, MenuList, MenuItem } from '@mui/material';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import React from "react";
+import {
+  Popper,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+} from "@mui/material";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 const SharePopover = ({
   anchorEl,
   open,
   onClose,
   productLink,
-  productImage,     // public image URL (CORS-enabled if on a different domain)
+  productImage, // public image URL (CORS-enabled if on a different domain)
   title,
   isRTL,
 }) => {
-  const caption =
-    `${title} : ${productLink}\n`.trim();
+  const caption = `${title} : ${productLink}\n`.trim();
 
   const encodedText = encodeURIComponent(`${caption}\n`);
   const waLink = `https://wa.me/?text=${encodedText}`;
@@ -22,7 +28,7 @@ const SharePopover = ({
   const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedText}`;
 
   const openLink = (url) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, "_blank", "noopener,noreferrer");
     onClose();
   };
 
@@ -30,27 +36,36 @@ const SharePopover = ({
     <Popper
       open={open}
       anchorEl={anchorEl}
-      placement={isRTL ? 'bottom-end' : 'bottom-start'}
+      placement={isRTL ? "bottom-end" : "bottom-start"}
       transition
       disablePortal={false}
       style={{ zIndex: 1300 }}
     >
       {({ TransitionProps }) => (
         <Grow {...TransitionProps}>
-          <Paper elevation={3} sx={{ px: 1, py: 1.5 }}>
+          <Paper elevation={3} sx={{ py: 1.5 }}>
             <ClickAwayListener onClickAway={onClose}>
               <MenuList dense disablePadding>
-                <MenuItem onClick={() => openLink(waLink)} sx={{ minWidth: 180, justifyContent: 'center' }}>
-                  <WhatsAppIcon color="success" sx={{ mr: 1 }} />
-                  WhatsApp
+                <MenuItem
+                  onClick={() => openLink(waLink)}
+                  sx={{ minWidth: 180, justifyContent: "center" }}
+                >
+                  <WhatsAppIcon color="success" sx={{ mr: 1, ml: 1 }} />
+                  {isRTL ? "واتساب" : "WhatsApp"}
                 </MenuItem>
-                <MenuItem onClick={() => openLink(instaLink)} sx={{ minWidth: 180, justifyContent: 'center' }}>
-                  <InstagramIcon color="action" sx={{ mr: 1 }} />
-                  Instagram
+                <MenuItem
+                  onClick={() => openLink(instaLink)}
+                  sx={{ minWidth: 180, justifyContent: "center" }}
+                >
+                  <InstagramIcon color="action" sx={{ mr: 1, ml: 1 }} />
+                  {isRTL ? "انستغرام" : "Instagram"}
                 </MenuItem>
-                <MenuItem onClick={() => openLink(fbLink)} sx={{ minWidth: 180, justifyContent: 'center' }}>
-                  <FacebookIcon color="primary" sx={{ mr: 1 }} />
-                  Facebook
+                <MenuItem
+                  onClick={() => openLink(fbLink)}
+                  sx={{ minWidth: 180, justifyContent: "center" }}
+                >
+                  <FacebookIcon color="primary" sx={{ mr: 1, ml: 1 }} />
+                  {isRTL ? "فيسبوك" : "Facebook"}
                 </MenuItem>
               </MenuList>
             </ClickAwayListener>
