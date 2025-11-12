@@ -30,7 +30,8 @@ const BackButton = ({ routeToHome = false }) => {
       <Button
         variant="text"
         sx={{ color: colorPalette.theme, direction: 'ltr' }}
-        onClick={() => routeToHome ? router.push('/home') : router.back({ isRender: true })}
+        onClick={() => router.push('/home')}
+        // onClick={() => routeToHome ? router.push('/home') : router.back({ isRender: true })}
         startIcon={!isRtl && <HomeIcon sx={{ marginRight: -1, marginLeft: 1 }} />}
         endIcon={isRtl && <HomeIcon sx={{ marginLeft: -1, marginRight: 1 }} />}
       >

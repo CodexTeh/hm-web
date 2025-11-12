@@ -478,7 +478,7 @@ export const ProductView = () => {
 
       <Grid container spacing={2}>
         {/* Left Section: Carousel */}
-        <Grid item xs={12} md={6}>
+        <Grid item size={{ xs:12, md:6 }}>
           {/* <Box
               sx={{
                 display: 'flex',
@@ -500,7 +500,7 @@ export const ProductView = () => {
         </Grid>
 
         {/* Right Section: Details */}
-        <Grid item xs={12} md={6}>
+        <Grid item size={{ xs:12, md:6 }}>
           <Box
             sx={{
               display: "flex",
