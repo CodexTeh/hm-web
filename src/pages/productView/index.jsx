@@ -474,7 +474,7 @@ export const ProductView = () => {
 
   return (
     <Box sx={{ padding: 3, marginTop: 10 }}>
-      <BackButton />
+      <BackButton routeToHome={true}/>
 
       <Grid container spacing={2}>
         {/* Left Section: Carousel */}

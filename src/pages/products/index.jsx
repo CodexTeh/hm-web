@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import Footer from 'components/Footer';
-import { getCategories } from 'redux-state/common/action';
+import { getCategories, getBanners } from 'redux-state/common/action';
 import WhatsAppButton from 'components/WhatsAppButton';
 import CardDrawer from './CardDrawer/CartDrawer';
 import CartFloatButton from './CartFloatButton';
@@ -10,7 +10,6 @@ import ProductCardView from './Products';
 import { OffersSlider } from './OffersSlider';
 import { Box } from '@mui/material';
 import { GetCartDetails } from 'redux-state/selectors';
-
 
 export default function Products() {
 
@@ -23,6 +22,7 @@ export default function Products() {
   // Fetch categories on mount
   useEffect(() => {
     dispatch(getCategories());
+    dispatch(getBanners());
   }, [dispatch]);
 
   useEffect(() => {
