@@ -1,0 +1,136 @@
+import React, { useMemo, useState } from 'react';
+import { Box, Button, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { colorPalette } from 'utils/colorPalette';
+import { GetLanguage } from 'redux-state/common/selectors';
+import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from 'react-redux';
+import { getProducts, addSearchText } from 'redux-state/common/action';
+
+const SearchBar = ({ setHasScrolled }) => {
+  const language = GetLanguage();
+  const dispatch = useDispatch();
+
+  const [searchText, setSearchText] = useState('');
+  const isRTL = language === 'ar'; // Checks if the language is Arabic
+
+  const filter = isRTL ? { arabicName: searchText } : { website_name: searchText };
+
+  const pagination = useMemo(
+    () => ({
+      page: 0,
+      perPage: 20,
+    }),
+    []
+  );
+
+  // Dynamic placeholder translation
+  const placeholderText = isRTL
+    ? 'ابحث عن منتجاتك من هنا' // Arabic translation for "Search your products from here"
+    : 'Search your products from here';
+
+  const searchProducts = () => {
+    dispatch(getProducts(pagination, filter));
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: { xs: 'stretch', sm: 'center' },
+        justifyContent: 'center',
+        width: { xs: '80%', sm: '80vw', md: '60%' },
+        maxWidth: 500,
+        mx: 'auto',
+        gap: { xs: 1, sm: 1.5 },
+        position: 'relative',
+        zIndex: 1200
+      }}
+    >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevent the default form submission behavior
+          // if (searchText) {
+          //   searchProducts();
+          // }
+        }}
+        style={{ width: '100%' }}
+      >
+        <TextField
+          sx={{
+            borderRadius: '5px',
+            fontSize: { xs: 8, md: 13 },
+            height: { xs: 55 },
+            borderColor: colorPalette.theme,
+            background: colorPalette.lightShadow,
+            direction: isRTL ? 'rtl' : 'ltr',
+            width: '100%',
+            minWidth: 0,
+            '& fieldset': {
+              borderColor: colorPalette.theme,
+            },
+            fontWeight: 400,
+          }}
+          fullWidth
+          value={searchText}
+          onChange={(e) => {
+            dispatch(addSearchText(e.target.value));
+            setSearchText(e.target.value)
+          }}
+          placeholder={placeholderText}
+          startAdornment={
+            <SearchIcon
+              style={{
+                color: colorPalette.grey,
+                paddingLeft: isRTL ? 0 : 16,
+                paddingRight: isRTL ? 16 : 0,
+              }}
+            />
+          }
+        />
+        <Button
+          type="submit"
+          sx={{
+            display: 'none', // Hide the submit button (optional)
+          }}
+        />
+      </form>
+
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: colorPalette.lightShadow,
+          width: { xs: 55 },
+          height: { xs: 55 },
+          cursor: 'pointer',
+          borderRadius: 1,
+          borderColor: colorPalette.theme,
+          borderWidth: 1,
+          borderStyle: 'solid',
+          mx: { xs: 0, sm: 0.5 },
+        }}
+        onClick={() => {
+          setHasScrolled(false);
+          if (searchText) {
+            dispatch(addSearchText(null));
+            setSearchText('');
+            searchProducts()
+          }
+        }}
+      >
+        <CloseIcon
+          style={{
+            color: colorPalette.theme,
+            width: 20,
+            height: 20,
+          }}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export default SearchBar;

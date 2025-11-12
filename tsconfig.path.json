@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "paths": {
+      // "src/*": ["./*"],
+      "components/*": ["./components/*"],
+      "contexts/*": ["./contexts/*"],
+      "helpers/*": ["./helpers/*"],
+      "modals/*": ["./modals/*"],
+      "models/*": ["./models/*"],
+      "hooks/*": ["./hooks/*"],
+      "layout/*": ["./layout/*"],
+      "assets/*": ["./assets/*"],
+      "redux-state/*": ["./redux-state/*"],
+    }
+  }
+}
