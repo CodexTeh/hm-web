@@ -85,26 +85,28 @@ const Banner = () => {
 
   // Preload first banner (LCP): create an early <link rel=preload> or Image() object
   useEffect(() => {
-    const first = bannerUrls[0];
-    if (!first) return;
+    if (banners?.length > 0) {
+      const first = bannerUrls[0];
+      if (!first) return;
 
-    // 1) Create a <link rel=preload> (preferred for LCP)
-    try {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "image";
-      link.href = first;
-      document.head.appendChild(link);
-      // remove after a while (optional)
-      return () => {
-        document.head.removeChild(link);
-      };
-    } catch (err) {
-      // fallback: instantiate Image to warm the cache
-      const img = new Image();
-      img.src = first;
+      // 1) Create a <link rel=preload> (preferred for LCP)
+      try {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = first;
+        document.head.appendChild(link);
+        // remove after a while (optional)
+        return () => {
+          document.head.removeChild(link);
+        };
+      } catch (err) {
+        // fallback: instantiate Image to warm the cache
+        const img = new Image();
+        img.src = first;
+      }
     }
-  }, [bannerUrls]);
+  }, [bannerUrls, banners?.length]);
 
   const handleImageChange = (index) => setCurrentBannerIndex(index);
 

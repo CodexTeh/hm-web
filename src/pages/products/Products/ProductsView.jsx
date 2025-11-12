@@ -5,7 +5,6 @@ import {
   CardContent,
   Typography,
   Button,
-  CardMedia,
   Box,
   IconButton,
   CircularProgress,
@@ -18,6 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import emptyProductImage from "assets/icons/empty-product.jpg";
 import useRouter from "helpers/useRouter";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   GetUser,
   GetProducts,
@@ -248,7 +248,14 @@ const ProductsView = ({
                 size={{
                   xs: products.length > 1 ? 6 : 12,
                   sm: products.length > 1 ? 6 : 12,
-                  md: products.length > 1 ? products.length === 2 ? 6 : products.length === 3 ? 4 : 3 : 12,
+                  md:
+                    products.length > 1
+                      ? products.length === 2
+                        ? 6
+                        : products.length === 3
+                          ? 4
+                          : 3
+                      : 12,
                 }}
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? "rtl" : "ltr" }} // Ensure each card respects the language direction
@@ -285,7 +292,7 @@ const ProductsView = ({
                     </Box>
                   )}
                   {/* Product Image */}
-                  <CardMedia
+                  {/* <CardMedia
                     component="img"
                     height={isMobile ? "100" : "300"}
                     image={
@@ -293,7 +300,23 @@ const ProductsView = ({
                     }
                     alt={product?.website_name}
                     sx={{ objectFit: "contain" }}
-                  />
+                  /> */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <LazyLoadImage
+                      alt={product?.website_name}
+                      height={isMobile ? "100" : "300"}
+                      src={
+                        imageUrls?.length > 0 ? imageUrls[0] : emptyProductImage
+                      } // use normal <img> attributes as props
+                      // width={image.width}
+                    />
+                  </Box>
                   <CardContent>
                     {/* Product Name */}
                     <Typography
