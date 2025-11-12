@@ -312,9 +312,8 @@ const ProductsView = ({
                       alt={product?.website_name}
                       height={isMobile ? "100" : "300"}
                       src={
-                        imageUrls?.length > 0 ? imageUrls[0] : emptyProductImage
-                      } // use normal <img> attributes as props
-                      // width={image.width}
+                        imageUrls?.length > 0 ? `https://img.hmawani.com/resize?url=${imageUrls[0]}&w=400` : emptyProductImage
+                      } 
                     />
                   </Box>
                   <CardContent>

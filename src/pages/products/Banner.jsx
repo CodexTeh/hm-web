@@ -134,6 +134,7 @@ const Banner = () => {
       showThumbs={false}
       borderRadius={"0px"}
       showStatus={false}
+      dimention={1300}
       maxHeight="100%"
       width="100%"
       height="100%"

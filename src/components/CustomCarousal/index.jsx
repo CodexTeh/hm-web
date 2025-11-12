@@ -152,12 +152,13 @@ export const CustomCarousel = React.memo(function CustomCarousel({
   handleImageChange,
   images = [],
   isRTL,
+  dimention = 400,
   showThumbs = true,
   width = '100%',
   height = 350,
   maxHeight = 350,
   showStatus = true,
-  borderRadius = '8px'
+  borderRadius = '8px',
 }) {
 
   const renderArrowPrev = useCallback((onClickHandler, hasPrev, label) =>
@@ -240,7 +241,7 @@ export const CustomCarousel = React.memo(function CustomCarousel({
       {images?.map((image, index) => (
         <div key={index}>
           <LazyImage
-            src={image}
+            src={`https://img.hmawani.com/resize?url=${image}&w=${dimention}`}
             alt={`Gallery-${index}`}
             style={{
               width: width,
