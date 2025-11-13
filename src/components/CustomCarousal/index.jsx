@@ -241,8 +241,7 @@ export const CustomCarousel = React.memo(function CustomCarousel({
       {images?.map((image, index) => (
         <div key={index}>
           <LazyImage
-            // src={`https://img.hmawani.com/resize?url=${image}&w=${dimention}`}
-            src={image}
+            src={`https://img.hmawani.com/resize?url=${image}&w=${dimention}`}
             alt={`Gallery-${index}`}
             style={{
               width: width,
