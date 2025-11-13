@@ -64,7 +64,7 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
   const currentTranslations = isRTL ? translations.ar : translations.en;
 
   return (
-    <Grid item xs={12} md={4}>
+    <Grid item size={{xs:12, md:4}}>
       <Box
         sx={{
           padding: 2,

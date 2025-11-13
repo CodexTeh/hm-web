@@ -232,7 +232,7 @@ const ContactPage = () => {
       <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', mb: 4 }}>
         <Grid container spacing={{ xs: 2, md: 4 }}>
           {/* Contact Info Section */}
-          <Grid item xs={12} md={6}>
+          <Grid item size={{xs:12, md:6}}>
             <StyledContactCard sx={{ textAlign: rtl ? 'right' : 'left' }}>
               <Typography variant="h5" component="h2" fontWeight="bold" gutterBottom
                 sx={{ color: 'text.primary', pb: 2 }}
@@ -321,7 +321,7 @@ const ContactPage = () => {
 
 
           {/* Custom Contact Form Section (replaces Typeform) */}
-          <Grid item xs={12} md={6}>
+          <Grid item size={{xs:12, md:6}}>
             <Box sx={{
               borderRadius: 2,
               height: '100%',
@@ -447,7 +447,7 @@ const ContactPage = () => {
 
 
           {/* Location Selector */}
-          <Grid item xs={12} md={4}>
+          <Grid item size={{xs:12, md:4}}>
             <FormControl fullWidth sx={{ mt: { xs: 2, md: -4 } }}>
               <Typography
                 sx={{
