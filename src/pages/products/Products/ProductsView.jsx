@@ -256,6 +256,14 @@ const ProductsView = ({
                           ? 4
                           : 3
                       : 12,
+                  xl:
+                    products.length > 1
+                      ? products.length === 2
+                        ? 6
+                        : products.length === 3
+                          ? 4
+                          : 2
+                      : 12,
                 }}
                 key={`${product.id}-${index}`}
                 sx={{ direction: isRTL ? "rtl" : "ltr" }} // Ensure each card respects the language direction
@@ -310,10 +318,12 @@ const ProductsView = ({
                   >
                     <LazyLoadImage
                       alt={product?.website_name}
-                      height={isMobile ? "100" : "300"}
+                      height={isMobile ? "100" : "150"}
                       src={
-                        imageUrls?.length > 0 ? `https://img.hmawani.com/resize?url=${imageUrls[0]}&w=400` : emptyProductImage
-                      } 
+                        imageUrls?.length > 0
+                          ? `https://img.hmawani.com/resize?url=${imageUrls[0]}&w=400`
+                          : emptyProductImage
+                      }
                     />
                   </Box>
                   <CardContent>
