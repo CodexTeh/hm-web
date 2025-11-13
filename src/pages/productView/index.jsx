@@ -473,7 +473,7 @@ export const ProductView = () => {
   const handleDrawerClose = useCallback(() => setOpenDrawer(false), []);
 
   return (
-    <Box sx={{ padding: 3, marginTop: 10 }}>
+    <Box sx={{ padding: 3, marginTop: 15 }}>
       <BackButton routeToHome={true}/>
 
       <Grid container spacing={2}>
