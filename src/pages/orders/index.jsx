@@ -467,7 +467,7 @@ const OrderList = () => {
           alignItems: "flex-end",
         }}
       >
-        <Button
+        {/* <Button
           variant="text"
           sx={{ color: colorPalette.theme }}
           onClick={() => router.push("/home")}
@@ -486,7 +486,7 @@ const OrderList = () => {
           >
             {t.backToHome}
           </Typography>
-        </Button>
+        </Button> */}
         {orders?.length > 0 && <InputOrderSelectField />}
       </Box>
       {orders?.length > 0 ? (
