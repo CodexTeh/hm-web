@@ -541,7 +541,7 @@ const ProductsView = ({
               size="large"
               disabled={!hasMoreItems}
               variant="contained"
-              onClick={loadProducts}
+              onClick={() => loadProducts(true)}
             >
               {isFetching ? (
                 <CircularProgress color="inherit" size={20} />

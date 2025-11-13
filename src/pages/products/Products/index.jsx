@@ -343,7 +343,7 @@ const ProductCardView = () => {
   }, [filter, hasMoreItems, isFetching, isRTL, open, sortBy]);
   // ---------------------------------------
 
-  const loadProducts = () => {
+  const loadProducts = (loadFromButton = false) => {
     setRowsPerPage((prev) => prev + 50);
     if (pathname === "/flashSale" || pathname === "/offers") {
       if (timers?.length > 0) {
@@ -368,7 +368,7 @@ const ProductCardView = () => {
       !(pathname === "/flashSale" || pathname === "/offers") &&
       sortBy === SORT_OPTIONS.NONE
     ) {
-      dispatch(getProducts(pagination, filter));
+      dispatch(getProducts(pagination, filter, loadFromButton));
     }
   };
 

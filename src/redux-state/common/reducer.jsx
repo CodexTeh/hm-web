@@ -145,25 +145,43 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, productsLoading: true };
 
     case GET_PRODUCTS_SUCCESS: {
-      const filteredProducts =
-        action.payload.products?.filter(
-          (item) =>
-            item.image_urls &&
-            item?.image_urls?.trim() !== "[]" &&
-            item.qty_onhand > 0
-        ) || [];
+      console.log('yoyo1', payload);
+      const { data, loadFromButton} = payload;
+      if (!loadFromButton) {
+        return {
+          ...state,
+          productsLoading: false,
+          products: data?.products?.filter(
+            (item) =>
+              item.image_urls &&
+              item?.image_urls?.trim() !== "[]" &&
+              item.qty_onhand > 0
+          ),
+          totalProducts: data?.count,
+        };
+      } else {
+        const filteredProducts =
+          data?.products?.filter(
+            (item) =>
+              item.image_urls &&
+              item?.image_urls?.trim() !== "[]" &&
+              item.qty_onhand > 0
+          ) || [];
 
-      // If it's page 1 (first load), replace the list; otherwise, append
-      const isFirstPage = action.payload.page === 0 || !state.products?.length;
-
-      return {
-        ...state,
-        productsLoading: false,
-        products: isFirstPage
-          ? filteredProducts
-          : [...state.products, ...filteredProducts],
-        totalProducts: action.payload.count,
-      };
+        // If it's page 1 (first load), replace the list; otherwise, append
+        const isFirstPage =
+          data?.page === 0 || !state.products?.length;
+        const mergedProducts = [...state.products, ...filteredProducts];
+        const uniqueProducts = mergedProducts.filter(
+          (p, index, self) => index === self.findIndex((x) => x.id === p.id)
+        );
+        return {
+          ...state,
+          productsLoading: false,
+          products: isFirstPage ? filteredProducts : uniqueProducts,
+          totalProducts: data?.count,
+        };
+      }
     }
 
     case GET_PRODUCTS_BY_CATEGORY:

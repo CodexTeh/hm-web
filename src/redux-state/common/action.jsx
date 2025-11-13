@@ -73,17 +73,17 @@ export const addSearchText = (text) => (
   }
 );
 
-export const getProducts = (pagination, filter) => (
+export const getProducts = (pagination, filter, loadFromButton = false) => (
   {
     type: GET_PRODUCTS,
-    payload: { pagination, filter }
+    payload: { pagination, filter, loadFromButton }
   }
 );
 
-export const getProductsSuccess = (data) => (
+export const getProductsSuccess = (data, loadFromButton = false) => (
   {
     type: GET_PRODUCTS_SUCCESS,
-    payload: data
+    payload: {data, loadFromButton}
   }
 );
 

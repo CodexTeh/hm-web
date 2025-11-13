@@ -26,8 +26,9 @@ const getUser = state => state.onboarding.user;
 
 function* getProducts(action) {
   try {
+    const { loadFromButton } = action.payload;
     const data = yield call(Api.getProducts, action.payload);
-    yield put(Actions.getProductsSuccess(data));
+    yield put(Actions.getProductsSuccess(data, loadFromButton));
   } catch (error) {
     yield put(Actions.getProductsSuccess([]));
     console.log("error", error);
