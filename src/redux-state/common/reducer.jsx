@@ -39,8 +39,8 @@ import {
   GET_USER_PROFILE,
   GET_USER_PROFILE_SUCCESS,
   EMPTY_CART,
-  SET_SEARCH_TEXT
-} from './types';
+  SET_SEARCH_TEXT,
+} from "./types";
 
 const INITIAL_STATE = {
   productsLoading: false,
@@ -48,8 +48,8 @@ const INITIAL_STATE = {
   editProductLoading: false,
   products: [],
   toggleToast: false,
-  toastType: '',
-  toastMessage: '',
+  toastType: "",
+  toastMessage: "",
   loginModal: false,
   registerModal: false,
   profile: null,
@@ -59,7 +59,7 @@ const INITIAL_STATE = {
     items: [],
     user: {},
     totalPrice: 0,
-    orderDetails: {}
+    orderDetails: {},
   },
   orders: [],
   getOrdersLoading: false,
@@ -82,16 +82,15 @@ const INITIAL_STATE = {
   placeOrderLoading: false,
   wishlistLoading: false,
   wishList: [],
-  language: 'en'
+  language: "en",
 };
 
 export default (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
   switch (type) {
-
     case CHANGE_LANGUAGE:
       return { ...state, language: payload };
-    
+
     case GET_SALE_TIMER:
       return { ...state, getSaleTimerLoading: true };
     case GET_SALE_TIMER_SUCCESS:
@@ -104,12 +103,17 @@ export default (state = INITIAL_STATE, action) => {
           items: [],
           user: {},
           totalPrice: 0,
-          orderDetails: {}
-        }
+          orderDetails: {},
+        },
       };
 
     case TOGGLE_TOAST:
-      return { ...state, toggleToast: payload.isOpen, toastMessage: payload.message, toastType: payload.type };
+      return {
+        ...state,
+        toggleToast: payload.isOpen,
+        toastMessage: payload.message,
+        toastType: payload.type,
+      };
 
     case ADD_TO_CART:
       return { ...state, cart: payload };
@@ -140,14 +144,38 @@ export default (state = INITIAL_STATE, action) => {
     case GET_PRODUCTS:
       return { ...state, productsLoading: true };
 
-    case GET_PRODUCTS_SUCCESS:
-      return { ...state, productsLoading: false, products: action.payload.products?.filter(item => item.image_urls && item?.image_urls?.trim() !== "[]" && item.qty_onhand > 0), totalProducts: action.payload.count };
+    case GET_PRODUCTS_SUCCESS: {
+      const filteredProducts =
+        action.payload.products?.filter(
+          (item) =>
+            item.image_urls &&
+            item?.image_urls?.trim() !== "[]" &&
+            item.qty_onhand > 0
+        ) || [];
+
+      // If it's page 1 (first load), replace the list; otherwise, append
+      const isFirstPage = action.payload.page === 0 || !state.products?.length;
+
+      return {
+        ...state,
+        productsLoading: false,
+        products: isFirstPage
+          ? filteredProducts
+          : [...state.products, ...filteredProducts],
+        totalProducts: action.payload.count,
+      };
+    }
 
     case GET_PRODUCTS_BY_CATEGORY:
       return { ...state, productsByCategoryLoading: true };
 
     case GET_PRODUCTS_BY_CATEGORY_SUCCESS:
-      return { ...state, productsByCategoryLoading: false, productsByCategory: action.payload.products, totalProductsByCategory: action.payload?.products?.length };
+      return {
+        ...state,
+        productsByCategoryLoading: false,
+        productsByCategory: action.payload.products,
+        totalProductsByCategory: action.payload?.products?.length,
+      };
 
     case GET_BANNERS:
       return { ...state, getBannersLoading: true };
@@ -158,14 +186,24 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_CATEGORIES_SUCCESS:
       const { category, subcategory } = payload;
-      const filterCats = category.filter(item => item.id !== 27);
-      return { ...state, getCategoriesLoading: false, categories: filterCats, subCategories: subcategory };
+      const filterCats = category.filter((item) => item.id !== 27);
+      return {
+        ...state,
+        getCategoriesLoading: false,
+        categories: filterCats,
+        subCategories: subcategory,
+      };
 
     case GET_SEARCHED_PRODUCTS:
       return { ...state, productsLoading: true };
 
     case GET_SEARCHED_PRODUCTS_SUCCESS:
-      return { ...state, productsLoading: false, products: action.payload, totalProducts: 1 };
+      return {
+        ...state,
+        productsLoading: false,
+        products: action.payload,
+        totalProducts: 1,
+      };
 
     case EDIT_PRODUCT:
       return { ...state, editProductLoading: true };
@@ -189,7 +227,11 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, addProductCatalogLodaing: true };
 
     case GET_PRODUCT_CATALOG_SUCCESS:
-      return { ...state, addProductCatalogLodaing: false, productCatalogs: action.payload };
+      return {
+        ...state,
+        addProductCatalogLodaing: false,
+        productCatalogs: action.payload,
+      };
 
     case GET_ORDERS:
       return { ...state, getOrdersLoading: true };
