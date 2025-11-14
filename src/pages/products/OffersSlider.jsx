@@ -2,20 +2,20 @@ import React, { useMemo } from "react";
 import Slider from "react-slick";
 import { Box } from "@mui/material";
 // Import useNavigate from react-router-dom
-import { useNavigate } from 'react-router-dom';
-
-import expressDeliveryImage from 'assets/icons/express.png';
-import couponImage from 'assets/icons/coupon.png';
-import flashsaleImage from 'assets/icons/flashsale.png';
-import freeDeliveryImage from 'assets/icons/free-delivery.png';
-import { GetLanguage } from 'redux-state/selectors';
+import { useNavigate } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import expressDeliveryImage from "assets/icons/express.png";
+import couponImage from "assets/icons/coupon.png";
+import flashsaleImage from "assets/icons/flashsale.png";
+import freeDeliveryImage from "assets/icons/free-delivery.png";
+import { GetLanguage } from "redux-state/selectors";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export const OffersSlider = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
-  const language = GetLanguage?.() || 'en'; // fallback for SSR/undefined
-  const rtl = language === 'ar';
+  const language = GetLanguage?.() || "en"; // fallback for SSR/undefined
+  const rtl = language === "ar";
 
   // --- NextArrow and PrevArrow components (no changes needed here) ---
   function NextArrow(props) {
@@ -63,56 +63,62 @@ export const OffersSlider = () => {
   }
   // -------------------------------------------------------------------
 
-  const settings = useMemo(() => ({
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    cssEase: "linear",
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    arrows: true,
-    rtl: language === 'ar',
-    lazyLoad: false,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
+  const settings = useMemo(
+    () => ({
+      infinite: true,
+      speed: 500,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      cssEase: "linear",
+      nextArrow: <NextArrow />,
+      prevArrow: <PrevArrow />,
+      arrows: true,
+      rtl: language === "ar",
+      lazyLoad: false,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+          },
         },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2,
+          },
         },
-      },
-    ],
-  }), [language]);
+      ],
+    }),
+    [language]
+  );
 
   // Modify `images` to be an array of objects, each with src and route
   const offersData = useMemo(
     () => [
-      { src: flashsaleImage, route: '/flashSale' },
-      { src: couponImage, route: '/offers' },
+      { src: flashsaleImage, route: "/flashSale" },
+      { src: couponImage, route: "/offers" },
       { src: freeDeliveryImage }, // Changed '/test' to match your request
       { src: expressDeliveryImage }, // Changed '/test1' to match your request
     ],
     []
   );
 
-  const offerImageStyle = useMemo(() => ({
-    width: "93%",
-    height: "auto",
-    borderRadius: "6px",
-    objectFit: "contain",
-    outline: "none",
-    // cursor: "pointer", // Cursor will be handled by the parent Box's sx prop for clickability
-  }), []);
+  const offerImageStyle = useMemo(
+    () => ({
+      width: "93%",
+      height: "auto",
+      borderRadius: "6px",
+      objectFit: "contain",
+      outline: "none",
+      // cursor: "pointer", // Cursor will be handled by the parent Box's sx prop for clickability
+    }),
+    []
+  );
 
   // Function to handle image click
   const handleOfferClick = (route, idx) => {
@@ -122,8 +128,8 @@ export const OffersSlider = () => {
       const message = rtl
         ? "مرحبًا، لدي بعض الأسئلة حول منتجاتك وسأكون ممتنًا لمساعدتك."
         : "Hello, I have a few questions about your products and would appreciate your assistance.";
-      const phoneE164 = (process.env.VITE_WHATSAPP_NUMBER || '').trim();
-      const phoneForWaMe = phoneE164.replace(/^\+/, '');
+      const phoneE164 = (process.env.VITE_WHATSAPP_NUMBER || "").trim();
+      const phoneForWaMe = phoneE164.replace(/^\+/, "");
       const url = `https://wa.me/${phoneForWaMe}?text=${encodeURIComponent(message)}`;
       window.open(url, "_blank", "noopener,noreferrer");
     }
@@ -146,16 +152,15 @@ export const OffersSlider = () => {
           <Box
             key={idx}
             sx={{
-              padding: '25px 40px 10px 10px',
-              cursor: 'pointer', // Make the entire clickable area indicate interactivity
+              padding: "25px 40px 10px 10px",
+              cursor: "pointer", // Make the entire clickable area indicate interactivity
             }}
             onClick={() => handleOfferClick(offer.route, idx)}
           >
-            <img
-              src={offer.src}
+            <LazyLoadImage
+              width="93%"
               alt={`Offer ${idx + 1}`}
-              style={offerImageStyle}
-              loading="eager"
+              src={offer.src}
             />
           </Box>
         ))}

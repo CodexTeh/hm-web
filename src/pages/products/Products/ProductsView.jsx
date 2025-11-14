@@ -321,7 +321,7 @@ const ProductsView = ({
                       height={isMobile ? "100" : "150"}
                       src={
                         imageUrls?.length > 0
-                          ? `https://img.hmawani.com/resize?url=${imageUrls[0]}&w=400`
+                          ? `https://img.hmawani.com/resize?url=${imageUrls[0]}&h=150`
                           : emptyProductImage
                       }
                     />

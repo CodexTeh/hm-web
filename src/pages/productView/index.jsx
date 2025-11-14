@@ -494,6 +494,7 @@ export const ProductView = () => {
             selectedIndex={selectedIndex}
             handleImageChange={handleImageChange}
             images={images}
+            dimention={350}
             isRTL={isRTL}
           />
           {/* </Box> */}

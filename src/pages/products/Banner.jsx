@@ -134,14 +134,12 @@ const Banner = () => {
       showThumbs={false}
       borderRadius={"0px"}
       showStatus={false}
-      dimention={1300}
+      dimention={656}
       maxHeight="100%"
       width="100%"
       height="100%"
       renderItem={(src, idx) => {
-        // If carousel supports a custom render prop; otherwise wrap images in Item component
         const srcSet = makeSrcSet(src);
-        // For the first (visible) banner, it's okay to load eagerly (we preloaded above)
         const loading = idx === 0 ? "eager" : "lazy";
         return (
           <ImageWithPlaceholder

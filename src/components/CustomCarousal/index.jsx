@@ -1,12 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Box,
   Skeleton, // 👈 New Import
-} from '@mui/material';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+} from "@mui/material";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 /**
  * Lightweight LazyImage component
@@ -18,8 +24,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 const LazyImage = React.memo(function LazyImage({
   src,
   alt,
-  srcSet,    // optional e.g. "img@1x.jpg 1x, img@2x.jpg 2x"
-  sizes,     // optional
+  srcSet, // optional e.g. "img@1x.jpg 1x, img@2x.jpg 2x"
+  sizes, // optional
   width,
   height,
   style,
@@ -27,25 +33,26 @@ const LazyImage = React.memo(function LazyImage({
   // Removed loadingPlaceholder prop: The MUI Skeleton is the intended loading UI.
   onLoad,
   onError,
+  fetchPriority
 }) {
   const containerRef = useRef(null); // Ref for the container (Intersection Observer target)
-  const imgRef = useRef(null);      // Ref for the actual image element (for cache check)
+  const imgRef = useRef(null); // Ref for the actual image element (for cache check)
   const [inView, setInView] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
-    if ('IntersectionObserver' in window) {
+    if ("IntersectionObserver" in window) {
       const ob = new IntersectionObserver(
-        entries => {
-          entries.forEach(entry => {
+        (entries) => {
+          entries.forEach((entry) => {
             if (entry.isIntersecting) {
               setInView(true);
               ob.disconnect();
             }
           });
         },
-        { rootMargin: '200px' } // preload a bit earlier
+        { rootMargin: "200px" } // preload a bit earlier
       );
       ob.observe(containerRef.current);
       return () => ob.disconnect();
@@ -59,34 +66,40 @@ const LazyImage = React.memo(function LazyImage({
   useEffect(() => {
     // This runs once 'inView' becomes true and the image element is rendered.
     if (inView && imgRef.current && imgRef.current.complete) {
-      // If the browser reports the image is already complete (cached and loaded), 
+      // If the browser reports the image is already complete (cached and loaded),
       // instantly set 'loaded' to true to skip the opacity transition and skeleton.
       setLoaded(true);
     }
   }, [inView]);
 
-  const handleLoad = useCallback((e) => {
-    setLoaded(true);
-    if (onLoad) onLoad(e);
-  }, [onLoad]);
+  const handleLoad = useCallback(
+    (e) => {
+      setLoaded(true);
+      if (onLoad) onLoad(e);
+    },
+    [onLoad]
+  );
 
-  const handleError = useCallback((e) => {
-    if (onError) onError(e);
-  }, [onError]);
+  const handleError = useCallback(
+    (e) => {
+      if (onError) onError(e);
+    },
+    [onError]
+  );
 
   return (
     <div
       ref={containerRef} // Use containerRef for IntersectionObserver
       style={{
-        position: 'relative',
+        position: "relative",
         width,
         height,
         minWidth: width,
         minHeight: height,
-        display: 'block',
+        display: "block",
         // 🛠️ Added default background to the container for robustness when not loaded
-        background: loaded ? 'transparent' : '#f5f5f5', 
-        overflow: 'hidden',
+        background: loaded ? "transparent" : "#f5f5f5",
+        overflow: "hidden",
       }}
       className={className}
     >
@@ -94,19 +107,19 @@ const LazyImage = React.memo(function LazyImage({
         Rendered when the image is not yet loaded.
       */}
       {!loaded && (
-        <Skeleton 
-          variant="rectangular" 
+        <Skeleton
+          variant="rectangular"
           animation="wave"
-          sx={{ 
-            width: '100%', 
-            height: '100%', 
-            position: 'absolute', 
-            top: 0, 
+          sx={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
             left: 0,
             zIndex: 1, // Ensure skeleton is below the carousel controls/text if any
             // Match the border radius of the final image
             borderRadius: style?.borderRadius || 0,
-          }} 
+          }}
         />
       )}
 
@@ -116,10 +129,11 @@ const LazyImage = React.memo(function LazyImage({
           src={src}
           srcSet={srcSet}
           sizes={sizes}
+          fetchPriority={fetchPriority}
           alt={alt}
           width={undefined} // let CSS control sizing by default
           height={undefined}
-          // loading="lazy"
+          loading="lazy"
           decoding="async"
           style={{
             display: 'block',
@@ -152,76 +166,84 @@ export const CustomCarousel = React.memo(function CustomCarousel({
   handleImageChange,
   images = [],
   isRTL,
-  dimention = 400,
+  dimention = 150,
   showThumbs = true,
-  width = '100%',
+  width = "100%",
   height = 350,
   maxHeight = 350,
   showStatus = true,
-  borderRadius = '8px',
+  borderRadius = "8px",
 }) {
+  const renderArrowPrev = useCallback(
+    (onClickHandler, hasPrev, label) =>
+      hasPrev && (
+        <Box
+          onClick={onClickHandler}
+          aria-label={label}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: 30,
+            transform: "translateY(-50%)",
+            zIndex: 2,
+            width: 25,
+            height: 25,
+            backgroundColor: "white",
+            borderRadius: "50%",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+          }}
+        >
+          <ArrowBackIosIcon fontSize="inherit" sx={{ marginLeft: 0.5 }} />
+        </Box>
+      ),
+    []
+  );
 
-  const renderArrowPrev = useCallback((onClickHandler, hasPrev, label) =>
-    hasPrev && (
-      <Box
-        onClick={onClickHandler}
-        aria-label={label}
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: 30,
-          transform: 'translateY(-50%)',
-          zIndex: 2,
-          width: 25,
-          height: 25,
-          backgroundColor: 'white',
-          borderRadius: '50%',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-        }}
-      >
-        <ArrowBackIosIcon fontSize="inherit" sx={{ marginLeft: 0.5}} />
-      </Box>
-    ), []);
-
-  const renderArrowNext = useCallback((onClickHandler, hasNext, label) =>
-    hasNext && (
-      <Box
-        onClick={onClickHandler}
-        aria-label={label}
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          right: 30,
-          transform: 'translateY(-50%)',
-          zIndex: 2,
-          width: 25,
-          height: 25,
-          backgroundColor: 'white',
-          borderRadius: '50%',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-        }}
-      >
-        <ArrowForwardIosIcon fontSize="inherit" />
-      </Box>
-    ), []);
+  const renderArrowNext = useCallback(
+    (onClickHandler, hasNext, label) =>
+      hasNext && (
+        <Box
+          onClick={onClickHandler}
+          aria-label={label}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: 30,
+            transform: "translateY(-50%)",
+            zIndex: 2,
+            width: 25,
+            height: 25,
+            backgroundColor: "white",
+            borderRadius: "50%",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+          }}
+        >
+          <ArrowForwardIosIcon fontSize="inherit" />
+        </Box>
+      ),
+    []
+  );
 
   // Provide explicit slide styles (avoid recreating objects)
-  const slideStyle = useMemo(() => ({
-    width,
-    height,
-    maxHeight,
-    objectFit: 'contain',
-    borderRadius,
-    outline: 'none',
-  }), [width, height, maxHeight, borderRadius]);
+  const slideStyle = useMemo(
+    () => ({
+      width,
+      height,
+      maxHeight,
+      objectFit: "contain",
+      borderRadius,
+      outline: "none",
+    }),
+    [width, height, maxHeight, borderRadius]
+  );
 
   return (
     <Carousel
@@ -235,22 +257,25 @@ export const CustomCarousel = React.memo(function CustomCarousel({
       renderArrowPrev={renderArrowPrev}
       renderArrowNext={renderArrowNext}
       style={{
-        direction: isRTL ? 'rtl' : 'ltr',
+        direction: isRTL ? "rtl" : "ltr",
       }}
     >
       {images?.map((image, index) => (
         <div key={index}>
           <LazyImage
-            src={`https://img.hmawani.com/resize?url=${image}&w=${dimention}`}
+            src={`https://img.hmawani.com/resize?url=${image}&h=${dimention}`}
             alt={`Gallery-${index}`}
+            width={width}
+            height={height}
             style={{
               width: width,
               height: slideStyle.height,
               maxHeight: slideStyle.maxHeight,
               objectFit: slideStyle.objectFit,
               borderRadius: slideStyle.borderRadius,
-              outline: 'none'
+              outline: "none",
             }}
+            fetchPriority={index=0 ? "high" : "low"}
           />
         </div>
       ))}
