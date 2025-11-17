@@ -122,55 +122,55 @@ export default defineConfig(async ({ mode }) => {
           }),
         ],
 
-        output: {
-          // ⚡ STABLE CHUNK MAP (React-safe)
-          manualChunks(id) {
-            // 1. React core (strict match only)
-            if (
-              /node_modules[\\/](react|react-dom)[\\/](index\.js|client\.js)$/.test(
-                id
-              )
-            ) {
-              return "react-core";
-            }
+        // output: {
+        //   // ⚡ STABLE CHUNK MAP (React-safe)
+        //   manualChunks(id) {
+        //     // 1. React core (strict match only)
+        //     if (
+        //       /node_modules[\\/](react|react-dom)[\\/](index\.js|client\.js)$/.test(
+        //         id
+        //       )
+        //     ) {
+        //       return "react-core";
+        //     }
 
-            // 2. Redux ecosystem
-            if (
-              /node_modules[\\/](redux|redux-persist|redux-saga|redux-thunk|@reduxjs\/toolkit)[\\/]/.test(
-                id
-              )
-            ) {
-              return "redux-vendor";
-            }
+        //     // 2. Redux ecosystem
+        //     if (
+        //       /node_modules[\\/](redux|redux-persist|redux-saga|redux-thunk|@reduxjs\/toolkit)[\\/]/.test(
+        //         id
+        //       )
+        //     ) {
+        //       return "redux-vendor";
+        //     }
 
-            // 3. MUI + Emotion
-            if (
-              id.includes("node_modules/@mui") ||
-              id.includes("node_modules/@emotion")
-            ) {
-              return "mui-vendor";
-            }
+        //     // 3. MUI + Emotion
+        //     if (
+        //       id.includes("node_modules/@mui") ||
+        //       id.includes("node_modules/@emotion")
+        //     ) {
+        //       return "mui-vendor";
+        //     }
 
-            // 4. Big utilities
-            if (
-              id.includes("node_modules/axios") ||
-              id.includes("node_modules/dayjs") ||
-              id.includes("node_modules/leaflet") ||
-              id.includes("node_modules/lodash")
-            ) {
-              return "utils-vendor";
-            }
+        //     // 4. Big utilities
+        //     if (
+        //       id.includes("node_modules/axios") ||
+        //       id.includes("node_modules/dayjs") ||
+        //       id.includes("node_modules/leaflet") ||
+        //       id.includes("node_modules/lodash")
+        //     ) {
+        //       return "utils-vendor";
+        //     }
 
-            // 5. Everything else
-            if (id.includes("node_modules")) {
-              return "vendor";
-            }
-          },
+        //     // 5. Everything else
+        //     if (id.includes("node_modules")) {
+        //       return "vendor";
+        //     }
+        //   },
 
-          entryFileNames: "assets/js/[name]-[hash].js",
-          chunkFileNames: "assets/js/[name]-[hash].js",
-          assetFileNames: "assets/[ext]/[name]-[hash].[ext]",
-        },
+        //   entryFileNames: "assets/js/[name]-[hash].js",
+        //   chunkFileNames: "assets/js/[name]-[hash].js",
+        //   assetFileNames: "assets/[ext]/[name]-[hash].[ext]",
+        // },
       },
     },
 
