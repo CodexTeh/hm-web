@@ -182,7 +182,6 @@ export default defineConfig(async ({ mode }) => {
     define: {
       __APP_ENV__: JSON.stringify(mode),
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
-      "process.env": safeEnv,
     },
 
     preview: {
