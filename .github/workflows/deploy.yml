@@ -8,7 +8,7 @@ env:
   SERVER_USER: hmawani
   SERVER_IP: ${{ secrets.SERVER_IP }}
   APP_DIR: "/home/hmawani/app/hm-web"
-  YARN: "/home/hmawani/.asdf/shims/yarn"
+  NPM: "/home/hmawani/.asdf/shims/npm"
 
 jobs:
   deploy:
@@ -28,8 +28,8 @@ jobs:
             export GIT_SSH_COMMAND='ssh -i /home/hmawani/.ssh/nabeegh_github' &&
             cd ${APP_DIR} &&
             git pull origin main &&
-            $YARN install --frozen-lockfile &&
-            $YARN build &&
+            $NPM ci &&
+            $NPM run build &&
             cp -r /home/hmawani/app/hm-web/build/* /var/www/hmawani-web/ &&
             echo 'Deployment successful!'"
 
