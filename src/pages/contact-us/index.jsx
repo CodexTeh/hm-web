@@ -187,16 +187,16 @@ const ContactPage = () => {
     const win = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
 
     // If popup blocked or not opened, fallback to mailto
-    if (!win) {
-      window.location.href = buildMailtoUrl();
-    } else {
-      setAlert({
-        type: 'success',
-        message: rtl
-          ? 'تم فتح نافذة البريد لإرسال رسالتك.'
-          : 'Email compose window opened. You can send your message there.',
-      });
-    }
+    // if (!win) {
+    //   window.location.href = buildMailtoUrl();
+    // } else {
+    //   setAlert({
+    //     type: 'success',
+    //     message: rtl
+    //       ? 'تم فتح نافذة البريد لإرسال رسالتك.'
+    //       : 'Email compose window opened. You can send your message there.',
+    //   });
+    // }
   };
 
   const whatsappNumber = process.env.VITE_WHATSAPP_NUMBER || '+96898890195';

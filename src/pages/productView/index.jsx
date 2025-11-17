@@ -31,6 +31,9 @@ import {
   GetSubCategories,
   GetCategories,
   GetProducts,
+  GetOfferProducts,
+  GetFlashSaleOfferProducts,
+  GetNewArrivalProducts,
   GetAllProductsCount,
   GetProductsLoading,
   GetCartDetails,
@@ -47,6 +50,7 @@ import SharePopover from "components/ShareButon";
 import BackButton from "components/BackButton";
 import CartFloatButton from "../products/CartFloatButton";
 import CardDrawer from "../products/CardDrawer/CartDrawer";
+import { useLocation } from "react-router-dom";
 
 export const ProductView = () => {
   const router = useRouter();
@@ -57,6 +61,7 @@ export const ProductView = () => {
   // Language/RTL
   const language = GetLanguage(); // 'en' | 'ar'
   const isRTL = language === "ar";
+  const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -137,7 +142,16 @@ export const ProductView = () => {
 
   const allCategories = GetCategories();
   const subCategories = GetSubCategories();
-  const products = GetProducts();
+  let products;
+  if (pathname === "/offers") {
+    products = GetOfferProducts();
+  } else if (pathname === "/new-arrivals") {
+    products = GetNewArrivalProducts();
+  } else if (pathname === "/flashSale") {
+    products = GetFlashSaleOfferProducts();
+  } else {
+    products = GetProducts();
+  }
   const itemsCount = GetAllProductsCount();
   const isFetching = GetProductsLoading();
   const cartDetails = GetCartDetails();
@@ -474,11 +488,11 @@ export const ProductView = () => {
 
   return (
     <Box sx={{ padding: 3, marginTop: 15 }}>
-      <BackButton routeToHome={true}/>
+      <BackButton routeToHome={true} />
 
       <Grid container spacing={2}>
         {/* Left Section: Carousel */}
-        <Grid item size={{ xs:12, md:6 }}>
+        <Grid item size={{ xs: 12, md: 6 }}>
           {/* <Box
               sx={{
                 display: 'flex',
@@ -501,7 +515,7 @@ export const ProductView = () => {
         </Grid>
 
         {/* Right Section: Details */}
-        <Grid item size={{ xs:12, md:6 }}>
+        <Grid item size={{ xs: 12, md: 6 }}>
           <Box
             sx={{
               display: "flex",

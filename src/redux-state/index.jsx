@@ -1,20 +1,20 @@
-import { combineReducers } from 'redux';
-import createSagaMiddleware from 'redux-saga';
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from "redux";
+import createSagaMiddleware from "redux-saga";
+import { configureStore } from "@reduxjs/toolkit";
 
-import { persistStore, persistReducer, createMigrate } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer, createMigrate } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-import onboardingReducer from './onboarding/reducer';
-import commonReducer from './common/reducer';
-import mySaga from './sagas';
+import onboardingReducer from "./onboarding/reducer";
+import commonReducer from "./common/reducer";
+import mySaga from "./sagas";
 
 // Step 1: Create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
 const migrations = {
   0: (state) => ({
-    ...state
+    ...state,
   }),
   1: (state) => ({
     ...state,
@@ -26,12 +26,6 @@ const migrations = {
       user: null,
     },
   }),
-  2: (state) => ({
-    ...state,
-    common: {
-      loginModal: false,
-    },
-  }),
 };
 
 // Combine your reducers
@@ -41,19 +35,20 @@ const combinedReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   blacklist: [],
   migrate: createMigrate(migrations, { debug: false }),
   storage,
-  version: 0
+  version: 3,
 };
 const rootReducer = persistReducer(persistConfig, combinedReducer);
 // Step 2: Set up the store with sagaMiddleware and other middlewares
 
 const store = configureStore({
-  devTools: process.env.NODE_ENV !== 'production',
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
-  reducer: rootReducer
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(sagaMiddleware),
+  reducer: rootReducer,
 });
 
 // Step 3: Create the persistor

@@ -47,6 +47,9 @@ const INITIAL_STATE = {
   productsByCategoryLoading: false,
   editProductLoading: false,
   products: [],
+  offerProducts: [],
+  newArrivalProducts: [],
+  flashSaleProducts: [],
   toggleToast: false,
   toastType: "",
   toastMessage: "",
@@ -145,13 +148,18 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, productsLoading: true };
 
     case GET_PRODUCTS_SUCCESS: {
-      console.log('yoyo1', payload);
-      const { data, loadFromButton} = payload;
+      const pathname = window.location.pathname;
+
+      const { data, loadFromButton } = payload;
+      let key = "products";
+      if (pathname === "/offers") key = "offerProducts";
+      else if (pathname === "/new-arrivals") key = "newArrivalProducts";
+      else if (pathname === "/flashSale") key = "flashSaleProducts";
       if (!loadFromButton) {
         return {
           ...state,
           productsLoading: false,
-          products: data?.products?.filter(
+          [key]: data?.products?.filter(
             (item) =>
               item.image_urls &&
               item?.image_urls?.trim() !== "[]" &&
@@ -169,16 +177,15 @@ export default (state = INITIAL_STATE, action) => {
           ) || [];
 
         // If it's page 1 (first load), replace the list; otherwise, append
-        const isFirstPage =
-          data?.page === 0 || !state.products?.length;
-        const mergedProducts = [...state.products, ...filteredProducts];
+        const isFirstPage = data?.page === 0 || !state?.[key]?.length;
+        const mergedProducts = [...state?.[key], ...filteredProducts];
         const uniqueProducts = mergedProducts.filter(
           (p, index, self) => index === self.findIndex((x) => x.id === p.id)
         );
         return {
           ...state,
           productsLoading: false,
-          products: isFirstPage ? filteredProducts : uniqueProducts,
+          [key]: isFirstPage ? filteredProducts : uniqueProducts,
           totalProducts: data?.count,
         };
       }

@@ -113,7 +113,7 @@ const CheckoutPage = () => {
       // );
       dispatch(toggleToast(true, getOrderMessage(data), "success"));
       dispatch(emptyCart());
-      router.push("/orders");
+      router.push(null, "/orders");
     });
     return () => {
       channel.unbind(constants.order);

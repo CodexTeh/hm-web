@@ -106,9 +106,9 @@ const ProductCatalog = () => {
     setOpenEditModal(false);
   };
 
-  useEffect(() => {
-    dispatch(getProductCatalog());
-  }, [])
+  // useEffect(() => {
+  //   dispatch(getProductCatalog());
+  // }, [])
 
 
 

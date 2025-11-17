@@ -2,31 +2,36 @@ import {
   useParams,
   useLocation,
   useNavigate,
-  useMatch
-} from 'react-router-dom';
-import queryString from 'query-string';
+  useMatch,
+} from "react-router-dom";
+import queryString from "query-string";
 
 export default function useRouter() {
   const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const match = useMatch('');
+  const match = useMatch("");
 
   // Return our custom router object
   return {
     // Navigation helpers
-    push: (url) => navigate(url),
+    // push: (url) => navigate(url),
     replace: (url) => navigate(url, { replace: true }),
-    back: (state = null, fallback = '/home') => {
-      
+    back: (state = null, fallback = "/home") => {
       if (state) {
-        sessionStorage.setItem('__router_back_state', JSON.stringify(state));
+        sessionStorage.setItem("__router_back_state", JSON.stringify(state));
       }
       if (window.history.length > 1) {
         navigate(-1);
       } else {
         navigate(fallback);
       }
+    },
+    push: (state = null, url) => {
+      if (state) {
+        sessionStorage.setItem("__router_back_state", JSON.stringify(state));
+      }
+      navigate(url);
     },
 
     // Basic router info
@@ -35,12 +40,12 @@ export default function useRouter() {
     // Combine params + query
     query: {
       ...queryString.parse(location.search),
-      ...params
+      ...params,
     },
 
     // Expose raw router objects
     match,
     location,
-    navigate
+    navigate,
   };
 }

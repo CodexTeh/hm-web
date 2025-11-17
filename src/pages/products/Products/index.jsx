@@ -40,8 +40,6 @@ import BackButton from "components/BackButton";
 import Timer from "components/Timer";
 import {
   getProducts,
-  getProductCatalog,
-  getCategories,
   getSaleTimers,
   getProductsSuccess,
 } from "redux-state/common/action";
@@ -213,8 +211,8 @@ const ProductCardView = () => {
   }, [from, to, isRTL]);
 
   useEffect(() => {
-    dispatch(getProductCatalog());
-    dispatch(getCategories());
+    // dispatch(getProductCatalog());
+    // dispatch(getCategories());
   }, [dispatch]);
 
   const InputTextField = useCallback(
@@ -519,15 +517,15 @@ const ProductCardView = () => {
       setTimerExpiry(null);
   }, [pathname]);
 
-  useEffect(() => {
-    // When filter changes, scroll the view to the top of the page
-    if (filter && Object.keys(filter).length > 0) {
-      window.scrollTo({
-        top: isMobile ? 20 : 900,
-        behavior: "smooth", // change to 'instant' if you want no animation
-      });
-    }
-  }, [filter]);
+  // useEffect(() => {
+  //   // When filter changes, scroll the view to the top of the page
+  //   if (filter && Object.keys(filter).length > 0) {
+  //     window.scrollTo({
+  //       top: isMobile ? 20 : 900,
+  //       behavior: "smooth", // change to 'instant' if you want no animation
+  //     });
+  //   }
+  // }, [filter]);
 
   return (
     <Box sx={{ background: colorPalette.greyBackground }}>

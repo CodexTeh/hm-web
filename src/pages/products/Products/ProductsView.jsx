@@ -21,6 +21,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   GetUser,
   GetProducts,
+  GetOfferProducts,
+  GetFlashSaleOfferProducts,
+  GetNewArrivalProducts,
   GetCartDetails,
   GetProductCatalogs,
 } from "redux-state/selectors";
@@ -43,7 +46,16 @@ const ProductsView = ({
   const router = useRouter();
   const { pathname } = useLocation();
 
-  let products = GetProducts();
+  let products;
+  if (pathname === "/offers") {
+    products = GetOfferProducts();
+  } else if (pathname === "/new-arrivals") {
+    products = GetNewArrivalProducts();
+  } else if (pathname === "/flashSale") {
+    products = GetFlashSaleOfferProducts();
+  } else {
+    products = GetProducts();
+  }
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -277,7 +289,7 @@ const ProductsView = ({
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push(`/product/${product?.barcode}`);
+                    router.push(null, `/product/${product?.barcode}`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >

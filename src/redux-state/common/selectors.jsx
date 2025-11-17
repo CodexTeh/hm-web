@@ -6,6 +6,15 @@ export const GetProductsLoading = () =>
 export const GetProducts = () =>
   useSelector(
     (state) => state.common.products);
+export const GetOfferProducts = () =>
+  useSelector(
+    (state) => state.common.offerProducts);
+export const GetFlashSaleOfferProducts = () =>
+  useSelector(
+    (state) => state.common.flashSaleProducts);
+export const GetNewArrivalProducts = () =>
+  useSelector(
+    (state) => state.common.newArrivalProducts);
 export const GetAllProductsCount = () =>
   useSelector(
     (state) => state.common.totalProductsByCategory);

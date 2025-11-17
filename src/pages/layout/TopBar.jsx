@@ -12,10 +12,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
 import { useTheme, createTheme } from "@mui/material/styles";
 import { Chip, ThemeProvider, useMediaQuery } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import logo from "assets/icons/logo.png";
 import SearchBar from "components/SearchBar";
-import useRouter from 'helpers/useRouter';
+import useRouter from "helpers/useRouter";
 import { useDispatch } from "react-redux";
 import { removeToken } from "helpers/tokenActions";
 import { GetLanguage, GetUser } from "redux-state/selectors";
@@ -31,22 +31,27 @@ const TopBar = () => {
   const router = useRouter();
   const { pathname } = useLocation();
 
-  const pages = React.useMemo(() => ({
-    en: ["Home", "New Arrivals", "Offers", "Flash Sale", "Contact Us"],
-    ar: ["بيت", "الوافدون الجدد", "العروض", "بيع فلاش", "اتصل بنا"],
-  }), []);
+  const pages = React.useMemo(
+    () => ({
+      en: ["Home", "New Arrivals", "Offers", "Flash Sale", "Contact Us"],
+      ar: ["بيت", "الوافدون الجدد", "العروض", "بيع فلاش", "اتصل بنا"],
+    }),
+    []
+  );
 
   const settings = {
     en: [
       { title: "Profile", path: `/profile/${user?._id}` },
-      { title: 'Wishlist', path: '/wishlist' },
-      { title: 'My Orders', path: '/orders' },
-      { title: "Logout", path: '/' }],
+      { title: "Wishlist", path: "/wishlist" },
+      { title: "My Orders", path: "/orders" },
+      { title: "Logout", path: "/" },
+    ],
     ar: [
       { title: "الملف الشخصي", path: `/profile/${user?._id}` },
-      { title: 'قائمة الرغبات', path: '/wishlist' },
-      { title: 'طلباتي', path: '/orders' },
-      { title: "تسجيل الخروج", path: '/' }],
+      { title: "قائمة الرغبات", path: "/wishlist" },
+      { title: "طلباتي", path: "/orders" },
+      { title: "تسجيل الخروج", path: "/" },
+    ],
   };
 
   // State for menu/drawer
@@ -68,19 +73,22 @@ const TopBar = () => {
   }, [language]);
 
   // Handlers
-  const routeToPath = useCallback((path) => router.push(`${path}`), [router]);
+  const routeToPath = useCallback(
+    (path) => router.push(null, `${path}`),
+    [router]
+  );
 
   const onClickPage = useCallback(
     (page) => {
-      if (page === pages[language][0]) window.location.replace("/home");
-      else if (page === pages[language][1]) window.location.replace("/new-arrivals");
-      else if (page === pages[language][2]) window.location.replace("/offers");
-      else if (page === pages[language][3]) window.location.replace("/flashSale");
-      else if (page === pages[language][4]) window.location.replace("/contact-us");
+      if (language && page === pages[language][0]) router.push({ isRender: true }, "/home");
+      else if (page === pages[language][1]) router.push({ isRender: true }, "/new-arrivals");
+      else if (page === pages[language][2]) router.push({ isRender: true }, "/offers");
+      else if (page === pages[language][3]) router.push({ isRender: true }, "/flashSale");
+      else if (page === pages[language][4]) router.push({ isRender: true }, "/contact-us");
 
       setDrawerOpen(false); // Always close drawer if on mobile
     },
-    [language, pages, setDrawerOpen]
+    [language, pages, router]
   );
 
   const handleLanguageChange = (newLang) => dispatch(changeLanguage(newLang));
@@ -91,50 +99,62 @@ const TopBar = () => {
 
   // Drawer for mobile nav
   const toggleDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) return;
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    )
+      return;
     setDrawerOpen(open);
   };
 
   // Search overlay
-  const renderSearchOverlay = React.useCallback(() => (
-    <Box
-      sx={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "rgba(255, 255, 255, 0.7)",
-        backdropFilter: "blur(10px)",
-        zIndex: 1,
-      }}
-    >
+  const renderSearchOverlay = React.useCallback(
+    () => (
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
           height: "100%",
+          background: "rgba(255, 255, 255, 0.7)",
+          backdropFilter: "blur(10px)",
+          zIndex: 1,
         }}
       >
-        <SearchBar setHasScrolled={setHasScrolled} />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <SearchBar setHasScrolled={setHasScrolled} />
+        </Box>
       </Box>
-    </Box>
-  ), []);
+    ),
+    []
+  );
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" sx={{
-        background: colorPalette.white,
-        transition: "box-shadow 0.3s",
-      }}>
-        <Toolbar sx={{
-          minHeight: { xs: 64, md: 80 },
-          px: { xs: 1, md: 4 },
-          display: "flex",
-          // flexDirection: language === "ar" ? "row-reverse" : "row",
-          justifyContent: "space-between"
-        }}>
+      <AppBar
+        position="static"
+        sx={{
+          background: colorPalette.white,
+          transition: "box-shadow 0.3s",
+        }}
+      >
+        <Toolbar
+          sx={{
+            minHeight: { xs: 64, md: 80 },
+            px: { xs: 1, md: 4 },
+            display: "flex",
+            // flexDirection: language === "ar" ? "row-reverse" : "row",
+            justifyContent: "space-between",
+          }}
+        >
           {/* Left side: Hamburger on mobile, logo always */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isMobile && (
@@ -142,7 +162,6 @@ const TopBar = () => {
                 edge="end"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-
                 sx={{ mr: 0, ml: language === "ar" ? 3 : -1.5 }}
               >
                 <MenuIcon />
@@ -152,9 +171,9 @@ const TopBar = () => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                cursor: 'pointer'
+                cursor: "pointer",
               }}
-              onClick={() => routeToPath('/home')}
+              onClick={() => routeToPath("/home")}
             >
               <img
                 src={logo}
@@ -174,20 +193,33 @@ const TopBar = () => {
           {/* Middle: Navigation (hidden on mobile) */}
           {!isMobile && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {pages[language].map((page, idx) => {
-                const routes = ["/home", "/new-arrivals", "/offers", "/flashSale", "/contact-us"];
+              {pages[language]?.map((page, idx) => {
+                const routes = [
+                  "/home",
+                  "/new-arrivals",
+                  "/offers",
+                  "/flashSale",
+                  "/contact-us",
+                ];
                 const route = routes[idx];
                 const isActive = pathname === route;
 
                 const showNewBadge = route === "/new-arrivals"; // 👈 condition for badge
 
                 return (
-                  <Box key={idx} sx={{ position: "relative", display: "inline-flex" }}>
+                  <Box
+                    key={idx}
+                    sx={{ position: "relative", display: "inline-flex" }}
+                  >
                     <Button
                       onClick={() => onClickPage(page)}
                       sx={{
-                        color: isActive ? colorPalette.white : colorPalette.black,
-                        background: isActive ? colorPalette.theme : "transparent",
+                        color: isActive
+                          ? colorPalette.white
+                          : colorPalette.black,
+                        background: isActive
+                          ? colorPalette.theme
+                          : "transparent",
                         fontWeight: 600,
                         fontSize: 14,
                         mx: 0.5,
@@ -218,24 +250,26 @@ const TopBar = () => {
                 );
               })}
             </Box>
-
           )}
 
           {/* Right: Search, Language, Avatar */}
-          <Box sx={{
-            display: "flex",
-            alignItems: "center",
-            // direction: "ltr",
-            p: 0,
-            m: 0,
-            gap: { xs: 0.2, sm: 1.5, md: 2 }
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              // direction: "ltr",
+              p: 0,
+              m: 0,
+              gap: { xs: 0.2, sm: 1.5, md: 2 },
+            }}
+          >
             {/* Search Icon */}
             <IconButton
               aria-label="search"
               onClick={() => setHasScrolled(true)}
               sx={{
-                color: colorPalette.black, p: 0,
+                color: colorPalette.black,
+                p: 0,
                 m: 0,
               }}
             >
@@ -243,12 +277,14 @@ const TopBar = () => {
             </IconButton>
 
             {/* Language Switcher */}
-            <Box sx={{
-              display: "flex",
-              flexDirection: { xs: "row", md: "row" },
-              gap: { xs: 0.5, md: 1 },
-              alignItems: "center"
-            }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "row", md: "row" },
+                gap: { xs: 0.5, md: 1 },
+                alignItems: "center",
+              }}
+            >
               <Button
                 size="small"
                 onClick={() => handleLanguageChange("en")}
@@ -257,7 +293,8 @@ const TopBar = () => {
                   textTransform: "none",
                   fontSize: isMobile ? 10 : 14,
                   border: `1px solid ${colorPalette.theme}`,
-                  backgroundColor: language === "en" ? colorPalette.theme : "transparent",
+                  backgroundColor:
+                    language === "en" ? colorPalette.theme : "transparent",
                   color: language === "en" ? "#fff" : colorPalette.theme,
                   minWidth: 35,
                   width: { xs: 35, md: "auto" },
@@ -273,7 +310,8 @@ const TopBar = () => {
                   textTransform: "none",
                   fontSize: isMobile ? 10 : 14,
                   border: `1px solid ${colorPalette.theme}`,
-                  backgroundColor: language === "ar" ? colorPalette.theme : "transparent",
+                  backgroundColor:
+                    language === "ar" ? colorPalette.theme : "transparent",
                   color: language === "ar" ? "#fff" : colorPalette.theme,
                   minWidth: 30,
                   width: { xs: 35, md: "auto" },
@@ -293,7 +331,8 @@ const TopBar = () => {
                   textTransform: "none",
                   fontSize: isMobile ? 10 : 14,
                   border: `1px solid ${colorPalette.theme}`,
-                  backgroundColor: language === "ar" ? colorPalette.theme : "transparent",
+                  backgroundColor:
+                    language === "ar" ? colorPalette.theme : "transparent",
                   color: language === "ar" ? "#fff" : colorPalette.theme,
                   minWidth: 30,
                   width: { xs: 35, md: "auto" },
@@ -301,8 +340,7 @@ const TopBar = () => {
               >
                 {language === "ar" ? "ينضم" : "Login"}
               </Button>
-            )
-            }
+            )}
 
             {/* --- Drawer for mobile navigation --- */}
             <Drawer
@@ -310,7 +348,7 @@ const TopBar = () => {
               open={drawerOpen}
               onClose={toggleDrawer(false)}
               PaperProps={{
-                sx: { width: 220, p: 2, bgcolor: colorPalette.white }
+                sx: { width: 220, p: 2, bgcolor: colorPalette.white },
               }}
             >
               <Box
@@ -319,11 +357,17 @@ const TopBar = () => {
                   mt: 2,
                   display: "flex",
                   flexDirection: "column",
-                  gap: 1
+                  gap: 1,
                 }}
               >
-                {pages[language].map((page, idx) => {
-                  const routes = ["/home", "/new-arrivals", "/offers", "/flashSale", "/contact-us"];
+                {pages[language]?.map((page, idx) => {
+                  const routes = [
+                    "/home",
+                    "/new-arrivals",
+                    "/offers",
+                    "/flashSale",
+                    "/contact-us",
+                  ];
                   const route = routes[idx];
                   const isActive = pathname === route;
                   const showNewBadge = route === "/new-arrivals"; // 👈 condition for badge
@@ -349,18 +393,23 @@ const TopBar = () => {
                         key={idx}
                         onClick={() => onClickPage(page)}
                         sx={{
-                          justifyContent: language === "ar" ? "flex-end" : "flex-start",
-                          color: isActive ? colorPalette.white : colorPalette.black,
-                          background: isActive ? colorPalette.theme : "transparent",
+                          justifyContent:
+                            language === "ar" ? "flex-end" : "flex-start",
+                          color: isActive
+                            ? colorPalette.white
+                            : colorPalette.black,
+                          background: isActive
+                            ? colorPalette.theme
+                            : "transparent",
                           fontWeight: 500,
                           width: "100%",
-                          textAlign: language === "ar" ? "right" : "left"
+                          textAlign: language === "ar" ? "right" : "left",
                         }}
                       >
                         {page}
                       </Button>
                     </>
-                  )
+                  );
                 })}
               </Box>
             </Drawer>
@@ -391,28 +440,33 @@ const TopBar = () => {
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                   keepMounted
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
                   {settings[language].map((setting, index) => (
                     <MenuItem key={index} onClick={handleCloseUserMenu}>
-                      <Box onClick={() => {
-                        if (setting.title === 'Logout' || setting.title === "تسجيل الخروج") {
-                          dispatch(logout());
-                          // dispatch(emptyCart());
-                          removeToken();
-                        } else {
-                          routeToPath(setting.path);
-                        }
-                      }}>
+                      <Box
+                        onClick={() => {
+                          if (
+                            setting.title === "Logout" ||
+                            setting.title === "تسجيل الخروج"
+                          ) {
+                            dispatch(logout());
+                            // dispatch(emptyCart());
+                            removeToken();
+                          } else {
+                            routeToPath(setting.path);
+                          }
+                        }}
+                      >
                         <Typography>{setting.title}</Typography>
                       </Box>
                     </MenuItem>

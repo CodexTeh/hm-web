@@ -31,7 +31,7 @@ const CheckoutButton = ({ isRTL, handleDrawerClose }) => {
         onClick={() => {
           handleDrawerClose();
           if (!user) return dispatch(openLoginModal(true));
-          router.push('/checkout')
+          router.push(null, '/checkout')
         }}
         sx={{
           display: 'flex',

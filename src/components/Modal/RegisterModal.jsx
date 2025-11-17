@@ -120,14 +120,14 @@ const RegisterModal = ({ handleClose }) => {
           {isRTL ? "بالتسجيل، أنت توافق على" : "By signing up, you agree to our"}{" "}
           <Typography
             component="span"
-            onClick={() => router.push("/terms")}
+            onClick={() => router.push(null, "/terms")}
             sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
           >
             {text.terms}
           </Typography>{" "}
           &{" "}
           <Typography
-            onClick={() => router.push("/return-policy")}
+            onClick={() => router.push(null, "/return-policy")}
             component="span"
             sx={{ color: colorPalette.theme, fontWeight: "bold", cursor: "pointer" }}
           >
