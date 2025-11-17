@@ -39,10 +39,7 @@ export default defineConfig(async ({ mode }) => {
               content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
               safelist: {
                 standard: [/^Mui/, /^css-/, /^makeStyles-/],
-                deep: [
-                  /^leaflet/,
-                  /^Toastify/,
-                ],
+                deep: [/^leaflet/, /^Toastify/],
                 greedy: [/^product-/, /^custom-/],
               },
               variables: true,
@@ -182,6 +179,7 @@ export default defineConfig(async ({ mode }) => {
     define: {
       __APP_ENV__: JSON.stringify(mode),
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+      "process.env": safeEnv,
     },
 
     preview: {
