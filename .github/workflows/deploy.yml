@@ -28,7 +28,7 @@ jobs:
             export GIT_SSH_COMMAND='ssh -i /home/hmawani/.ssh/nabeegh_github' &&
             cd ${APP_DIR} &&
             git pull origin main &&
-            rm -f package-lock.json && $NPM install &&
+            rm -f package-lock.json && $NPM install --legacy-peer-deps &&
             $NPM run build &&
             cp -r /home/hmawani/app/hm-web/build/* /var/www/hmawani-web/ &&
             echo 'Deployment successful!'"
