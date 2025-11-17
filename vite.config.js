@@ -3,10 +3,10 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import purgeCss from "vite-plugin-purgecss";
 import critical from "rollup-plugin-critical";
-import { imagetools } from "vite-imagetools";
 import { visualizer } from "rollup-plugin-visualizer";
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
+  const { imagetools } = await import("vite-imagetools");
   const env = loadEnv(mode, process.cwd(), "");
 
   // Only expose VITE_ env vars
