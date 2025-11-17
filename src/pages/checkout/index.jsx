@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -14,7 +14,7 @@ import { GetUser, GetLanguage, GetCartDetails } from "redux-state/selectors";
 import { useDispatch } from "react-redux";
 import PhoneTextInput from "components/PhoneTextInput";
 import { emptyCart, addToCart } from "redux-state/common/action";
-import pusher from "helpers/pusherConfig";
+import { getPusher } from "helpers/pusherConfig";
 import constants from "helpers/constants";
 import useRouter from "helpers/useRouter";
 import { toggleToast } from "redux-state/common/action";
@@ -105,19 +105,34 @@ const CheckoutPage = () => {
     }
   };
 
+  const pusherRef = useRef(null);
+  const channelRef = useRef(null);
+
   useEffect(() => {
-    const channel = pusher.subscribe(constants.ORDER_PLACE_CHANNEL);
-    channel.bind(constants.order, function (data) {
-      // dispatch(
-      //   setLatestOrders(data.orderId)
-      // );
-      dispatch(toggleToast(true, getOrderMessage(data), "success"));
-      dispatch(emptyCart());
-      router.push(null, "/orders");
-    });
+    // Get a fresh, connected Pusher instance (handles reconnection after bfcache)
+    // Lazy-loads pusher-js only when needed (after login)
+    const setupPusher = async () => {
+      pusherRef.current = await getPusher();
+      channelRef.current = pusherRef.current.subscribe(constants.ORDER_PLACE_CHANNEL);
+      channelRef.current.bind(constants.order, function (data) {
+        // dispatch(
+        //   setLatestOrders(data.orderId)
+        // );
+        dispatch(toggleToast(true, getOrderMessage(data), "success"));
+        dispatch(emptyCart());
+        router.push(null, "/orders");
+      });
+    };
+
+    setupPusher();
+
     return () => {
-      channel.unbind(constants.order);
-      pusher.unsubscribe(constants.ORDER_PLACE_CHANNEL);
+      if (channelRef.current) {
+        channelRef.current.unbind(constants.order);
+        if (pusherRef.current) {
+          pusherRef.current.unsubscribe(constants.ORDER_PLACE_CHANNEL);
+        }
+      }
     };
   }, []);
 
@@ -197,7 +212,7 @@ const CheckoutPage = () => {
             spacing={3}
             sx={{ maxWidth: "1200px", width: "100%" }}
           >
-            <Grid item size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Card sx={{ marginBottom: 3, padding: 2 }}>
                 <CardContent sx={{ direction: "ltr" }}>
                   <Stepper

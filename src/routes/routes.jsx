@@ -1,18 +1,74 @@
-import React from 'react';
-import Categories from 'pages/categories';
-import Layout from 'pages/layout';
-import Products from 'pages/products';
+import React, { Suspense, lazy } from 'react';
+import { Box, CircularProgress, Fade } from '@mui/material';
+const Layout = lazy(() => import('pages/layout'));
 import ErrorElement from 'pages/error';
-import Checkout from 'pages/checkout';
-import OrderList from 'pages/orders';
-import TermsAndConditions from 'pages/terms';
-import PrivacyPolicy from 'pages/privacy-policy';
-import ReturnPolicy from 'pages/return-policy';
-import WishList from 'pages/wishlist';
-import AboutUs from 'pages/about-us';
-import UserProfile from 'pages/profile';
-import ContactUs from 'pages/contact-us';
-import { ProductView } from 'pages/productView';
+
+// Lazy load all route components for code splitting
+const Categories = lazy(() => import('pages/categories'));
+const Products = lazy(() => import('pages/products'));
+const Checkout = lazy(() => import('pages/checkout'));
+const OrderList = lazy(() => import('pages/orders'));
+const TermsAndConditions = lazy(() => import('pages/terms'));
+const PrivacyPolicy = lazy(() => import('pages/privacy-policy'));
+const ReturnPolicy = lazy(() => import('pages/return-policy'));
+const WishList = lazy(() => import('pages/wishlist'));
+const AboutUs = lazy(() => import('pages/about-us'));
+const UserProfile = lazy(() => import('pages/profile'));
+const ContactUs = lazy(() => import('pages/contact-us'));
+const ProductView = lazy(() => import('pages/productView').then(module => ({ default: module.ProductView })));
+
+// Modern loading fallback component with smooth animations
+// Optimized for best UX - subtle, elegant, and non-intrusive
+const RouteLoader = () => (
+  <Fade in={true} timeout={400}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 'calc(100vh - 80px)', // Account for header/navbar
+        width: '100%',
+        position: 'relative',
+        backgroundColor: 'transparent',
+        py: 8,
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 2,
+        }}
+      >
+        <CircularProgress
+          size={40}
+          thickness={3.6}
+          sx={{
+            color: '#632DDD',
+            '& .MuiCircularProgress-circle': {
+              strokeLinecap: 'round',
+            },
+          }}
+        />
+      </Box>
+    </Box>
+  </Fade>
+);
+
+// Wrapper component for lazy routes with Suspense
+const LazyRoute = ({ component: Component, ...props }) => (
+  <Suspense fallback={<RouteLoader />}>
+    <Component {...props} />
+  </Suspense>
+);
+
+// Wrapper component for lazy Layout with Suspense
+const LazyLayout = () => (
+  <Suspense fallback={null}>
+    <Layout />
+  </Suspense>
+);
 
 export const AppRoutes = [
   {
@@ -24,7 +80,7 @@ export const AppRoutes = [
         errorElement: <ErrorElement />,
         children: [
           {
-            element: <Layout />,
+            element: <LazyLayout />,
             key: 'layout',
             errorElement: <ErrorElement />
           },
@@ -32,105 +88,105 @@ export const AppRoutes = [
             index: true,
             path: '/',
             key: 'products',
-            element: <><Layout /><Products /></>,
+            element: <><LazyLayout /><LazyRoute component={Products} /></>,
             errorElement: <ErrorElement />
           },
           {
             index: true,
             path: '/new-arrivals',
             key: 'products',
-            element: <><Layout /><Products /></>,
+            element: <><LazyLayout /><LazyRoute component={Products} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: '/product/:barcode',
             key: 'products',
-            element: <><Layout /><ProductView /></>,
+            element: <><LazyLayout /><LazyRoute component={ProductView} /></>,
             errorElement: <ErrorElement />
           },
           {
             index: true,
             path: '/home',
             key: 'products',
-            element: <><Layout /><Products /></>,
+            element: <><LazyLayout /><LazyRoute component={Products} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'flashSale',
             key: 'flashSale',
-            element: <><Layout /><Products /></>,
+            element: <><LazyLayout /><LazyRoute component={Products} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'offers',
             key: 'offers',
-            element: <><Layout /><Products /></>,
+            element: <><LazyLayout /><LazyRoute component={Products} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'profile/:userId',
             key: 'profile',
-            element: <><Layout /><UserProfile /></>,
+            element: <><LazyLayout /><LazyRoute component={UserProfile} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'contact-us',
             key: 'contact-us',
-            element: <><Layout /><ContactUs /></>,
+            element: <><LazyLayout /><LazyRoute component={ContactUs} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'checkout',
             key: 'checkout',
-            element: <><Layout /><Checkout /></>,
+            element: <><LazyLayout /><LazyRoute component={Checkout} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'orders',
             key: 'orders',
-            element: <><Layout /><OrderList /></>,
+            element: <><LazyLayout /><LazyRoute component={OrderList} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'orders',
             key: 'orders?orderId',
-            element: <><Layout /><OrderList /></>,
+            element: <><LazyLayout /><LazyRoute component={OrderList} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'categories',
             key: 'categories',
-            element: <Categories />,
+            element: <LazyRoute component={Categories} />,
             errorElement: <ErrorElement />
           },
           {
             path: 'terms',
             key: 'terms',
-            element: <><Layout /><TermsAndConditions /></>,
+            element: <><LazyLayout /><LazyRoute component={TermsAndConditions} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'privacy-policy',
             key: 'privacy-policy',
-            element:<><Layout /> <PrivacyPolicy /></>,
+            element: <><LazyLayout /><LazyRoute component={PrivacyPolicy} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'return-policy',
             key: 'return-policy',
-            element: <><Layout /><ReturnPolicy /></>,
+            element: <><LazyLayout /><LazyRoute component={ReturnPolicy} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'about-us',
             key: 'about-us',
-            element: <><Layout /><AboutUs /></>,
+            element: <><LazyLayout /><LazyRoute component={AboutUs} /></>,
             errorElement: <ErrorElement />
           },
           {
             path: 'wishlist',
             key: 'wishlist',
-            element: <><Layout /><WishList /></>,
+            element: <><LazyLayout /><LazyRoute component={WishList} /></>,
             errorElement: <ErrorElement />
           },
         ]

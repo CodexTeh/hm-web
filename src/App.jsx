@@ -1,6 +1,15 @@
+// CRITICAL: Ensure React is imported and available before any React-dependent code
+// Import React first to ensure react-vendor chunk loads before other vendor chunks
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+// Ensure React is available globally for vendor chunks that might need it
+if (typeof window !== 'undefined' && !window.React) {
+  window.React = React;
+}
+
+// Import React-dependent packages after React is loaded
+import { createBrowserRouter, RouterProvider } from 'react-router';
 
 // State-management
 import { Provider } from 'react-redux';

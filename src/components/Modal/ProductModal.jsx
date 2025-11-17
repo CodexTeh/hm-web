@@ -304,7 +304,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
       >
         <Grid container spacing={2}>
           {/* Left Section: Carousel */}
-          <Grid item xs={12} md={6} >
+          <Grid size={{ xs: 12, md: 6 }}>
             {/* <Box
               sx={{
                 display: 'flex',
@@ -321,7 +321,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
           </Grid>
 
           {/* Right Section: Details */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', mt: -2 }}>
               <Typography variant="h1" sx={{
                 display: '-webkit-box',
@@ -512,7 +512,7 @@ export const ProductModal = ({ filter, isRTL, open, setOpen, product, imageUrls,
               }, {
                 label: isRTL ? "الباركود: " : "Item Code: ", value: product?.barcode
               }].map((attr, idx) => (
-                <Grid item xs={6} sm={6} md={4} key={idx}>
+                <Grid size={{ xs: 6, sm: 6, md: 4 }} key={idx}>
                   <Typography
                     variant="body2"
                     color="textSecondary"

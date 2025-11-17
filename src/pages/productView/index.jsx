@@ -50,7 +50,7 @@ import SharePopover from "components/ShareButon";
 import BackButton from "components/BackButton";
 import CartFloatButton from "../products/CartFloatButton";
 import CardDrawer from "../products/CardDrawer/CartDrawer";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 export const ProductView = () => {
   const router = useRouter();
@@ -492,7 +492,7 @@ export const ProductView = () => {
 
       <Grid container spacing={2}>
         {/* Left Section: Carousel */}
-        <Grid item size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           {/* <Box
               sx={{
                 display: 'flex',
@@ -515,7 +515,7 @@ export const ProductView = () => {
         </Grid>
 
         {/* Right Section: Details */}
-        <Grid item size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Box
             sx={{
               display: "flex",
@@ -765,7 +765,7 @@ export const ProductView = () => {
                 value: product?.barcode,
               },
             ].map((attr, idx) => (
-              <Grid item size={{ xs: 6, sm: 6, md: 4 }} key={idx}>
+              <Grid size={{ xs: 6, sm: 6, md: 4 }} key={idx}>
                 <Typography
                   variant="body1"
                   color="textSecondary"

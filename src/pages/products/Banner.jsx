@@ -1,160 +1,125 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { CustomCarousel } from "components/CustomCarousal";
+import React, { useMemo, useEffect } from "react";
+import { Box } from "@mui/material";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { EmblaSlider } from "components/ui/EmblaSlider";
 import { GetLanguage, GetBanners } from "redux-state/common/selectors";
-import { Box, Skeleton } from "@mui/material";
 
-/** Tiny ImageWithPlaceholder for hero banners */
-const ImageWithPlaceholder = ({ src, alt, srcSet, sizes, style }) => {
-  const [loaded, setLoaded] = useState(false);
+// Helper to build img.hmawani.com proxy URL
+const getProxyUrl = (url, height = 656) => {
+  if (!url || typeof url !== "string") return url;
+  // If already a proxy URL, return as is
+  if (url.includes("img.hmawani.com/resize")) return url;
+  // Otherwise, proxy through img.hmawani.com
+  return `https://img.hmawani.com/resize?url=${encodeURIComponent(url)}&h=${height}`;
+};
+
+const Banner = () => {
+  const language = GetLanguage();
+  const banners = GetBanners();
+  const isRTL = language === "ar";
+
+  const bannerUrls = useMemo(() => {
+    const list = (isRTL ? banners?.arBannerUrls : banners?.bannerUrls) || [];
+    return list.filter(Boolean).length > 0 ? list.filter(Boolean) : [];
+  }, [isRTL, banners]);
+
+  // Preload the first banner image for LCP optimization
+  useEffect(() => {
+    if (bannerUrls.length === 0) return;
+
+    const firstBannerUrl = bannerUrls[0];
+    const proxyUrl = getProxyUrl(firstBannerUrl);
+
+    // Check if preload link already exists
+    const existingLink = document.querySelector(`link[rel="preload"][as="image"][href="${proxyUrl}"]`);
+    if (existingLink) return;
+
+    // Create preload link
+    const preloadLink = document.createElement("link");
+    preloadLink.rel = "preload";
+    preloadLink.as = "image";
+    preloadLink.href = proxyUrl;
+    preloadLink.fetchPriority = "high";
+
+    // Add to head (prepend for early discovery)
+    document.head.insertBefore(preloadLink, document.head.firstChild);
+
+    // Cleanup on unmount or when banner URL changes
+    return () => {
+      if (document.head.contains(preloadLink)) {
+        document.head.removeChild(preloadLink);
+      }
+    };
+  }, [bannerUrls]);
+
+
+  const bannerImageStyle = {
+    width: "100%",
+    height: "656px",
+    objectFit: "contain",
+    display: "block",
+  };
+
+  const slides = useMemo(
+    () =>
+      bannerUrls.map((src, idx) => {
+        const proxyUrl = getProxyUrl(src);
+        
+        // First slide: eager load for LCP
+        if (idx === 0) {
+          return (
+            <img
+              key={idx}
+              src={proxyUrl}
+              alt={`banner-${idx + 1}`}
+              style={bannerImageStyle}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          );
+        }
+        
+        // Rest: lazy load with proxy
+        return (
+          <LazyLoadImage
+            key={idx}
+            alt={`banner-${idx + 1}`}
+            src={proxyUrl}
+            style={bannerImageStyle}
+            effect="opacity"
+          />
+        );
+      }),
+    [bannerUrls]
+  );
+
+  if (bannerUrls.length === 0) return null;
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "100%",
-        position: "relative",
+        height: "656px",
         overflow: "hidden",
       }}
-      style={style}
     >
-      {!loaded && (
-        <Skeleton
-          variant="rectangular"
-          animation="wave"
-          sx={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            top: 0,
-            left: 0,
-          }}
-        />
-      )}
-
-      {/* Use <picture> to serve WebP first if available, fallback to original */}
-      <picture>
-        {/* If your backend can serve .webp variant, construct the webp URL accordingly */}
-        {src.replace ? (
-          // example: if backend supports adding .webp or accepts format param e.g. ?fm=webp
-          <source
-            srcSet={src.replace(/\.(jpe?g|png)($|\?)/i, ".webp$2")}
-            type="image/webp"
-          />
-        ) : null}
-
-        {/* optional responsive srcSet */}
-        {srcSet ? <source srcSet={srcSet} sizes={sizes} /> : null}
-
-        <img
-          src={src}
-          alt={alt || ""}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-            transition: "opacity 300ms ease",
-            opacity: loaded ? 1 : 0,
-          }}
-          decoding="async"
-          loading="lazy" /* for hero consider 'eager' if it's above-the-fold, but we preload below */
-          srcSet={srcSet}
-          sizes={sizes}
-          onLoad={() => setLoaded(true)}
-          onError={() => setLoaded(true)}
-        />
-      </picture>
+      <EmblaSlider
+        slides={slides}
+        slidesToShow={1}
+        slidesToScroll={1}
+        autoPlay={true}
+        autoPlayInterval={5000}
+        loop={true}
+        isRTL={isRTL}
+        showArrows={true}
+        height={656}
+        maxHeight={656}
+        width="100%"
+        objectFit="contain"
+      />
     </Box>
   );
-};
-
-const Banner = () => {
-  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-
-  const language = GetLanguage();
-  const banners = GetBanners();
-
-  const isRTL = language === "ar";
-
-  // ensure we return a stable array of URLs (fallback to local asset)
-  const bannerUrls = useMemo(() => {
-    const list = (isRTL ? banners?.arBannerUrls : banners?.bannerUrls) || [];
-    // remove falsy, ensure strings
-    return list.filter(Boolean).length > 0 ? list.filter(Boolean) : null;
-  }, [isRTL, banners]);
-
-  // Preload first banner (LCP): create an early <link rel=preload> or Image() object
-  useEffect(() => {
-    if (banners?.length > 0) {
-      const first = bannerUrls[0];
-      if (!first) return;
-
-      // 1) Create a <link rel=preload> (preferred for LCP)
-      try {
-        const link = document.createElement("link");
-        link.rel = "preload";
-        link.as = "image";
-        link.href = first;
-        document.head.appendChild(link);
-        // remove after a while (optional)
-        return () => {
-          document.head.removeChild(link);
-        };
-      } catch (err) {
-        // fallback: instantiate Image to warm the cache
-        const img = new Image();
-        img.src = first;
-      }
-    }
-  }, [bannerUrls, banners?.length]);
-
-  const handleImageChange = (index) => setCurrentBannerIndex(index);
-
-  // helper to generate srcSet if your backend supports width param e.g. ?w=
-  const makeSrcSet = (url) => {
-    // naive example: if url supports query param width
-    if (!url) return null;
-    try {
-      const u300 = `${url}${url.includes("?") ? "&" : "?"}w=600`;
-      const u768 = `${url}${url.includes("?") ? "&" : "?"}w=900`;
-      const u1200 = `${url}${url.includes("?") ? "&" : "?"}w=1400`;
-      return `${u300} 600w, ${u768} 900w, ${u1200} 1400w`;
-    } catch {
-      return null;
-    }
-  };
-
-  return bannerUrls?.length > 0 ? (
-    <CustomCarousel
-      selectedIndex={currentBannerIndex}
-      handleImageChange={handleImageChange}
-      images={bannerUrls}
-      isRTL={isRTL}
-      hasChildImages={false}
-      showThumbs={false}
-      borderRadius={"0px"}
-      showStatus={false}
-      dimention={656}
-      maxHeight="100%"
-      width="100%"
-      height="100%"
-      renderItem={(src, idx) => {
-        const srcSet = makeSrcSet(src);
-        const loading = idx === 0 ? "eager" : "lazy";
-        return (
-          <ImageWithPlaceholder
-            key={idx}
-            src={src}
-            alt={`banner-${idx}`}
-            srcSet={srcSet}
-            sizes="100vw"
-            style={{ width: "100%", height: "100%" }}
-            loading={loading}
-          />
-        );
-      }}
-    />
-  ) : null;
 };
 
 export default Banner;

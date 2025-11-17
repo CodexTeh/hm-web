@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import {
   Container,
   Grid,
@@ -12,20 +12,18 @@ import {
   Alert,
   styled,
 } from '@mui/material';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import Footer from 'components/Footer';
 import WhatsAppButton from 'components/WhatsAppButton';
 import ContactImage from 'assets/icons/contact.jpg';
 import { GetLanguage } from "redux-state/selectors";
 import { colorPalette } from 'utils/colorPalette';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import Material-UI icons
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import BackButton from 'components/BackButton';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Lazy load the Map component
+const Map = React.lazy(() => import('./Map'));
 
 // Custom styled component for the outer container
 const StyledContactCard = styled(Box)(({ theme }) => ({
@@ -63,25 +61,6 @@ const locations = [
   { id: 3, name_en: "Al Salam Street Shop - Salalah", name_ar: "محل شارع السلام - صلالة", lat: 17.014324, lng: 54.103949 },
   { id: 4, name_en: "Al Salam Street Shop - Salalah Gharbia", name_ar: "محل شارع السلام - صلالة الغربية", lat: 17.005715, lng: 54.063577 },
 ];
-
-// Custom map icon
-const customIcon = new L.Icon({
-  iconUrl: markerIcon,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowUrl: markerShadow,
-  shadowSize: [41, 41],
-});
-
-// Map center updater for selected location
-const MapCenterUpdater = ({ lat, lng }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.setView([lat, lng], map.getZoom());
-  }, [lat, lng, map]);
-  return null;
-};
 
 const ContactPage = () => {
   const [selectedLocation, setSelectedLocation] = useState(locations[0]);
@@ -232,7 +211,7 @@ const ContactPage = () => {
       <Container maxWidth="lg" sx={{ direction: rtl ? 'rtl' : 'ltr', mb: 4 }}>
         <Grid container spacing={{ xs: 2, md: 4 }}>
           {/* Contact Info Section */}
-          <Grid item size={{xs:12, md:6}}>
+          <Grid size={{xs:12, md:6}}>
             <StyledContactCard sx={{ textAlign: rtl ? 'right' : 'left' }}>
               <Typography variant="h5" component="h2" fontWeight="bold" gutterBottom
                 sx={{ color: 'text.primary', pb: 2 }}
@@ -321,7 +300,7 @@ const ContactPage = () => {
 
 
           {/* Custom Contact Form Section (replaces Typeform) */}
-          <Grid item size={{xs:12, md:6}}>
+          <Grid size={{xs:12, md:6}}>
             <Box sx={{
               borderRadius: 2,
               height: '100%',
@@ -346,7 +325,7 @@ const ContactPage = () => {
 
               <Box component="form" noValidate onSubmit={handleSubmit}>
                 <Grid container spacing={2} direction={rtl ? 'row-reverse' : 'row'}>
-                  <Grid item size={{ xs:12, sm:6 }}>
+                  <Grid size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'الاسم الكامل' : 'Full Name'}
@@ -361,7 +340,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item size={{ xs:12, sm:6 }}>
+                  <Grid size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'البريد الإلكتروني' : 'Email'}
@@ -377,7 +356,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item size={{ xs:12, sm:6 }}>
+                  <Grid size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'رقم الهاتف' : 'Phone'}
@@ -392,7 +371,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item size={{ xs:12, sm:6 }}>
+                  <Grid size={{ xs:12, sm:6 }}>
                     <TextField
                       fullWidth
                       label={rtl ? 'الموضوع' : 'Subject'}
@@ -407,7 +386,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item size={{xs:12}}>
+                  <Grid size={{xs:12}}>
                     <TextField
                       fullWidth
                       label={rtl ? 'الرسالة' : 'Message'}
@@ -423,7 +402,7 @@ const ContactPage = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -447,7 +426,7 @@ const ContactPage = () => {
 
 
           {/* Location Selector */}
-          <Grid item size={{xs:12, md:4}}>
+          <Grid size={{xs:12, md:4}}>
             <FormControl fullWidth sx={{ mt: { xs: 2, md: -4 } }}>
               <Typography
                 sx={{
@@ -470,19 +449,23 @@ const ContactPage = () => {
           </Grid>
 
           {/* Map Section */}
-          <Grid item size={{xs:12}}>
+          <Grid size={{xs:12}}>
             <Box mt={2} mb={4} sx={{ height: { xs: 230, sm: 320, md: 400 }, width: '100%' }}>
-              <MapContainer
-                center={[selectedLocation.lat, selectedLocation.lng]}
-                zoom={15}
-                style={{ height: '100%', width: '100%', borderRadius: 8 }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Marker icon={customIcon} position={[selectedLocation.lat, selectedLocation.lng]}>
-                  <Popup>{rtl ? selectedLocation.name_ar : selectedLocation.name_en}</Popup>
-                </Marker>
-                <MapCenterUpdater lat={selectedLocation.lat} lng={selectedLocation.lng} />
-              </MapContainer>
+              <Suspense fallback={
+                <div style={{ 
+                  height: '100%', 
+                  width: '100%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  backgroundColor: '#f5f5f5'
+                }}>
+                  Loading map...
+                </div>
+              }>
+                <Map selectedLocation={selectedLocation} rtl={rtl} />
+              </Suspense>
             </Box>
           </Grid>
         </Grid>

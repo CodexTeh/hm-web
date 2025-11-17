@@ -1,5 +1,7 @@
 import React from 'react';
-import { Edit, Inventory } from '@mui/icons-material';
+import Edit from '@mui/icons-material/Edit';
+import Inventory from '@mui/icons-material/Inventory';
+
 import { ToolTip } from '../ToolTip';
 const rotatedStyle = {
   transform: 'rotate(40deg)' // Rotate the icon by 180 degrees

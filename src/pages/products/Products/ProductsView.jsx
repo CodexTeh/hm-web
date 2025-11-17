@@ -30,7 +30,7 @@ import {
 import { addToCart } from "redux-state/common/action";
 import { colorPalette } from "utils/colorPalette";
 import EmptyView from "./EmptyView";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 const ProductsView = ({
   hasMoreItems,
@@ -256,7 +256,6 @@ const ProductsView = ({
 
             return (
               <Grid
-                item
                 size={{
                   xs: products.length > 1 ? 6 : 12,
                   sm: products.length > 1 ? 6 : 12,
@@ -326,11 +325,20 @@ const ProductsView = ({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      width: "100%",
+                      height: isMobile ? "100px" : "150px",
+                      minHeight: isMobile ? "100px" : "150px",
                     }}
                   >
                     <LazyLoadImage
                       alt={product?.website_name}
+                      width={isMobile ? "100%" : "100%"}
                       height={isMobile ? "100" : "150"}
+                      style={{
+                        objectFit: "contain",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                      }}
                       src={
                         imageUrls?.length > 0
                           ? `https://img.hmawani.com/resize?url=${imageUrls[0]}&h=150`

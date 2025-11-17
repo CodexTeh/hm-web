@@ -33,7 +33,7 @@ const DeliveryCardSelection = ({ selectedDeliveryOption, setSelectedDeliveryOpti
   return (
     <Grid container spacing={2}>
       {deliveryOptions.map((option) => (
-        <Grid item xs={12} sm={6} md={4} key={option.title}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={option.title}>
           <Card
             onClick={() => handleCardClick(option.title)}
             sx={{

@@ -11,7 +11,7 @@ import { GetProfile, GetProfileLoading } from "redux-state/selectors";
 import { getProfile } from "redux-state/actions";
 import { GetLanguage } from "redux-state/common/selectors";
 
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import OrderList from "../orders";
 import { useIsSmallScreen } from "../../theme";
@@ -91,7 +91,7 @@ const UserProfile = () => {
             {/* Profile Fields */}
             <Grid container spacing={2}>
               {/* Username */}
-              <Grid item size={{ xs: 12 }}>
+              <Grid size={{ xs: 12 }}>
                 <Box display="flex" alignItems="center">
                   <Typography
                     variant={isMobile ? "subtitle1" : "h6"}
@@ -105,7 +105,7 @@ const UserProfile = () => {
                 </Box>
               </Grid>
               {/* Email */}
-              <Grid item size={{ xs: 12 }}>
+              <Grid size={{ xs: 12 }}>
                 <Box display="flex" alignItems="center">
                   <Typography
                     variant={isMobile ? "subtitle1" : "h6"}
@@ -119,7 +119,7 @@ const UserProfile = () => {
                 </Box>
               </Grid>
               {/* Contact */}
-              <Grid item size={{ xs: 12 }}>
+              <Grid size={{ xs: 12 }}>
                 <Box display="flex" alignItems="center">
                   <Typography
                     variant={isMobile ? "subtitle1" : "h6"}
@@ -133,7 +133,7 @@ const UserProfile = () => {
                 </Box>
               </Grid>
               {/* Address */}
-              <Grid item size={{ xs: 12 }}>
+              <Grid size={{ xs: 12 }}>
                 <Box display="flex" alignItems="center">
                   <Typography
                     variant={isMobile ? "subtitle1" : "h6"}

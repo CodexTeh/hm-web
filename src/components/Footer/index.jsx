@@ -9,14 +9,16 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { GetLanguage } from "redux-state/selectors";
-import {
-  Facebook,
-  KeyboardArrowUp,
-  Apple,
-  Android
-} from "@mui/icons-material";
+import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
+import Apple from "@mui/icons-material/Apple";
+import Android from "@mui/icons-material/Android";
 // keep qrcode import but don't render it until after mount
 import { QRCodeCanvas } from "qrcode.react";
+// Social media icons
+import facebookIcon from "assets/icons/facebook.png";
+import instagramIcon from "assets/icons/instagram.png";
+import tiktokIcon from "assets/icons/tiktok.png";
+import snapchatIcon from "assets/icons/snapchat.png";
 
 const Footer = () => {
   // minimal synchronous work on render
@@ -24,10 +26,17 @@ const Footer = () => {
   const rtl = language === "ar";
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const iosLink = useMemo(() => "https://apps.apple.com/app/hm-awani/id6752559648", []);
-  const androidLink = useMemo(() => "https://play.google.com/store/apps/details?id=com.hmawani&pcampaignid=web_share", []);
+  const iosLink = useMemo(
+    () => "https://apps.apple.com/app/hm-awani/id6752559648",
+    []
+  );
+  const androidLink = useMemo(
+    () =>
+      "https://play.google.com/store/apps/details?id=com.hmawani&pcampaignid=web_share",
+    []
+  );
   // const androidLink = useMemo(() => "https://play.google.com/store/apps/details?id=com.workvize.bloomfieldmtn&hl=en", []);
 
   // Defer heavy QR rendering until after mount to avoid blocking first paint
@@ -38,12 +47,41 @@ const Footer = () => {
     return () => window.clearTimeout(id);
   }, []);
 
+  // Track scroll position to show/hide back to top button
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const scrollThreshold = 300; // Show button after scrolling 300px
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setShowBackToTop(scrollY > scrollThreshold);
+    };
+
+    // Check initial scroll position
+    handleScroll();
+
+    // Add scroll event listener with throttling for better performance
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [scrollThreshold]);
+
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const convertToArabicDigits = (str) => {
-    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
     return str.replace(/[0-9]/g, (digit) => arabicDigits[parseInt(digit)]);
   };
   const currentYear = new Date().getFullYear(); // Get current year
@@ -69,13 +107,10 @@ const Footer = () => {
       <Grid
         container
         spacing={3}
-        sx={{
-          flexDirection: rtl ? "row-reverse" : "row",
-          maxWidth: "100%",
-        }}
+        sx={{ flexDirection: rtl ? "row-reverse" : "row", maxWidth: "100%" }}
       >
         {/* About */}
-        <Grid item size={{ xs:6, sm:6, md:2 }}>
+        <Grid size={{ xs: 6, sm: 6, md: 2 }}>
           <Typography
             variant="body1"
             fontWeight={600}
@@ -92,7 +127,7 @@ const Footer = () => {
         </Grid>
 
         {/* Policies */}
-        <Grid item size={{ xs:6, sm:6, md:2 }}>
+        <Grid size={{ xs: 6, sm: 6, md: 2 }}>
           <Typography
             variant="body1"
             fontWeight={600}
@@ -102,20 +137,38 @@ const Footer = () => {
             {rtl ? "سياساتنا" : "OUR POLICIES"}
           </Typography>
           <Box>
-            <Link href="/return-policy" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
+            <Link
+              href="/return-policy"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block", mb: 0.7 }}
+            >
               {rtl ? "سياسة الإرجاع" : "Return Policy"}
             </Link>
-            <Link href="/terms" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
+            <Link
+              href="/terms"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block", mb: 0.7 }}
+            >
               {rtl ? "الشروط والأحكام" : "Terms & Conditions"}
             </Link>
-            <Link href="/privacy-policy" fontSize={13} color="inherit" underline="hover" sx={{ display: "block" }}>
+            <Link
+              href="/privacy-policy"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block" }}
+            >
               {rtl ? "سياسة الخصوصية" : "Privacy Policy"}
             </Link>
           </Box>
         </Grid>
 
         {/* Information */}
-        <Grid item size={{ xs:6, sm:6, md:2 }}>
+        <Grid size={{ xs: 6, sm: 6, md: 2 }}>
           <Typography
             variant="body1"
             fontWeight={600}
@@ -125,64 +178,166 @@ const Footer = () => {
             {rtl ? "المعلومات" : "INFORMATION"}
           </Typography>
           <Box>
-            <Link href="/about-us" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
+            <Link
+              href="/about-us"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block", mb: 0.7 }}
+            >
               {rtl ? "معلومات عنا" : "About Us"}
             </Link>
-            <Link href="/contact-us" fontSize={13} color="inherit" underline="hover" sx={{ display: "block" }}>
+            <Link
+              href="/contact-us"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block" }}
+            >
               {rtl ? "اتصل بنا" : "Contact Us"}
             </Link>
           </Box>
         </Grid>
 
         {/* Help */}
-        <Grid item size={{ xs:6, sm:6, md:2 }}>
-          <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
+        <Grid size={{ xs: 6, sm: 6, md: 2 }}>
+          <Typography
+            variant="body1"
+            fontWeight={600}
+            gutterBottom
+            sx={{ fontSize: { xs: 15, sm: 16 } }}
+          >
             {rtl ? "تحتاج إلى مساعدة؟" : "NEED HELP?"}
           </Typography>
           <Box>
-            <Link href="/orders" fontSize={13} color="inherit" underline="hover" sx={{ display: "block", mb: 0.7 }}>
+            <Link
+              href="/orders"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block", mb: 0.7 }}
+            >
               {rtl ? "تتبع طلبك" : "Track Your Order"}
             </Link>
-            <Link href="/contact-us" fontSize={13} color="inherit" underline="hover" sx={{ display: "block" }}>
+            <Link
+              href="/contact-us"
+              fontSize={13}
+              color="inherit"
+              underline="hover"
+              sx={{ display: "block" }}
+            >
               {rtl ? "طلب الخدمة عبر الإنترنت" : "Online Service Request"}
             </Link>
           </Box>
         </Grid>
 
         {/* App Download Cards */}
-        <Grid item size={{ xs:12, sm:6, md:3 }}>
-          <Typography variant="body1" fontWeight={600} gutterBottom sx={{ fontSize: { xs: 15, sm: 16 } }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Typography
+            variant="body1"
+            fontWeight={600}
+            gutterBottom
+            sx={{ fontSize: { xs: 15, sm: 16 } }}
+          >
             {rtl ? "امسح QR أو اضغط للتنزيل" : "SCAN OR CLICK TO DOWNLOAD APP"}
           </Typography>
           <Box
             sx={{
               display: "flex",
-              flexDirection: 'row',
+              flexDirection: "row",
               gap: 1,
-              alignItems: 'center',
+              alignItems: "center",
             }}
           >
             {/* iOS Card */}
-            <Box sx={{ bgcolor: "#2b2b2b", borderRadius: 2, p: 1, display: "flex", alignItems: "center", flexDirection: 'column', textAlign: 'center' }}>
+            <Box
+              sx={{
+                bgcolor: "#2b2b2b",
+                borderRadius: 2,
+                p: 1,
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                textAlign: "center",
+              }}
+            >
               <Apple fontSize="small" />
-              <Box component="a" href={iosLink} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", p: 1, mt: 1, bgcolor: "#1f1f1f", borderRadius: 1.5 }}>
+              <Box
+                component="a"
+                href={iosLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  display: "inline-flex",
+                  p: 1,
+                  mt: 1,
+                  bgcolor: "#1f1f1f",
+                  borderRadius: 1.5,
+                }}
+              >
                 {showQR ? (
-                  <QRCodeCanvas value={iosLink} size={qrSize} bgColor="#1f1f1f" fgColor="#ffffff" />
+                  <QRCodeCanvas
+                    value={iosLink}
+                    size={qrSize}
+                    bgColor="#1f1f1f"
+                    fgColor="#ffffff"
+                  />
                 ) : (
                   // light placeholder avoids heavy canvas at first paint
-                  <Box sx={{ width: qrSize, height: qrSize, bgcolor: "#111", borderRadius: 0.5 }} />
+                  <Box
+                    sx={{
+                      width: qrSize,
+                      height: qrSize,
+                      bgcolor: "#111",
+                      borderRadius: 0.5,
+                    }}
+                  />
                 )}
               </Box>
             </Box>
 
             {/* Android Card */}
-            <Box sx={{ bgcolor: "#2b2b2b", borderRadius: 2, p: 1, display: "flex", alignItems: "center", flexDirection: 'column', textAlign: 'center' }}>
+            <Box
+              sx={{
+                bgcolor: "#2b2b2b",
+                borderRadius: 2,
+                p: 1,
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                textAlign: "center",
+              }}
+            >
               <Android fontSize="small" />
-              <Box component="a" href={androidLink} target="_blank" rel="noopener noreferrer" sx={{ display: "inline-flex", p: 1, mt: 1, bgcolor: "#1f1f1f", borderRadius: 1.5 }}>
+              <Box
+                component="a"
+                href={androidLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  display: "inline-flex",
+                  p: 1,
+                  mt: 1,
+                  bgcolor: "#1f1f1f",
+                  borderRadius: 1.5,
+                }}
+              >
                 {showQR ? (
-                  <QRCodeCanvas value={androidLink} size={qrSize} bgColor="#1f1f1f" fgColor="#ffffff" />
+                  <QRCodeCanvas
+                    value={androidLink}
+                    size={qrSize}
+                    bgColor="#1f1f1f"
+                    fgColor="#ffffff"
+                  />
                 ) : (
-                  <Box sx={{ width: qrSize, height: qrSize, bgcolor: "#111", borderRadius: 0.5 }} />
+                  <Box
+                    sx={{
+                      width: qrSize,
+                      height: qrSize,
+                      bgcolor: "#111",
+                      borderRadius: 0.5,
+                    }}
+                  />
                 )}
               </Box>
             </Box>
@@ -191,16 +346,33 @@ const Footer = () => {
       </Grid>
 
       {/* Social Icons */}
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: { xs: 2, sm: 3 }, mt: { xs: 3, sm: 4 } }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: { xs: 2, sm: 3 },
+          mt: { xs: 3, sm: 4 },
+        }}
+      >
         <IconButton
           component="a"
           href={process.env.VITE_HM_FACEBOOK_URL}
           target="_blank"
           rel="noopener noreferrer"
-          sx={{ color: "#fff", "&:hover": { backgroundColor: "#444" }, fontSize: 30 }}
+          sx={{
+            color: "#fff",
+            "&:hover": { backgroundColor: "#444" },
+          }}
           aria-label="Open Facebook"
         >
-          <Facebook fontSize="inherit" />
+          <img
+            src={facebookIcon}
+            alt="Facebook"
+            style={{ width: 30, height: 30, borderRadius: "50%" }}
+            loading="lazy"
+            decoding="async"
+          />
         </IconButton>
 
         <IconButton
@@ -212,9 +384,9 @@ const Footer = () => {
           aria-label="Open Instagram"
         >
           <img
-            style={{ width: 30, height: 30 }}
-            src="https://img.icons8.com/?size=80&id=ZRiAFreol5mE&format=png"
-            alt="instagram"
+            src={instagramIcon}
+            alt="Instagram"
+            style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"
             decoding="async"
           />
@@ -229,9 +401,9 @@ const Footer = () => {
           aria-label="Open TikTok"
         >
           <img
-            style={{ width: 30, height: 30 }}
-            src="https://img.icons8.com/?size=48&id=118640&format=png"
-            alt="tiktok"
+            src={tiktokIcon}
+            alt="TikTok"
+            style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"
             decoding="async"
           />
@@ -246,9 +418,9 @@ const Footer = () => {
           aria-label="Open SnapChat"
         >
           <img
-            style={{ width: 30, height: 30 }}
-            src="https://app.snapchat.com/web/deeplink/snapcode?username=hmawaniwebstore&type=SVG&bitmoji=enable"
-            alt="snapchat"
+            src={snapchatIcon}
+            alt="Snapchat"
+            style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"
             decoding="async"
           />
@@ -256,14 +428,43 @@ const Footer = () => {
       </Box>
 
       {/* Back to Top Button */}
-      <Box sx={{ position: "fixed", bottom: "12px", [rtl ? "right" : "left"]: "16px", zIndex: 1000 }}>
-        <IconButton onClick={scrollToTop} sx={{ backgroundColor: "#fff", color: "#333", borderRadius: "50%", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", "&:hover": { backgroundColor: "#ddd" } }} aria-label={rtl ? "العودة للأعلى" : "Back to top"}>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "12px",
+          [rtl ? "right" : "left"]: "16px",
+          zIndex: 1000,
+          opacity: showBackToTop ? 1 : 0,
+          visibility: showBackToTop ? "visible" : "hidden",
+          transform: showBackToTop ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s ease-in-out",
+          pointerEvents: showBackToTop ? "auto" : "none",
+        }}
+      >
+        <IconButton
+          onClick={scrollToTop}
+          sx={{
+            backgroundColor: "#fff",
+            color: "#333",
+            borderRadius: "50%",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+            "&:hover": { backgroundColor: "#ddd" },
+          }}
+          aria-label={rtl ? "العودة للأعلى" : "Back to top"}
+        >
           <KeyboardArrowUp />
         </IconButton>
       </Box>
 
       {/* Footer Bottom Bar */}
-      <Box sx={{ borderTop: "1px solid #444", mt: { xs: 3, sm: 4 }, pt: 2, textAlign: "center" }}>
+      <Box
+        sx={{
+          borderTop: "1px solid #444",
+          mt: { xs: 3, sm: 4 },
+          pt: 2,
+          textAlign: "center",
+        }}
+      >
         <Typography variant="body2" sx={{ fontSize: { xs: 12, sm: 13 } }}>
           {rtl
             ? `© ${arabicYear} اتش ام للأواني مؤسسة حسين بن علوي مقيبل للتجارة`

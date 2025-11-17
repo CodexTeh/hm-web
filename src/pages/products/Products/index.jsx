@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import TuneIcon from "@mui/icons-material/Tune";
 import Refresh from "@mui/icons-material/Refresh";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -25,7 +25,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import moment from "moment-timezone";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { useTimer } from "react-timer-hook";
 import {
   GetAllProductsCount,
@@ -153,9 +158,9 @@ const ProductCardView = () => {
         const saleType = pathname === "/flashSale" ? "flashSale" : "offer";
         const saleTimer = timers.find((timer) => timer.saleType === saleType);
         if (saleTimer) {
-          const currentTime = moment(); // Current local time
+          const currentTime = dayjs(); // Current local time
           // Parse the sale times
-          const endSaleTime = moment(saleTimer.endSale).local();
+          const endSaleTime = dayjs(saleTimer.endSale);
 
           const localWallTime = saleTimer.endSale.replace(/Z$/, "");
 
@@ -348,9 +353,9 @@ const ProductCardView = () => {
         const saleType = pathname === "/flashSale" ? "flashSale" : "offer";
         const saleTimer = timers.find((timer) => timer.saleType === saleType);
         if (saleTimer) {
-          const currentTime = moment(); // Current local time
+          const currentTime = dayjs(); // Current local time
           // Parse the sale times
-          const endSaleTime = moment(saleTimer.endSale);
+          const endSaleTime = dayjs(saleTimer.endSale);
 
           if (endSaleTime.isAfter(currentTime)) {
             const filterKey =

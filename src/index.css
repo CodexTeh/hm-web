@@ -61,22 +61,6 @@ code {
   background-color: white; /* Thumb hover color */
 }
 
-.carousel .thumb.selected {
-  border: none !important;
-}
-
-.carousel .thumbs {
-  margin-left: 50px;
-  margin-right: 50px;
-}
-
-.carousel .slider-wrapper {
-  direction: ltr !important;
-}
-
-.carousel .carousel-status {
-  direction: ltr !important;
-}
 
 .css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
   color: #009f7f !important;

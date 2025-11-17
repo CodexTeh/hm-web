@@ -1,12 +1,12 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Typography,
-} from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
+// import {
+//   Box,
+//   Button,
+//   Typography,
+// } from '@mui/material';
+// import HomeIcon from '@mui/icons-material/Home';
 import useRouter from 'helpers/useRouter';
-import { colorPalette } from 'utils/colorPalette';
+// import { colorPalette } from 'utils/colorPalette';
 import { GetLanguage } from "redux-state/selectors";
 import { useIsSmallScreen } from '../../theme';
 

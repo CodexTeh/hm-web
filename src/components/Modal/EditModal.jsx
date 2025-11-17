@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { Select, MenuItem, FormControl, OutlinedInput } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CircularProgress, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
 import { UploadIcon } from 'assets/icons/UploadIcon';
 import { editProduct } from 'redux-state/actions';
 import { GetEditProductLoading, GetCategories } from 'redux-state/common/selectors';

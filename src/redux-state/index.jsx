@@ -47,7 +47,18 @@ const rootReducer = persistReducer(persistConfig, combinedReducer);
 const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(sagaMiddleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/REGISTER",
+          "persist/PAUSE",
+          "persist/PURGE",
+          "persist/FLUSH",
+        ],
+      },
+    }).concat(sagaMiddleware),
   reducer: rootReducer,
 });
 

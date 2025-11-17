@@ -1,124 +1,162 @@
-import React, { useMemo } from "react";
-import Slider from "react-slick";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
-// Import useNavigate from react-router-dom
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { EmblaSlider } from "components/ui/EmblaSlider";
 import expressDeliveryImage from "assets/icons/express.png";
 import couponImage from "assets/icons/coupon.png";
 import flashsaleImage from "assets/icons/flashsale.png";
 import freeDeliveryImage from "assets/icons/free-delivery.png";
 import { GetLanguage } from "redux-state/selectors";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { resizeImage } from "helpers/resizeImage";
+
+// Global cache for resized images to prevent duplicate processing
+const resizedImageCache = new Map();
+
+// Component for individual offer image with lazy resizing
+const OfferImage = ({ offer, idx, onOfferClick, rtl, offerImageStyle, slidesToShow }) => {
+  const [resizedUrl, setResizedUrl] = useState(null);
+  const [shouldResize, setShouldResize] = useState(idx < slidesToShow);
+  const blobUrlRef = useRef(null);
+  const imageRef = useRef(null);
+
+  // Only resize visible images immediately, defer offscreen images
+  useEffect(() => {
+    if (!shouldResize || !offer.src) return;
+
+    let isMounted = true;
+
+    const resizeImageAsync = async () => {
+      try {
+        // Check cache first to avoid duplicate processing
+        const cacheKey = `${offer.src}-622x288-webp`;
+        if (resizedImageCache.has(cacheKey)) {
+          const cached = resizedImageCache.get(cacheKey);
+          if (isMounted) {
+            setResizedUrl(cached);
+          }
+          return;
+        }
+
+        // Resize to actual display size (622x288) and convert to WebP for better compression
+        const resized = await resizeImage(offer.src, 622, 288, 0.85, 'webp');
+        if (isMounted) {
+          if (resized && typeof resized === "string") {
+            if (resized.startsWith("blob:")) {
+              blobUrlRef.current = resized;
+              // Cache the resized image
+              resizedImageCache.set(cacheKey, resized);
+            }
+            setResizedUrl(resized);
+          } else {
+            // If resize returns invalid value, use original
+            setResizedUrl(offer.src);
+          }
+        }
+      } catch (error) {
+        console.error(`Error resizing image ${idx}:`, error);
+        if (isMounted) {
+          setResizedUrl(offer.src);
+        }
+      }
+    };
+
+    resizeImageAsync();
+
+    return () => {
+      isMounted = false;
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
+      }
+    };
+  }, [shouldResize, offer.src, idx]);
+
+  // Use Intersection Observer to trigger resizing when image is about to be visible
+  useEffect(() => {
+    if (shouldResize || idx < slidesToShow) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldResize(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: "50px" } // Start loading 50px before it's visible
+    );
+
+    if (imageRef.current) {
+      observer.observe(imageRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [shouldResize, idx, slidesToShow]);
+
+  // Use resized URL if available, otherwise fallback to original image
+  // Always show the original image as fallback to ensure images are visible
+  const imageSrc = resizedUrl || offer.src;
+
+  // Don't render if no image source is available
+  if (!imageSrc || !offer.src) {
+    return null;
+  }
+
+  return (
+    <a
+      ref={imageRef}
+      style={{ cursor: "pointer" }}
+      onClick={() => onOfferClick(offer.route, idx)}
+    >
+      {imageSrc && (
+        <LazyLoadImage
+          width="462"
+          height="230"
+          alt={`Offer ${idx + 1}`}
+          src={imageSrc}
+          style={offerImageStyle}
+          effect="opacity"
+          threshold={100}
+          visibleByDefault={idx < slidesToShow}
+          onError={(e) => {
+            // Fallback to original if resized image fails to load
+            if (resizedUrl && e.target.src !== offer.src) {
+              e.target.src = offer.src;
+            }
+          }}
+        />
+      )}
+    </a>
+  );
+};
 
 export const OffersSlider = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
-  const language = GetLanguage?.() || "en"; // fallback for SSR/undefined
+  const navigate = useNavigate();
+  const language = GetLanguage?.() || "en";
   const rtl = language === "ar";
 
-  // --- NextArrow and PrevArrow components (no changes needed here) ---
-  function NextArrow(props) {
-    const { className, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "50%",
-          width: "40px",
-          height: "40px",
-          marginLeft: 20,
-          marginRight: 20,
-          zIndex: 1,
-          cursor: "pointer",
-        }}
-        onClick={onClick}
-      />
-    );
-  }
-
-  function PrevArrow(props) {
-    const { className, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "50%",
-          width: "40px",
-          height: "40px",
-          marginLeft: 20,
-          marginRight: 20,
-          zIndex: 1,
-          cursor: "pointer",
-        }}
-        onClick={onClick}
-      />
-    );
-  }
-  // -------------------------------------------------------------------
-
-  const settings = useMemo(
-    () => ({
-      infinite: true,
-      speed: 500,
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 2000,
-      cssEase: "linear",
-      nextArrow: <NextArrow />,
-      prevArrow: <PrevArrow />,
-      arrows: true,
-      rtl: language === "ar",
-      lazyLoad: false,
-      responsive: [
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 1,
-          },
-        },
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 2,
-          },
-        },
-      ],
-    }),
-    [language]
-  );
-
-  // Modify `images` to be an array of objects, each with src and route
-  const offersData = useMemo(
+  // Original image sources
+  const originalOffersData = useMemo(
     () => [
       { src: flashsaleImage, route: "/flashSale" },
       { src: couponImage, route: "/offers" },
-      { src: freeDeliveryImage }, // Changed '/test' to match your request
-      { src: expressDeliveryImage }, // Changed '/test1' to match your request
+      { src: freeDeliveryImage },
+      { src: expressDeliveryImage },
     ],
     []
   );
 
-  const offerImageStyle = useMemo(
-    () => ({
-      width: "93%",
-      height: "auto",
-      borderRadius: "6px",
-      objectFit: "contain",
-      outline: "none",
-      // cursor: "pointer", // Cursor will be handled by the parent Box's sx prop for clickability
-    }),
-    []
-  );
+  const offerImageStyle = {
+    width: "100%",
+    height: "230px",
+    borderRadius: "6px",
+    objectFit: "contain",
+    display: "block",
+  };
 
   // Function to handle image click
   const handleOfferClick = (route, idx) => {
@@ -135,36 +173,54 @@ export const OffersSlider = () => {
     }
   };
 
+  // Convert offersData to slides with lazy-loaded resizing
+  const slidesToShow = 3; // Default slides to show
+  const slides = useMemo(
+    () =>
+      originalOffersData.map((offer, idx) => (
+        <OfferImage
+          key={idx}
+          offer={offer}
+          idx={idx}
+          onOfferClick={handleOfferClick}
+          rtl={rtl}
+          offerImageStyle={offerImageStyle}
+          slidesToShow={slidesToShow}
+        />
+      )),
+    [originalOffersData, rtl, slidesToShow]
+  );
+
   return (
     <Box
       sx={{
-        width: "99%",
         alignSelf: "center",
         margin: "0 auto",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-        paddingBottom: "1rem",
+        paddingBlock: "1rem",
+        paddingInline: "1rem",
+        overflow: "hidden",
       }}
     >
-      <Slider {...settings}>
-        {offersData.map((offer, idx) => (
-          // Add onClick to the Box component
-          <Box
-            key={idx}
-            sx={{
-              padding: "25px 40px 10px 10px",
-              cursor: "pointer", // Make the entire clickable area indicate interactivity
-            }}
-            onClick={() => handleOfferClick(offer.route, idx)}
-          >
-            <LazyLoadImage
-              width="93%"
-              alt={`Offer ${idx + 1}`}
-              src={offer.src}
-            />
-          </Box>
-        ))}
-      </Slider>
+      <EmblaSlider
+        slides={slides}
+        slidesToShow={3}
+        slidesToScroll={1}
+        autoPlay={true}
+        autoPlayInterval={5000}
+        loop={true}
+        isRTL={rtl}
+        showArrows={true}
+        height={230}
+        maxHeight={230}
+        width="100%"
+        objectFit="contain"
+        breakpoints={[
+          { breakpoint: 1024, slidesToShow: 2, slidesToScroll: 1 },
+          { breakpoint: 768, slidesToShow: 2, slidesToScroll: 2 },
+        ]}
+      />
     </Box>
   );
 };

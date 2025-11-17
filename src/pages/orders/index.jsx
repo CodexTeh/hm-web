@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, Suspense } from "react";
 import {
   Box,
   Grid,
@@ -26,14 +26,14 @@ import {
   GetOrders,
 } from "redux-state/selectors";
 import HomeIcon from "@mui/icons-material/Home";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import { getHeaders } from "components/TableView/getHeaders";
 import TableView from "components/TableView";
 import { getOrders, toggleToast, emptyCart } from "redux-state/actions";
 import useRouter from "helpers/useRouter";
-import Barcode from "react-barcode";
-import { useLocation, useParams } from "react-router-dom";
+const Barcode = React.lazy(() => import("react-barcode"));
+import { useLocation, useParams } from "react-router";
 
 const statusMapper = {
   processing: 1,
@@ -177,7 +177,9 @@ const OrderList = () => {
 
       const baseCells = {
         barcode: (
-          <Barcode height={20} width={1} fontSize={14} value={item.barcode} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Barcode height={20} width={1} fontSize={14} value={item.barcode} />
+          </Suspense>
         ),
         item: (
           <Box
@@ -270,7 +272,7 @@ const OrderList = () => {
       {
         label: t.date,
         value: currentOrder?.createdAt
-          ? moment(currentOrder.createdAt).format("MMMM D, YYYY")
+          ? dayjs(currentOrder.createdAt).format("MMMM D, YYYY")
           : "N/A",
       },
       {
@@ -393,7 +395,7 @@ const OrderList = () => {
       dir={isRTL ? "rtl" : "ltr"}
     >
       {infoCards.map((card, index) => (
-        <Grid key={index} item size={{ xs:12, sm:6, md:3 }}>
+        <Grid key={index} size={{ xs:12, sm:6, md:3 }}>
           <Card
             variant="outlined"
             sx={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}
@@ -416,7 +418,7 @@ const OrderList = () => {
     <Box sx={{ maxWidth: "600px" }}>
       <Grid container direction="column" spacing={2}>
         {detailsList.map((detail, index) => (
-          <Grid item key={index}>
+          <Grid key={index}>
             <Box sx={{ display: "flex" }}>
               <Typography
                 variant="body2"
@@ -598,7 +600,7 @@ const OrderList = () => {
               </Typography>
               {renderDetails(pricing)}
             </Grid> */}
-            <Grid item size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography
                 variant={isMobile ? "subtitle1" : "h6"}
                 sx={{ fontWeight: "bold", mb: 2 }}

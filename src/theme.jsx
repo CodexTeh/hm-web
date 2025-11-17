@@ -1,5 +1,4 @@
 import {
-  adaptV4Theme,
   useTheme,
   createTheme
 } from '@mui/material/styles';
@@ -143,13 +142,15 @@ const themeOptions = {
       main: '#031F46'
     }
   },
-  overrides: {
+  components: {
     MuiSvgIcon: {
-      colorAction: {
-        color: '#c4c4c4'
+      styleOverrides: {
+        colorAction: {
+          color: '#c4c4c4'
+        }
       }
     }
   }
 };
 
-export const theme = createTheme(adaptV4Theme(themeOptions));
+export const theme = createTheme(themeOptions);

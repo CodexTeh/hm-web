@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -21,7 +21,8 @@ import { removeToken } from "helpers/tokenActions";
 import { GetLanguage, GetUser } from "redux-state/selectors";
 import { logout, changeLanguage, openLoginModal } from "redux-state/actions";
 import { colorPalette } from "utils/colorPalette";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
+import { resizeImage } from "helpers/resizeImage";
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,74 @@ const TopBar = () => {
   // Responsive
   const themeInstance = useTheme();
   const isMobile = useMediaQuery(themeInstance.breakpoints.down("md"));
+
+  // Logo optimization - resize large logo to display size
+  // Initialize with original logo so it renders immediately, then optimize in background
+  const [resizedLogo, setResizedLogo] = useState(logo);
+  const logoBlobRef = useRef(null);
+
+  useEffect(() => {
+    // Resize logo to max display size (180px width for desktop, 140px for mobile)
+    // Using 225x225 to cover both cases with some buffer
+    const resizeLogo = async () => {
+      try {
+        // Check if we have a cached resized logo in sessionStorage
+        const cacheKey = 'logo-resized-225x225-webp';
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+          // Verify the cached blob URL is still valid
+          try {
+            const testImg = new Image();
+            testImg.onload = () => {
+              setResizedLogo(cached);
+            };
+            testImg.onerror = () => {
+              // Cache is invalid, remove it and resize again
+              sessionStorage.removeItem(cacheKey);
+              performResize();
+            };
+            testImg.src = cached;
+            return;
+          } catch (e) {
+            // Cache check failed, remove and resize
+            sessionStorage.removeItem(cacheKey);
+          }
+        }
+        
+        performResize();
+      } catch (error) {
+        console.error("Error in logo resize setup:", error);
+        // Keep original logo if anything fails
+      }
+    };
+
+    const performResize = async () => {
+      try {
+        // Use the imported logo
+        const resized = await resizeImage(logo, 225, 225, 0.9, 'webp');
+        if (resized && typeof resized === "string" && resized.startsWith("blob:")) {
+          logoBlobRef.current = resized;
+          // Cache the blob URL in sessionStorage (valid for this session)
+          // Note: Blob URLs are session-specific, so this cache helps within the same session
+          sessionStorage.setItem('logo-resized-225x225-webp', resized);
+          setResizedLogo(resized);
+        } else {
+          setResizedLogo(resized);
+        }
+      } catch (error) {
+        console.error("Error resizing logo:", error);
+        // Keep original logo if resize fails
+      }
+    };
+
+    resizeLogo();
+
+    return () => {
+      if (logoBlobRef.current) {
+        URL.revokeObjectURL(logoBlobRef.current);
+      }
+    };
+  }, [logo]);
 
   // Dynamic theme direction
   const theme = createTheme({
@@ -176,7 +245,7 @@ const TopBar = () => {
               onClick={() => routeToPath("/home")}
             >
               <img
-                src={logo}
+                src={resizedLogo}
                 alt="logo"
                 style={{
                   width: isMobile ? 140 : 180, // Smaller logo for mobile
@@ -373,7 +442,7 @@ const TopBar = () => {
                   const showNewBadge = route === "/new-arrivals"; // 👈 condition for badge
 
                   return (
-                    <>
+                    <React.Fragment key={idx}>
                       {showNewBadge && (
                         <Chip
                           label={language === "ar" ? "جديد" : "New"}
@@ -390,7 +459,6 @@ const TopBar = () => {
                         />
                       )}
                       <Button
-                        key={idx}
                         onClick={() => onClickPage(page)}
                         sx={{
                           justifyContent:
@@ -408,7 +476,7 @@ const TopBar = () => {
                       >
                         {page}
                       </Button>
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </Box>
