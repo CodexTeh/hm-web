@@ -111,10 +111,11 @@ const Banner = () => {
     <Box
       sx={{
         width: "100%",
-        height: `auto`,
+        height: `100%`,
         minHeight: `auto`,
         maxHeight: `${BANNER_HEIGHT}px`,
         overflow: "hidden",
+        aspectRatio: "21/9",
         // Reserve space to prevent layout shift
         position: "relative",
       }}
