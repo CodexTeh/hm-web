@@ -19,6 +19,7 @@ import { AppRoutes } from './routes/routes';
 import './index.css';
 
 import reportWebVitals from './reportWebVitals';
+import { registerServiceWorker, setupOnlineStatusListener } from './helpers/cacheUtils';
 
 const router = createBrowserRouter(AppRoutes);
 
@@ -32,6 +33,23 @@ const App = () => {
         </PersistGate>
       </Provider>
     // </React.StrictMode>
+  );
+
+  // Register service worker for browser caching
+  if (process.env.NODE_ENV === 'production') {
+    registerServiceWorker().catch((error) => {
+      console.error('Failed to register service worker:', error);
+    });
+  }
+
+  // Setup online/offline status listeners
+  setupOnlineStatusListener(
+    () => {
+      console.log('Application is back online');
+    },
+    () => {
+      console.log('Application is offline');
+    }
   );
 
   reportWebVitals();
