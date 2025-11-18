@@ -108,6 +108,11 @@ export default defineConfig(async ({ mode }) => {
           tryCatchDeoptimization: false,
         },
 
+        // Exclude Babel plugins from bundle (they're build-time tools, not runtime dependencies)
+        external: (id) => {
+          return /^@babel\/plugin-/.test(id);
+        },
+
         plugins: [
           // ⚡ Visualizer (opens report after build)
           visualizer({

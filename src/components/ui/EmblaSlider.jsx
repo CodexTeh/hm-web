@@ -119,27 +119,49 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
 
   // Handle responsive slidesToShow
   useEffect(() => {
-    if (breakpoints.length === 0) return;
+    if (breakpoints.length === 0) {
+      setCurrentSlidesToShow(slidesToShow);
+      return;
+    }
 
     const updateSlidesToShow = () => {
       const width = window.innerWidth;
-      // Sort breakpoints descending
+      
+      // Sort breakpoints ascending (smallest to largest) to find the smallest matching breakpoint
       const sorted = [...breakpoints].sort(
-        (a, b) => b.breakpoint - a.breakpoint
+        (a, b) => a.breakpoint - b.breakpoint
       );
+      
+      // Find the smallest breakpoint that width is less than or equal to
+      // This ensures the most specific (smallest) matching breakpoint is used
+      let matchedBreakpoint = null;
       for (const bp of sorted) {
         if (width <= bp.breakpoint) {
-          setCurrentSlidesToShow(bp.slidesToShow || slidesToShow);
-          return;
+          matchedBreakpoint = bp;
+          // Found the smallest matching breakpoint, use it
+          break;
         }
       }
-      setCurrentSlidesToShow(slidesToShow);
+      
+      if (matchedBreakpoint) {
+        setCurrentSlidesToShow(matchedBreakpoint.slidesToShow || slidesToShow);
+      } else {
+        // Width is larger than all breakpoints, use default
+        setCurrentSlidesToShow(slidesToShow);
+      }
     };
 
     updateSlidesToShow();
     window.addEventListener("resize", updateSlidesToShow);
     return () => window.removeEventListener("resize", updateSlidesToShow);
   }, [breakpoints, slidesToShow]);
+
+  // Reinitialize Embla when currentSlidesToShow changes
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.reInit();
+    }
+  }, [currentSlidesToShow, emblaApi]);
 
   // Imperative API
   useImperativeHandle(ref, () => ({
@@ -344,7 +366,7 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
         <div
           style={{
             display: "flex",
-            gap: slidesToShow > 1 ? "10px" : 0,
+            gap: currentSlidesToShow > 1 ? "10px" : 0,
             height: "100%",
           }}
         >

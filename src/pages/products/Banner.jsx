@@ -13,6 +13,9 @@ const getProxyUrl = (url, height = 656) => {
   return `https://img.hmawani.com/resize?url=${encodeURIComponent(url)}&h=${height}`;
 };
 
+// Banner height constant to prevent layout shifts
+const BANNER_HEIGHT = 656;
+
 const Banner = () => {
   const language = GetLanguage();
   const banners = GetBanners();
@@ -55,7 +58,8 @@ const Banner = () => {
 
   const bannerImageStyle = {
     width: "100%",
-    maxHeight: "656px",
+    height: "auto",
+    maxHeight: `${BANNER_HEIGHT}px`,
     objectFit: "contain",
     display: "block",
   };
@@ -65,7 +69,7 @@ const Banner = () => {
       bannerUrls.map((src, idx) => {
         const proxyUrl = getProxyUrl(src);
 
-        // First slide: eager load for LCP
+        // First slide: eager load for LCP with explicit dimensions
         if (idx === 0) {
           return (
             <img
@@ -76,21 +80,24 @@ const Banner = () => {
               loading="eager"
               fetchpriority="high"
               decoding="async"
+              width="1200"
+              height={"auto"}
             />
           );
         }
 
-        // Rest: lazy load with proxy
+        // Rest: lazy load with proxy and explicit dimensions
         return (
           <LazyLoadImage
             key={idx}
             alt={`banner-${idx + 1}`}
             src={proxyUrl}
             style={bannerImageStyle}
+            width="1200"
+            height={"auto"}
             effect="opacity"
             wrapperProps={{
-              // If you need to, you can tweak the effect transition using the wrapper style.
-              style: { width: "100%", height: "100%" },
+              style: { width: "100%", height: "auto" },
             }}
           />
         );
@@ -98,30 +105,47 @@ const Banner = () => {
     [bannerUrls]
   );
 
-  if (bannerUrls.length === 0) return null;
-
+  // Always render the container to reserve space and prevent layout shifts
+  // Use fixed height to maintain space even when banners are loading
   return (
     <Box
       sx={{
         width: "100%",
-        maxHeight: "656px",
+        height: `auto`,
+        minHeight: `auto`,
+        maxHeight: `${BANNER_HEIGHT}px`,
         overflow: "hidden",
+        // Reserve space to prevent layout shift
+        position: "relative",
       }}
     >
-      <EmblaSlider
-        slides={slides}
-        slidesToShow={1}
-        slidesToScroll={1}
-        autoPlay={true}
-        autoPlayInterval={5000}
-        loop={true}
-        isRTL={isRTL}
-        showArrows={true}
-        height="auto"
-        maxHeight={656}
-        width="100%"
-        objectFit="contain"
-      />
+      {bannerUrls.length > 0 ? (
+        <EmblaSlider
+          slides={slides}
+          slidesToShow={1}
+          slidesToScroll={1}
+          autoPlay={true}
+          autoPlayInterval={5000}
+          loop={true}
+          isRTL={isRTL}
+          showArrows={true}
+          height={"auto"}
+          maxHeight={BANNER_HEIGHT}
+          width="100%"
+          objectFit="contain"
+        />
+      ) : (
+        // Placeholder to maintain space while banners load
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            minHeight: `${BANNER_HEIGHT}px`,
+            backgroundColor: "rgba(0, 0, 0, 0.02)",
+          }}
+          aria-hidden="true"
+        />
+      )}
     </Box>
   );
 };

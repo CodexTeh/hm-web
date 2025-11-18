@@ -19,6 +19,7 @@ import facebookIcon from "assets/icons/facebook.png";
 import instagramIcon from "assets/icons/instagram.png";
 import tiktokIcon from "assets/icons/tiktok.png";
 import snapchatIcon from "assets/icons/snapchat.png";
+import { useResizedImage } from "helpers/resizeImage";
 
 const Footer = () => {
   // minimal synchronous work on render
@@ -91,6 +92,12 @@ const Footer = () => {
 
   // small memoized QR size
   const qrSize = useMemo(() => (isMobile ? 50 : 88), [isMobile]);
+
+  // Resize social media icons (60x60 for retina displays, displayed at 30x30)
+  const { resizedUrl: resizedFacebookIcon } = useResizedImage(facebookIcon, 60, 60, 0.9);
+  const { resizedUrl: resizedInstagramIcon } = useResizedImage(instagramIcon, 60, 60, 0.9);
+  const { resizedUrl: resizedTiktokIcon } = useResizedImage(tiktokIcon, 60, 60, 0.9);
+  const { resizedUrl: resizedSnapchatIcon } = useResizedImage(snapchatIcon, 60, 60, 0.9);
 
   return (
     <Box
@@ -367,7 +374,7 @@ const Footer = () => {
           aria-label="Open Facebook"
         >
           <img
-            src={facebookIcon}
+            src={resizedFacebookIcon}
             alt="Facebook"
             style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"
@@ -384,7 +391,7 @@ const Footer = () => {
           aria-label="Open Instagram"
         >
           <img
-            src={instagramIcon}
+            src={resizedInstagramIcon}
             alt="Instagram"
             style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"
@@ -401,7 +408,7 @@ const Footer = () => {
           aria-label="Open TikTok"
         >
           <img
-            src={tiktokIcon}
+            src={resizedTiktokIcon}
             alt="TikTok"
             style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"
@@ -418,7 +425,7 @@ const Footer = () => {
           aria-label="Open SnapChat"
         >
           <img
-            src={snapchatIcon}
+            src={resizedSnapchatIcon}
             alt="Snapchat"
             style={{ width: 30, height: 30, borderRadius: "50%" }}
             loading="lazy"

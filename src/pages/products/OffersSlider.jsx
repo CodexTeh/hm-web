@@ -114,7 +114,7 @@ const OfferImage = ({ offer, idx, onOfferClick, rtl, offerImageStyle, slidesToSh
     >
       {imageSrc && (
         <LazyLoadImage
-          width="462"
+          width="100%"
           height="auto"
           alt={`Offer ${idx + 1}`}
           src={imageSrc}
@@ -152,7 +152,7 @@ export const OffersSlider = () => {
 
   const offerImageStyle = {
     width: "100%",
-    maxHeight: "230px",
+    maxHeight: "292px",
     borderRadius: "6px",
     objectFit: "contain",
     display: "block",
@@ -174,7 +174,7 @@ export const OffersSlider = () => {
   };
 
   // Convert offersData to slides with lazy-loaded resizing
-  const slidesToShow = 3; // Default slides to show
+  const slidesToShow = 4; // Default slides to show (for 4K screens)
   const slides = useMemo(
     () =>
       originalOffersData.map((offer, idx) => (
@@ -205,7 +205,7 @@ export const OffersSlider = () => {
     >
       <EmblaSlider
         slides={slides}
-        slidesToShow={3}
+        slidesToShow={4}
         slidesToScroll={1}
         autoPlay={true}
         autoPlayInterval={5000}
@@ -213,13 +213,13 @@ export const OffersSlider = () => {
         isRTL={rtl}
         showArrows={true}
         height="auto"
-        maxHeight={230}
+        maxHeight={292}
         width="100%"
         objectFit="contain"
         breakpoints={[
-          { breakpoint: 1024, slidesToShow: 2, slidesToScroll: 1 },
-          { breakpoint: 768, slidesToShow: 2, slidesToScroll: 2 },
-          { breakpoint: 480, slidesToShow: 1, slidesToScroll: 1 },
+          { breakpoint: 2000, slidesToShow: 3, slidesToScroll: 1 },
+          { breakpoint: 1600, slidesToShow: 2, slidesToScroll: 1 },
+          { breakpoint: 1024, slidesToShow: 1, slidesToScroll: 1 },
         ]}
       />
     </Box>
