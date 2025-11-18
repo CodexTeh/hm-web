@@ -15,7 +15,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 /**
  * EmblaSlider - Simple and clean carousel component
- * 
+ *
  * Features:
  * - Uses react-lazy-load-image-component for optimized image loading
  * - Built on embla-carousel-react for smooth performance
@@ -23,9 +23,9 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
  * - Auto-play support
  * - Thumbnail support
  * - Responsive breakpoints
- * 
+ *
  * Compatible with CustomCarousel API for easy migration
- * 
+ *
  * @param {Object} props
  * @param {Array} props.images - Array of image URLs (for backward compatibility with CustomCarousel)
  * @param {Array} props.slides - Array of slide content (can be images or custom components)
@@ -96,16 +96,17 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
       align: "start",
       direction: isRTL ? "rtl" : "ltr",
       slidesToScroll,
-      breakpoints: breakpoints.length > 0
-        ? Object.fromEntries(
-            breakpoints.map((bp) => [
-              bp.breakpoint,
-              {
-                slidesToScroll: bp.slidesToScroll || slidesToScroll,
-              },
-            ])
-          )
-        : undefined,
+      breakpoints:
+        breakpoints.length > 0
+          ? Object.fromEntries(
+              breakpoints.map((bp) => [
+                bp.breakpoint,
+                {
+                  slidesToScroll: bp.slidesToScroll || slidesToScroll,
+                },
+              ])
+            )
+          : undefined,
     },
     []
   );
@@ -123,7 +124,9 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
     const updateSlidesToShow = () => {
       const width = window.innerWidth;
       // Sort breakpoints descending
-      const sorted = [...breakpoints].sort((a, b) => b.breakpoint - a.breakpoint);
+      const sorted = [...breakpoints].sort(
+        (a, b) => b.breakpoint - a.breakpoint
+      );
       for (const bp of sorted) {
         if (width <= bp.breakpoint) {
           setCurrentSlidesToShow(bp.slidesToShow || slidesToShow);
@@ -256,8 +259,8 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
               [direction === "prev" ? "left" : "right"]: 30,
               transform: "translateY(-50%)",
               zIndex: 3,
-              width: 40,
-              height: 40,
+              width: 25,
+              height: 25,
               backgroundColor: "white",
               borderRadius: "50%",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -274,13 +277,10 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
             {direction === "prev" ? (
               <ArrowBackIosIcon
                 fontSize="small"
-                sx={{ marginLeft: 0.5, color: "black" }}
+                sx={{ marginLeft: 0.5, color: "black", width: 15, height: 15 }}
               />
             ) : (
-              <ArrowForwardIosIcon
-                fontSize="small"
-                sx={{ color: "black" }}
-              />
+              <ArrowForwardIosIcon fontSize="small" sx={{ color: "black", width: 15, height: 15 }} />
             )}
           </Box>
         ),
@@ -494,4 +494,3 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
 });
 
 export default EmblaSlider;
-

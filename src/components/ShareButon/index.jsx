@@ -24,7 +24,7 @@ const SharePopover = ({
   isRTL,
 }) => {
   const caption = `${productLink}`;
-  const encodedText = encodeURIComponent(caption);
+  // const encodedText = encodeURIComponent(caption);
   
   return (
     <Popper
@@ -48,7 +48,7 @@ const SharePopover = ({
                   <XIcon size={32} round />
                 </TwitterShareButton>
                 <WhatsappShareButton
-                  url={encodedText}
+                  url={caption}
                   title={title}
                   separator=":: "
                 >
