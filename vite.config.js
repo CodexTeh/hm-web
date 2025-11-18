@@ -1,5 +1,5 @@
 import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import tsconfigPaths from "vite-tsconfig-paths";
 import purgeCss from "vite-plugin-purgecss";
 import critical from "rollup-plugin-critical";
@@ -17,14 +17,16 @@ export default defineConfig(async ({ mode }) => {
   return {
     // ⚡ Faster Dev, Pre-bundled deps
     optimizeDeps: {
-      esbuildOptions: { target: "es2020" },
+      esbuildOptions: { 
+        target: "es2022", // Modern target to avoid unnecessary transpilation
+      },
       include: ["react", "react-dom", "react-redux", "redux-persist"],
     },
 
     plugins: [
       react({
-        jsxRuntime: "automatic",
-        babel: { plugins: [] },
+        // SWC handles JSX transformation without Babel, avoiding unnecessary transpilation
+        // This eliminates the need for Babel plugins like transform-classes and transform-spread
       }),
 
       tsconfigPaths(),
@@ -32,18 +34,43 @@ export default defineConfig(async ({ mode }) => {
       // ⚡ Image optimization pipeline
       imagetools(),
 
-      // ⚡ Unused CSS removal
+      // ⚡ Unused CSS removal - aggressive purging for production
       ...(mode === "production"
         ? [
             purgeCss({
-              content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+              content: [
+                "./index.html",
+                "./public/index.html",
+                "./src/**/*.{js,jsx,ts,tsx}",
+                "./build/index.html", // Include built HTML for analysis
+              ],
               safelist: {
-                standard: [/^Mui/, /^css-/, /^makeStyles-/],
+                // Only keep MUI classes that are actually used (not all css-* classes)
+                standard: [
+                  /^Mui/, // MUI component classes
+                  /^makeStyles-/, // Legacy makeStyles
+                  // Keep specific MUI classes referenced in index.css
+                  /^css-1vdl86r-MuiTypography-root/,
+                  /^css-k7ykxg-MuiPaper-root-MuiAccordion-root/,
+                  /^css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root/,
+                  /^css-ay3cf-MuiPaper-root-MuiAppBar-root/,
+                ],
                 deep: [/^leaflet/, /^Toastify/],
                 greedy: [/^product-/, /^custom-/],
               },
+              // Remove unused CSS variables and keyframes
               variables: true,
               keyframes: true,
+              fontFace: true,
+              // More aggressive purging - extract all potential class names
+              defaultExtractor: (content) => {
+                // Extract class names, including CSS-in-JS patterns
+                const classMatches = content.match(/[A-Za-z0-9-_/:]+/g) || [];
+                // Also match className patterns and sx prop values
+                const classNameMatches = content.match(/className[=:]\s*["']([^"']+)["']/g) || [];
+                const sxMatches = content.match(/sx\s*=\s*\{[^}]*\}/g) || [];
+                return [...classMatches, ...classNameMatches, ...sxMatches];
+              },
             }),
           ]
         : []),
@@ -75,10 +102,11 @@ export default defineConfig(async ({ mode }) => {
     build: {
       outDir: "build",
       sourcemap: mode === "development",
-      cssCodeSplit: true,
+      cssCodeSplit: true, // Split CSS per route/component to reduce unused CSS
       chunkSizeWarningLimit: 1200,
 
-      target: ["chrome90", "firefox88", "safari14", "edge90", "es2020"],
+      // Modern browser targets - these browsers natively support classes, spread, etc.
+      target: ["es2022", "chrome90", "firefox88", "safari14", "edge90"],
 
       // ⚡ JS Optimization — remove unused JS aggressively
       minify: "terser",
@@ -96,9 +124,11 @@ export default defineConfig(async ({ mode }) => {
 
       // ESBuild-level treeshaking (extra layer)
       esbuild: {
-        target: "es2020",
+        target: "es2022", // Modern target - no transpilation of classes, spread, etc.
         treeShaking: true,
         pure: ["console.log"],
+        // Don't minify syntax that modern browsers support natively
+        legalComments: "none",
       },
 
       rollupOptions: {
@@ -108,10 +138,7 @@ export default defineConfig(async ({ mode }) => {
           tryCatchDeoptimization: false,
         },
 
-        // Exclude Babel plugins from bundle (they're build-time tools, not runtime dependencies)
-        external: (id) => {
-          return /^@babel\/plugin-/.test(id);
-        },
+        // No need to exclude Babel plugins anymore - we're using SWC instead
 
         plugins: [
           // ⚡ Visualizer (opens report after build)

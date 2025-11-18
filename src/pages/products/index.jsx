@@ -1,15 +1,16 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, lazy, Suspense } from 'react';
 import { useDispatch } from 'react-redux';
 import Footer from 'components/Footer';
 import { getCategories, getBanners } from 'redux-state/common/action';
 import WhatsAppButton from 'components/WhatsAppButton';
-import CardDrawer from './CardDrawer/CartDrawer';
 import CartFloatButton from './CartFloatButton';
 import Banner from './Banner';
 import ProductCardView from './Products';
 import { OffersSlider } from './OffersSlider';
 import { Box } from '@mui/material';
 import { GetCartDetails } from 'redux-state/selectors';
+
+const CardDrawer = lazy(() => import('./CardDrawer/CartDrawer'));
 
 export default function Products() {
 
@@ -47,7 +48,9 @@ export default function Products() {
       <Banner />
       <OffersSlider />
       <ProductCardView />
-      <CardDrawer open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
+      <Suspense fallback={null}>
+        <CardDrawer open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
+      </Suspense>
       <CartFloatButton open={openDrawer} handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} />
       <WhatsAppButton />
       <Footer />
