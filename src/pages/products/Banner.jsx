@@ -55,7 +55,7 @@ const Banner = () => {
 
   const bannerImageStyle = {
     width: "100%",
-    height: "656px",
+    maxHeight: "656px",
     objectFit: "contain",
     display: "block",
   };
@@ -64,7 +64,7 @@ const Banner = () => {
     () =>
       bannerUrls.map((src, idx) => {
         const proxyUrl = getProxyUrl(src);
-        
+
         // First slide: eager load for LCP
         if (idx === 0) {
           return (
@@ -79,7 +79,7 @@ const Banner = () => {
             />
           );
         }
-        
+
         // Rest: lazy load with proxy
         return (
           <LazyLoadImage
@@ -88,6 +88,10 @@ const Banner = () => {
             src={proxyUrl}
             style={bannerImageStyle}
             effect="opacity"
+            wrapperProps={{
+              // If you need to, you can tweak the effect transition using the wrapper style.
+              style: { width: "100%", height: "100%" },
+            }}
           />
         );
       }),
@@ -100,7 +104,7 @@ const Banner = () => {
     <Box
       sx={{
         width: "100%",
-        height: "656px",
+        maxHeight: "656px",
         overflow: "hidden",
       }}
     >
@@ -113,7 +117,7 @@ const Banner = () => {
         loop={true}
         isRTL={isRTL}
         showArrows={true}
-        height={656}
+        height="auto"
         maxHeight={656}
         width="100%"
         objectFit="contain"

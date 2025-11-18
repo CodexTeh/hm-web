@@ -115,7 +115,7 @@ const OfferImage = ({ offer, idx, onOfferClick, rtl, offerImageStyle, slidesToSh
       {imageSrc && (
         <LazyLoadImage
           width="462"
-          height="230"
+          height="auto"
           alt={`Offer ${idx + 1}`}
           src={imageSrc}
           style={offerImageStyle}
@@ -152,7 +152,7 @@ export const OffersSlider = () => {
 
   const offerImageStyle = {
     width: "100%",
-    height: "230px",
+    maxHeight: "230px",
     borderRadius: "6px",
     objectFit: "contain",
     display: "block",
@@ -212,13 +212,14 @@ export const OffersSlider = () => {
         loop={true}
         isRTL={rtl}
         showArrows={true}
-        height={230}
+        height="auto"
         maxHeight={230}
         width="100%"
         objectFit="contain"
         breakpoints={[
           { breakpoint: 1024, slidesToShow: 2, slidesToScroll: 1 },
           { breakpoint: 768, slidesToShow: 2, slidesToScroll: 2 },
+          { breakpoint: 480, slidesToShow: 1, slidesToScroll: 1 },
         ]}
       />
     </Box>

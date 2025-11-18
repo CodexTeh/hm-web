@@ -359,7 +359,7 @@ export const EmblaSlider = forwardRef(function EmblaSlider(
                   minWidth: 0,
                   height: "100%",
                   paddingRight:
-                    currentSlidesToShow > 1 && index < slidesToRender.length - 1
+                    currentSlidesToShow > 1 && index
                       ? "10px"
                       : 0,
                 }}
