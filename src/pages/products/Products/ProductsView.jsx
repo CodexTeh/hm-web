@@ -38,6 +38,7 @@ const ProductsView = ({
   loadProducts,
   isRTL,
   open,
+  setWishListItem = null,
   loadMore = true,
   sortBy = null,
 }) => {
@@ -288,6 +289,7 @@ const ProductsView = ({
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
+                    if(setWishListItem) setWishListItem(false);
                     router.push(null, `/product/${product?.barcode}`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}

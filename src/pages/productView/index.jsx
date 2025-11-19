@@ -458,9 +458,11 @@ export const ProductView = () => {
   };
 
   useEffect(() => {
-    checkWishlistProduct();
+    if(product) {
+      checkWishlistProduct();
+    }
     // eslint-disable-next-line
-  }, [wishListLoading]);
+  }, [wishListLoading, product]);
 
   const wishlistTooltipText = () => {
     if (isRTL) {
@@ -902,6 +904,7 @@ export const ProductView = () => {
           loadProducts={loadProducts}
           isFetching={isFetching}
           products={products}
+          setWishListItem={setWishListItem}
           isRTL={isRTL}
           open={true}
           handleOpen={() => {}}
