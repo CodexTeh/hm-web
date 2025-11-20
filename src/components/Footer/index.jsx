@@ -246,9 +246,10 @@ const Footer = () => {
             gutterBottom
             sx={{ fontSize: { xs: 15, sm: 16 } }}
           >
-            {rtl ? "امسح QR أو اضغط للتنزيل" : "SCAN OR CLICK TO DOWNLOAD APP"}
+            {rtl ? "تطبيقات الجوال قريبا..." : "Mobile apps coming soon..."}
+            {/* {rtl ? "امسح QR أو اضغط للتنزيل" : "SCAN OR CLICK TO DOWNLOAD APP"} */}
           </Typography>
-          <Box
+          {/* <Box
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -257,19 +258,19 @@ const Footer = () => {
             }}
           >
             {/* iOS Card */}
-            <Box
+            {/* <Box
               sx={{
                 bgcolor: "#2b2b2b",
                 borderRadius: 2,
                 p: 1,
                 display: "flex",
                 alignItems: "center",
-                flexDirection: "column",
+                flexDirection: "row",
                 textAlign: "center",
               }}
             >
               <Apple fontSize="small" />
-              <Box
+              {/* <Box
                 component="a"
                 href={iosLink}
                 target="_blank"
@@ -300,11 +301,11 @@ const Footer = () => {
                     }}
                   />
                 )}
-              </Box>
-            </Box>
+              </Box> */}
+            {/* </Box> */} 
 
             {/* Android Card */}
-            <Box
+            {/* <Box
               sx={{
                 bgcolor: "#2b2b2b",
                 borderRadius: 2,
@@ -316,7 +317,7 @@ const Footer = () => {
               }}
             >
               <Android fontSize="small" />
-              <Box
+              {/* <Box
                 component="a"
                 href={androidLink}
                 target="_blank"
@@ -346,9 +347,9 @@ const Footer = () => {
                     }}
                   />
                 )}
-              </Box>
-            </Box>
-          </Box>
+              </Box> */}
+            {/* </Box> */}
+          {/* </Box> */} 
         </Grid>
       </Grid>
 

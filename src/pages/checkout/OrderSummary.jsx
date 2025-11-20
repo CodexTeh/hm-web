@@ -156,6 +156,20 @@ const OrderSummary = ({ isRTL, selectedDeliveryOption, shippingAddress }) => {
             {isRTL ? cartDetails.totalPrice.toFixed(3) + " ر۔ع" : 'OMR ' + cartDetails.totalPrice.toFixed(3)}
           </Typography>
         </Box>
+        <Divider sx={{ margin: '16px 0' }} />
+        <Box
+          sx={{
+            marginTop: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant="body2"
+            color='textDisabled'
+          >
+            {isRTL ? "لا يشمل رسوم التوصيل. سيتواصل معك فريقنا عبر واتساب." : "Excluded Delivery Charges. Our team will contact you on WhatsApp."}
+          </Typography>
+        </Box>
         <Box sx={{ marginTop: 3 }}>
           <Button onClick={() => {
             if (!shippingAddress) {
