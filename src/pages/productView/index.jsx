@@ -33,6 +33,7 @@ import {
   GetProducts,
   GetOfferProducts,
   GetFlashSaleOfferProducts,
+  GetWishlistProducts,
   GetNewArrivalProducts,
   GetAllProductsCount,
   GetProductsLoading,
@@ -149,6 +150,8 @@ export const ProductView = () => {
     products = GetNewArrivalProducts();
   } else if (pathname === "/flashSale") {
     products = GetFlashSaleOfferProducts();
+  } else if (pathname === "/wishlist") {
+    products = GetWishlistProducts();
   } else {
     products = GetProducts();
   }

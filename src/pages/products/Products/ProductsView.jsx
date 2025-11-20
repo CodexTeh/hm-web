@@ -23,6 +23,7 @@ import {
   GetProducts,
   GetOfferProducts,
   GetFlashSaleOfferProducts,
+  GetWishlistProducts,
   GetNewArrivalProducts,
   GetCartDetails,
   GetProductCatalogs,
@@ -54,6 +55,8 @@ const ProductsView = ({
     products = GetNewArrivalProducts();
   } else if (pathname === "/flashSale") {
     products = GetFlashSaleOfferProducts();
+  } else if (pathname === "/wishlist") {
+    products = GetWishlistProducts();
   } else {
     products = GetProducts();
   }

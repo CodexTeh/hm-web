@@ -50,6 +50,7 @@ const INITIAL_STATE = {
   offerProducts: [],
   newArrivalProducts: [],
   flashSaleProducts: [],
+  wishlistProducts: [],
   toggleToast: false,
   toastType: "",
   toastMessage: "",
@@ -155,6 +156,7 @@ export default (state = INITIAL_STATE, action) => {
       if (pathname === "/offers") key = "offerProducts";
       else if (pathname === "/new-arrivals") key = "newArrivalProducts";
       else if (pathname === "/flashSale") key = "flashSaleProducts";
+      else if (pathname === "/wishlist") key = "wishlistProducts";
       if (!loadFromButton) {
         return {
           ...state,

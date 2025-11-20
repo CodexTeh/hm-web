@@ -12,6 +12,9 @@ export const GetOfferProducts = () =>
 export const GetFlashSaleOfferProducts = () =>
   useSelector(
     (state) => state.common.flashSaleProducts);
+export const GetWishlistProducts = () =>
+  useSelector(
+    (state) => state.common.wishlistProducts);
 export const GetNewArrivalProducts = () =>
   useSelector(
     (state) => state.common.newArrivalProducts);
