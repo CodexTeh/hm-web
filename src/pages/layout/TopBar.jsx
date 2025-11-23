@@ -150,7 +150,7 @@ const TopBar = () => {
   const onClickPage = useCallback(
     (page) => {
       if (language && page === pages[language][0]) router.push({ isRender: true }, "/home");
-      else if (page === pages[language][1]) router.push({ isRender: true }, "/new-arrivals");
+      else if (page === pages[language][1]) router.push({ isRender: false }, "/new-arrivals");
       else if (page === pages[language][2]) router.push({ isRender: true }, "/offers");
       else if (page === pages[language][3]) router.push({ isRender: true }, "/flashSale");
       else if (page === pages[language][4]) router.push({ isRender: true }, "/contact-us");
