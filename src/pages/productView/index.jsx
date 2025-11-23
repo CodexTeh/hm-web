@@ -42,7 +42,7 @@ import {
 } from "redux-state/selectors";
 import useRouter from "helpers/useRouter";
 import ProductsView from "pages/products/Products/ProductsView";
-import { getProducts, addToCart } from "redux-state/actions";
+import { getProducts, addToCart, getProductCatalog } from "redux-state/actions";
 import { Api } from "redux-state/common/api";
 import { addRemoveToWishlist } from "redux-state/actions";
 import { GetWishlistLoading, GetLanguage } from "redux-state/selectors";
@@ -326,6 +326,10 @@ export const ProductView = () => {
     fetchFeedData();
   }, [pagination.perPage, fetchFeedData]);
 
+  useEffect(() => {
+      dispatch(getProductCatalog());
+    }, [dispatch]);
+
   const allProductCatalogs = GetProductCatalogs();
   const splitByTypeAndLanguage = (array) => {
     return array.reduce((acc, item) => {
@@ -461,7 +465,7 @@ export const ProductView = () => {
   };
 
   useEffect(() => {
-    if(product) {
+    if(product && user) {
       checkWishlistProduct();
     }
     // eslint-disable-next-line
