@@ -213,11 +213,10 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_CATEGORIES_SUCCESS:
       const { category, subcategory } = payload;
-      const filterCats = category.filter((item) => item.id !== 27);
       return {
         ...state,
         getCategoriesLoading: false,
-        categories: filterCats,
+        categories: category,
         subCategories: subcategory,
       };
 

@@ -1,35 +1,37 @@
-import React, { useState } from 'react';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import { useMediaQuery, useTheme, Box } from '@mui/material';
-import { GetCategories, GetSubCategories } from 'redux-state/common/selectors';
-import { colorPalette } from 'utils/colorPalette';
-import { GetLanguage } from 'redux-state/common/selectors';
-import CategoryView from './CategoryView';
-import MenuIcon from '@mui/icons-material/Menu';
+import React, { useState } from "react";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import { useMediaQuery, useTheme, Box } from "@mui/material";
+import { GetCategories, GetSubCategories } from "redux-state/common/selectors";
+import { colorPalette } from "utils/colorPalette";
+import { GetLanguage } from "redux-state/common/selectors";
+import CategoryView from "./CategoryView";
+import MenuIcon from "@mui/icons-material/Menu";
 const CategoryDrawer = ({ setFilter, height }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const categories = GetCategories();
+  let categories = GetCategories();
+  categories = categories.filter((item) => item.id !== 27);
+
   const subCategories = GetSubCategories();
   const language = GetLanguage();
-  const isRTL = language === 'ar';
+  const isRTL = language === "ar";
 
   // Sticky sidebar style for desktop/tablet
   const sidebarStyle = {
-    position: 'sticky',
+    position: "sticky",
     top: 0,
     backgroundColor: colorPalette.white,
     width: 230,
     height: height,
-    overflowY: 'auto',
+    overflowY: "auto",
     zIndex: 15,
-    direction: isRTL ? 'rtl' : 'ltr',
+    direction: isRTL ? "rtl" : "ltr",
     p: { xs: 0, md: 2 },
-    boxShadow: { xs: 'none', md: '0px 2px 8px rgba(0,0,0,0.08)' },
+    boxShadow: { xs: "none", md: "0px 2px 8px rgba(0,0,0,0.08)" },
   };
 
   return (
@@ -44,7 +46,9 @@ const CategoryDrawer = ({ setFilter, height }) => {
             }}
           >
             <Button
-              startIcon={<MenuIcon sx={{ fontSize: 22, marginLeft: isRTL ? 1 : 0 }} />}
+              startIcon={
+                <MenuIcon sx={{ fontSize: 22, marginLeft: isRTL ? 1 : 0 }} />
+              }
               variant="contained"
               onClick={() => setDrawerOpen(true)}
               sx={{
@@ -73,7 +77,9 @@ const CategoryDrawer = ({ setFilter, height }) => {
             }}
           >
             {categories?.map((cat, index) => {
-              const subCats = subCategories.filter(sub => sub.categoryId === cat.id);
+              const subCats = subCategories.filter(
+                (sub) => sub.categoryId === cat.id
+              );
               return (
                 <CategoryView
                   subCategories={subCats}
@@ -95,7 +101,9 @@ const CategoryDrawer = ({ setFilter, height }) => {
       {!isMobile && (
         <Box sx={sidebarStyle} className="custom-scrollbar">
           {categories?.map((cat, index) => {
-            const subCats = subCategories.filter(sub => sub.categoryId === cat.id);
+            const subCats = subCategories.filter(
+              (sub) => sub.categoryId === cat.id
+            );
             return (
               <CategoryView
                 subCategories={subCats}

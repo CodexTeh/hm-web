@@ -42,7 +42,12 @@ import {
 } from "redux-state/selectors";
 import useRouter from "helpers/useRouter";
 import ProductsView from "pages/products/Products/ProductsView";
-import { getProducts, addToCart, getProductCatalog } from "redux-state/actions";
+import {
+  getProducts,
+  addToCart,
+  getProductCatalog,
+  getCategories,
+} from "redux-state/actions";
 import { Api } from "redux-state/common/api";
 import { addRemoveToWishlist } from "redux-state/actions";
 import { GetWishlistLoading, GetLanguage } from "redux-state/selectors";
@@ -188,6 +193,12 @@ export const ProductView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartDetails]);
 
+  useEffect(() => {
+    if (product && allCategories.length > 0) {
+      loadProducts();
+    }
+  }, [product, allCategories]);
+
   const handleIncrease = (product, finalPrice) => {
     const existingProductIndex = cartDetails?.items.findIndex(
       (item) => item.id === product.id
@@ -327,8 +338,9 @@ export const ProductView = () => {
   }, [pagination.perPage, fetchFeedData]);
 
   useEffect(() => {
-      dispatch(getProductCatalog());
-    }, [dispatch]);
+    dispatch(getProductCatalog());
+    dispatch(getCategories());
+  }, [dispatch]);
 
   const allProductCatalogs = GetProductCatalogs();
   const splitByTypeAndLanguage = (array) => {
@@ -356,13 +368,21 @@ export const ProductView = () => {
     } = {},
   } = splitByTypeAndLanguage(allProductCatalogs);
 
-  const category = allCategories.find(
-    (category) => category?.id?.toString() === product?.webCategory?.toString()
-  );
-  const subCategory = subCategories.find(
-    (subcategory) =>
-      subcategory?.id?.toString() === product?.subCategory?.toString()
-  );
+  const category = useMemo(() => {
+    if (product && !allCategories) return null;
+    return allCategories.find(
+      (category) =>
+        category?.id?.toString() === product?.webCategory?.toString()
+    );
+  }, [allCategories, product?.webCategory]);
+
+  const subCategory = useMemo(() => {
+    if (product && !subCategories) return null;
+    return subCategories.find(
+      (subcategory) =>
+        subcategory?.id?.toString() === product?.subCategory?.toString()
+    );
+  }, [subCategories, product?.subCategory]);
 
   const enProductSize = enSizes.find(
     (size) => size?.id?.toString() === product?.size?.toString()
