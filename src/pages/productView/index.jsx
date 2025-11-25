@@ -450,6 +450,7 @@ export const ProductView = () => {
   const images = imageUrls?.length > 0 ? imageUrls : gallery;
 
   const loadProducts = () => {
+    setRowsPerPage((prev) => prev + 50);
     const query = isRTL
       ? { arabicCategory: category?.id }
       : { webCategory: category?.id };
