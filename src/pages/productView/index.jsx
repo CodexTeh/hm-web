@@ -35,6 +35,7 @@ import {
   GetFlashSaleOfferProducts,
   GetWishlistProducts,
   GetNewArrivalProducts,
+  GetSubCatProducts,
   GetAllProductsCount,
   GetProductsLoading,
   GetCartDetails,
@@ -157,6 +158,8 @@ export const ProductView = () => {
     products = GetFlashSaleOfferProducts();
   } else if (pathname === "/wishlist") {
     products = GetWishlistProducts();
+  } else if (pathname.includes("product")) {
+    products = GetSubCatProducts();
   } else {
     products = GetProducts();
   }
@@ -472,8 +475,8 @@ export const ProductView = () => {
   const loadProducts = () => {
     setRowsPerPage((prev) => prev + 50);
     const query = isRTL
-      ? { arabicCategory: category?.id }
-      : { webCategory: category?.id };
+      ? { arabicSubCategory: subCategory?.id }
+      : { subCategory: subCategory?.id };
     dispatch(getProducts(pagination, query));
   };
 

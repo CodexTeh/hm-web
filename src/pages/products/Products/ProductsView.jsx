@@ -24,6 +24,7 @@ import {
   GetOfferProducts,
   GetFlashSaleOfferProducts,
   GetWishlistProducts,
+  GetSubCatProducts,
   GetNewArrivalProducts,
   GetCartDetails,
   GetProductCatalogs,
@@ -57,6 +58,8 @@ const ProductsView = ({
     products = GetFlashSaleOfferProducts();
   } else if (pathname === "/wishlist") {
     products = GetWishlistProducts();
+  } else if (pathname.includes("product")) {
+    products = GetSubCatProducts();
   } else {
     products = GetProducts();
   }
@@ -292,7 +295,7 @@ const ProductsView = ({
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if(setWishListItem) setWishListItem(false);
+                    if (setWishListItem) setWishListItem(false);
                     router.push(null, `/product/${product?.barcode}`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
