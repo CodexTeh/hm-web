@@ -26,6 +26,24 @@ const migrations = {
       user: null,
     },
   }),
+  2: (state) => ({
+    ...state,
+    onboarding: {
+      login: false,
+      createAccountLoading: false,
+      signInloading: false,
+      token: null,
+      user: null,
+    },
+    common: {
+      cart: {
+        items: [],
+        user: {},
+        totalPrice: 0,
+        orderDetails: {},
+      },
+    },
+  }),
 };
 
 // Combine your reducers
@@ -35,11 +53,11 @@ const combinedReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: "root",
+  key: "root3",
   blacklist: [],
   migrate: createMigrate(migrations, { debug: false }),
   storage,
-  version: 0,
+  version: 2,
 };
 const rootReducer = persistReducer(persistConfig, combinedReducer);
 // Step 2: Set up the store with sagaMiddleware and other middlewares
