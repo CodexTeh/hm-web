@@ -1,31 +1,38 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects'
-import { createAccountSuccess, forgetPasswordResponse, openLoginModal, openRegisterModal, signInSuccess, toggleToast } from '../actions';
-import { Api } from './api'
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import {
-  CREATE_ACCOUNT,
-  FORGET_PASSWORD,
-  SIGN_IN,
-} from './types'
-import { setToken } from 'helpers/tokenActions';
+  createAccountSuccess,
+  forgetPasswordResponse,
+  openLoginModal,
+  openRegisterModal,
+  signInSuccess,
+  toggleToast,
+} from "../actions";
+import { addToCart } from "../common/action";
+import { Api } from "./api";
+import { CREATE_ACCOUNT, FORGET_PASSWORD, SIGN_IN } from "./types";
+import { setToken } from "helpers/tokenActions";
 
-const getLanguage = state => state.common.language;
-
+const getLanguage = (state) => state.common.language;
+const getCart = (state) => state.common.cart;
 
 function* createAccount(action) {
-
   try {
     const language = yield select(getLanguage);
     yield call(Api.createAccount, action.payload, language);
     yield put(
-      toggleToast(true, language === 'en'? 'User created successfully!' : 'تم إنشاء المستخدم بنجاح!', 'success')
+      toggleToast(
+        true,
+        language === "en"
+          ? "User created successfully!"
+          : "تم إنشاء المستخدم بنجاح!",
+        "success"
+      )
     );
     yield put(createAccountSuccess());
     yield put(openRegisterModal(false));
     yield put(openLoginModal(true));
   } catch (error) {
-    yield put(
-      toggleToast(true, error.message, 'error')
-    );
+    yield put(toggleToast(true, error.message, "error"));
     yield put(createAccountSuccess());
     console.log("error", error);
   }
@@ -37,21 +44,37 @@ function* signIn(action) {
 
     const data = yield call(Api.signIn, action.payload, language);
     if (data && data?.info?.token) {
-      setToken(data.info.token)
+      setToken(data.info.token);
       yield put(
-        toggleToast(true, language === 'en' ? 'User login successfully!' : 'تم تسجيل دخول المستخدم بنجاح!', 'success')
+        toggleToast(
+          true,
+          language === "en"
+            ? "User login successfully!"
+            : "تم تسجيل دخول المستخدم بنجاح!",
+          "success"
+        )
       );
+      const cartItems = yield select(getCart);
+      if (cartItems) {
+        console.log('yooy12', cartItems);
+        
+        const { items, totalPrice } = cartItems;
+        const cart = {
+          items,
+          user: data?.user,
+          totalPrice,
+        };
+        yield put(addToCart(cart));
+      }
+
       yield put(signInSuccess(data));
     } else {
       yield put(signInSuccess(null));
     }
-
   } catch (error) {
-    yield put(
-      toggleToast(true, error.message, 'error')
-    );
+    yield put(toggleToast(true, error.message, "error"));
     yield put(signInSuccess(null));
-    console.log('error', error);
+    console.log("error", error);
   }
 }
 
@@ -62,7 +85,7 @@ function* forgetPassword(action) {
     const response = yield call(Api.forgetPassword, action.payload, language);
     yield put(
       forgetPasswordResponse({
-        resetPasswordStatus: response.data.message
+        resetPasswordStatus: response.data.message,
       })
     );
   } catch (error) {

@@ -35,11 +35,11 @@ const combinedReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: "root3",
+  key: "root",
   blacklist: [],
   migrate: createMigrate(migrations, { debug: false }),
   storage,
-  version: 1,
+  version: 0,
 };
 const rootReducer = persistReducer(persistConfig, combinedReducer);
 // Step 2: Set up the store with sagaMiddleware and other middlewares
