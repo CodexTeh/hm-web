@@ -1,6 +1,6 @@
-import queryString from 'query-string';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import queryString from "query-string";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = process.env.VITE_API_URL;
 const SERVER_URL = process.env.VITE_ODO_API_URL;
@@ -10,22 +10,24 @@ export const Api = {
     try {
       let response;
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
-      response = await fetch(`${SERVER_URL}/get_specific_product?barcode=${barcode}`, options);
+      response = await fetch(
+        `${SERVER_URL}/get_specific_product?barcode=${barcode}`,
+        options
+      );
 
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -35,29 +37,31 @@ export const Api = {
     try {
       let response;
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
       const { page = 1, perPage = 10 } = pagination || {};
       const query = {
         page: JSON.stringify(page + 1),
         limit: JSON.stringify(perPage),
-        ...filter
+        ...filter,
       };
 
-      response = await fetch(`${SERVER_URL}/get_products?${queryString.stringify(query)}`, options);
+      response = await fetch(
+        `${SERVER_URL}/get_products?${queryString.stringify(query)}`,
+        options
+      );
 
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -68,9 +72,9 @@ export const Api = {
       let response;
 
       const options = {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
       };
 
@@ -81,14 +85,13 @@ export const Api = {
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 404:
           return null;
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -100,35 +103,37 @@ export const Api = {
       let response;
 
       const options = {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
       };
 
       const { page = 1, perPage = 10 } = {};
       let rangeStart, rangeEnd;
-      rangeStart = (page) * (perPage);
-      rangeEnd = ((page) + 1) * (perPage) - 1;
+      rangeStart = page * perPage;
+      rangeEnd = (page + 1) * perPage - 1;
       const query = {
-        sort: JSON.stringify(['createdAt', 'DESC']),
+        sort: JSON.stringify(["createdAt", "DESC"]),
         range: JSON.stringify([rangeStart, rangeEnd]),
-        filter: JSON.stringify({ '$custom': { 'userId': userId, 'status': 'all' } }),
+        filter: JSON.stringify({ $custom: { userId: userId, status: "all" } }),
       };
 
-      response = await fetch(`${API_URL}orders?${queryString.stringify(query)}`, options);
+      response = await fetch(
+        `${API_URL}orders?${queryString.stringify(query)}`,
+        options
+      );
 
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -139,10 +144,10 @@ export const Api = {
       let response;
 
       const options = {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       };
 
@@ -153,11 +158,11 @@ export const Api = {
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -167,22 +172,24 @@ export const Api = {
     try {
       let response;
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
-      response = await fetch(`${SERVER_URL}/get_products_for_categories?category=['${category}']`, options);
+      response = await fetch(
+        `${SERVER_URL}/get_products_for_categories?category=['${category}']`,
+        options
+      );
 
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -192,22 +199,24 @@ export const Api = {
     try {
       let response;
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
-      response = await fetch(`${SERVER_URL}/get_specific_product?barcode=${searchText}`, options);
+      response = await fetch(
+        `${SERVER_URL}/get_specific_product?barcode=${searchText}`,
+        options
+      );
 
       switch (response.status) {
         case 200:
           const data = await response.json();
           return data;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -218,11 +227,14 @@ export const Api = {
       let response;
       let subCatResponse;
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
       response = await fetch(`${SERVER_URL}/api/get/all/category`, options);
-      subCatResponse = await fetch(`${SERVER_URL}/api/get/all/subcategory`, options);
+      subCatResponse = await fetch(
+        `${SERVER_URL}/api/get/all/subcategory`,
+        options
+      );
 
       switch (response.status) {
         case 200:
@@ -230,12 +242,11 @@ export const Api = {
           const { subcategory } = await subCatResponse.json();
           return { category, subcategory };
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -243,12 +254,11 @@ export const Api = {
   },
   createCategory: async (data, token) => {
     try {
-
       const options = {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       };
@@ -257,17 +267,17 @@ export const Api = {
 
       switch (response.status) {
         case 200:
-          toast("Category Added Successfully")
+          toast("Category Added Successfully");
           const responseData = await response.json();
           return responseData;
 
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          toast('Category or Subcategory already exists!')
-          throw new Error('Category or Subcategory already exists!');
+          toast("Category or Subcategory already exists!");
+          throw new Error("Category or Subcategory already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -275,12 +285,11 @@ export const Api = {
   },
   addProductCatalog: async (data, token) => {
     try {
-
       const options = {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       };
@@ -289,17 +298,17 @@ export const Api = {
 
       switch (response.status) {
         case 200:
-          toast("Product Catalog Added Successfully")
+          toast("Product Catalog Added Successfully");
           const responseData = await response.json();
           return responseData;
 
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          toast('Product Catalog already exists!')
-          throw new Error('Product Catalog already exists!');
+          toast("Product Catalog already exists!");
+          throw new Error("Product Catalog already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -308,7 +317,7 @@ export const Api = {
   getSaleTimers: async () => {
     try {
       const options = {
-        method: 'GET',
+        method: "GET",
       };
       const response = await fetch(`${API_URL}timer`, options);
       switch (response.status) {
@@ -319,18 +328,18 @@ export const Api = {
             case 200:
               return timers;
             case 400:
-              throw new Error('All fields are required');
+              throw new Error("All fields are required");
             case 409:
-              throw new Error('User already exists!');
+              throw new Error("User already exists!");
             default:
-              throw new Error('Something went wrong!');
+              throw new Error("Something went wrong!");
           }
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -338,28 +347,30 @@ export const Api = {
   },
   editProductCatalog: async (data, token) => {
     try {
-
       const options = {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       };
 
-      const response = await fetch(`${API_URL}update-product-catalogs`, options);
+      const response = await fetch(
+        `${API_URL}update-product-catalogs`,
+        options
+      );
 
       switch (response.status) {
         case 200:
-          toast("Product Catalog Updated Successfully")
+          toast("Product Catalog Updated Successfully");
           const responseData = await response.json();
           return responseData;
 
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -367,12 +378,14 @@ export const Api = {
   },
   getProductCatalog: async () => {
     try {
-
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
-      const response = await fetch(`${SERVER_URL}/api/get/all/catalog`, options);
+      const response = await fetch(
+        `${SERVER_URL}/api/get/all/catalog`,
+        options
+      );
 
       switch (response.status) {
         case 200:
@@ -380,9 +393,9 @@ export const Api = {
           return catalogs;
 
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -390,12 +403,11 @@ export const Api = {
   },
   editCategory: async (data, token) => {
     try {
-
       const options = {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       };
@@ -404,16 +416,16 @@ export const Api = {
 
       switch (response.status) {
         case 200:
-          toast("Category Edited Successfully")
+          toast("Category Edited Successfully");
           return true;
 
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          toast('Category or Subcategory already exists!')
-          throw new Error('Category or Subcategory already exists!');
+          toast("Category or Subcategory already exists!");
+          throw new Error("Category or Subcategory already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -421,11 +433,29 @@ export const Api = {
   },
   editProducts: async ({ id, data }, token) => {
     try {
-      const { category, arabicCategory, subCategory, arabicSubCategory,
-        name, arabicName, description, arabicDescription, brand,
-        arabicBrand, material, arabicMaterial, size
-        , arabicSize, unit, arabicUnit, availableColor
-        , arabicAvailableColor, flashSale, arabicFlashSale, images } = data;
+      const {
+        category,
+        arabicCategory,
+        subCategory,
+        arabicSubCategory,
+        name,
+        arabicName,
+        description,
+        arabicDescription,
+        brand,
+        arabicBrand,
+        material,
+        arabicMaterial,
+        size,
+        arabicSize,
+        unit,
+        arabicUnit,
+        availableColor,
+        arabicAvailableColor,
+        flashSale,
+        arabicFlashSale,
+        images,
+      } = data;
 
       let response;
       const formData = new FormData();
@@ -434,19 +464,19 @@ export const Api = {
 
       for (let i = 0; i < images.length; i++) {
         if (images[i]?.file) {
-          formData.append('file', images[i].file, images[i].title);
+          formData.append("file", images[i].file, images[i].title);
         } else if (images[i]?.url) {
           exisitingImages.push(images[i].url);
         }
       }
       if (exisitingImages.length > 0) {
-        formData.append('existingImages', exisitingImages)
+        formData.append("existingImages", exisitingImages);
       }
       const options = {
-        method: 'PUT',
+        method: "PUT",
         body: formData,
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
 
@@ -454,13 +484,13 @@ export const Api = {
 
       switch (response.status) {
         case 200:
-          toast("Product Edited Successfully")
+          toast("Product Edited Successfully");
           const imageUrls = await response.json();
 
           const options = {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               jsonrpc: "2.0",
@@ -486,30 +516,30 @@ export const Api = {
                 avalable_color: availableColor,
                 ar_color: arabicAvailableColor,
                 flash_sale: flashSale,
-                ar_flash_sale: arabicFlashSale
-              }
+                ar_flash_sale: arabicFlashSale,
+              },
             }),
           };
 
           response = await fetch(`${SERVER_URL}/update/product`, options);
           switch (response.status) {
             case 200:
-              toast("Product Edited Successfully")
+              toast("Product Edited Successfully");
               const data = await response.json();
               return data;
             case 400:
-              throw new Error('All fields are required');
+              throw new Error("All fields are required");
             case 409:
-              throw new Error('User already exists!');
+              throw new Error("User already exists!");
             default:
-              throw new Error('Something went wrong!');
+              throw new Error("Something went wrong!");
           }
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -520,10 +550,10 @@ export const Api = {
     try {
       let response;
       const options = {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'content-type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ user, cart, language }),
       };
@@ -533,20 +563,20 @@ export const Api = {
       switch (response.status) {
         case 200:
           const url = await response.json();
-          window.open(url);
+          window.open(url, "_self");
           return true;
         case 400:
           alert(response.message);
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
           alert(response.message);
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       alert(e.message);
-      console.log('Error', e);
+      console.log("Error", e);
     }
   },
   addRemoveToWishlist: async (data, token, language) => {
@@ -554,10 +584,10 @@ export const Api = {
     try {
       let response;
       const options = {
-        method: type === 'remove' ? 'DELETE' : 'POST',
+        method: type === "remove" ? "DELETE" : "POST",
         headers: {
-          'content-type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userId, productId }),
       };
@@ -574,34 +604,41 @@ export const Api = {
           // eslint-disable-next-line no-throw-literal
           throw { status: response.status, message: response.message };
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
-      throw new Error(JSON.stringify({ status: e.status || 500, message: e.message || 'Unknown error' }));
+      throw new Error(
+        JSON.stringify({
+          status: e.status || 500,
+          message: e.message || "Unknown error",
+        })
+      );
     }
   },
   checkWishlistProduct: async (productId, userId) => {
     try {
       const options = {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
       };
 
-      const response = await fetch(`${API_URL}wishlist/check?userId=${userId}&productId=${productId}`, options);
+      const response = await fetch(
+        `${API_URL}wishlist/check?userId=${userId}&productId=${productId}`,
+        options
+      );
 
       switch (response.status) {
         case 200:
           const { exists } = await response.json();
           return exists;
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
-
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
@@ -611,7 +648,7 @@ export const Api = {
   getBanners: async () => {
     try {
       const options = {
-        method: 'GET',
+        method: "GET",
       };
 
       const response = await fetch(`${API_URL}banners`, options);
@@ -624,21 +661,21 @@ export const Api = {
             case 200:
               return imageUrls;
             case 400:
-              throw new Error('All fields are required');
+              throw new Error("All fields are required");
             case 409:
-              throw new Error('User already exists!');
+              throw new Error("User already exists!");
             default:
-              throw new Error('Something went wrong!');
+              throw new Error("Something went wrong!");
           }
         case 400:
-          throw new Error('All fields are required');
+          throw new Error("All fields are required");
         case 409:
-          throw new Error('User already exists!');
+          throw new Error("User already exists!");
         default:
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
       }
     } catch (e) {
       console.log("Error", e);
     }
   },
-}
+};
